@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jussara Modas | Elegância & Modéstia</title>
+
+  <!-- ✅ SEO -->
+  <meta name="description" content="Jussara Modas — moda modesta feminina com curadoria premium. Saias midi, camisas elegantes e looks completos. Atendimento no WhatsApp e envio seguro." />
+  <meta name="keywords" content="moda modesta, moda feminina, saia midi, camisa social feminina, looks modestos, Jussara Modas" />
+  <!-- Troque pelo seu domínio real (GitHub Pages, domínio próprio etc.) -->
+  <link rel="canonical" href="https://SEU-DOMINIO-AQUI/" />
+  <meta name="theme-color" content="#e48ca8" />
+
+  <!-- OpenGraph (WhatsApp/Instagram) -->
+  <meta property="og:title" content="Jussara Modas | Elegância & Modéstia" />
+  <meta property="og:description" content="Moda modesta feminina com curadoria premium. Atendimento no WhatsApp e envio seguro." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://SEU-DOMINIO-AQUI/" />
+  <!-- Se você tiver uma imagem de capa, coloque aqui -->
+  <meta property="og:image" content="https://SEU-DOMINIO-AQUI/imagens/capa.jpg" />
+
+  <!-- Tailwind -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Fonts (otimizadas: poucas variações) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Montserrat:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
+  <!-- Pinch zoom (mobile) -->
+  <script src="https://unpkg.com/better-pinch-zoom@0.1.0/dist/pinch-zoom.umd.js"></script>
+
+  <style>
+    :root{
+      --bg: #fffafb;
+      --rose-50:#fff1f4;
+      --rose-100:#ffd6e2;
+      --rose-200:#f7b7c9;
+      --rose-500:#e48ca8;
+      --rose-600:#d46a8c;
+      --text:#1f2937;
+    }
+
+    html{ scroll-behavior:smooth; }
+    body{
+      font-family:'Montserrat',sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      overflow-x:hidden;
+      text-rendering:optimizeLegibility;
+      position: relative;
+    }
+
+    /* Background "vivo" (bolinhas + brilho suave) - leve e responsivo */
+    body::before{
+      content:"";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: -1;
+      opacity: .95;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(228,140,168,.22) 0 90px, transparent 91px),
+        radial-gradient(circle at 85% 25%, rgba(247,183,201,.22) 0 110px, transparent 111px),
+        radial-gradient(circle at 30% 85%, rgba(212,106,140,.18) 0 120px, transparent 121px),
+
+        radial-gradient(circle, rgba(228,140,168,.18) 2px, transparent 3px) 0 0/34px 34px,
+        radial-gradient(circle, rgba(247,183,201,.18) 2px, transparent 3px) 17px 17px/34px 34px,
+        radial-gradient(circle, rgba(212,106,140,.12) 1px, transparent 2px) 6px 12px/28px 28px,
+
+        linear-gradient(180deg, #fffafb 0%, #fff6f9 40%, #fffafb 100%);
+    }
+
+    h1,.logo{ font-family:'Alex Brush',cursive; }
+    h2,h3{ font-family:'Playfair Display',serif; }
+
+    :focus-visible{ outline:3px solid rgba(228,140,168,.45); outline-offset:3px; border-radius:12px; }
+
+    .product-card{
+      background:#fff;
+      border:1px solid rgba(247,183,201,.50);
+      box-shadow:0 10px 30px rgba(0,0,0,.06);
+      transition:transform .35s ease, box-shadow .35s ease, border-color .35s ease;
+      will-change:transform;
+    }
+    .product-card:hover{
+      transform:translateY(-4px);
+      box-shadow:0 18px 55px rgba(0,0,0,.12);
+      border-color:rgba(228,140,168,.65);
+    }
+
+    .zoom-container{
+      position:relative;
+      overflow:hidden;
+      cursor:zoom-in;
+      background:#0b0b0b;
+      touch-action:pan-x pan-y;
+    }
+    .zoom-container img{
+      transition:transform .12s ease-out;
+      transform-origin:center center;
+      will-change:transform;
+    }
+    @media (hover:hover) and (pointer:fine){
+      .zoom-container:hover img{ transform:scale(1.8); }
+    }
+
+    .btn-luxury{
+      background:linear-gradient(135deg,#d4a373 0%, #e48ca8 50%, #d4a373 100%);
+      background-size:200% auto;
+      transition:background-position .5s ease, transform .15s ease, filter .2s ease;
+      box-shadow:0 14px 40px rgba(212,106,140,.25);
+    }
+    .btn-luxury:hover{ background-position:right center; filter: brightness(1.02); }
+    .btn-luxury:active{ transform:scale(.98); }
+
+    .modal-animate{ animation:modalFade .25s ease-out; }
+    @keyframes modalFade{
+      from{ opacity:0; transform:translateY(10px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .custom-scroll::-webkit-scrollbar{ width:6px; height:6px; }
+    .custom-scroll::-webkit-scrollbar-thumb{ background:rgba(228,140,168,.6); border-radius:999px; }
+    .custom-scroll::-webkit-scrollbar-track{ background:rgba(247,183,201,.15); }
+
+    .modal-fab{
+      position:absolute;
+      top:16px;
+      left:16px;
+      z-index:80;
+      display:flex;
+      gap:10px;
+      padding:10px;
+      border-radius:999px;
+      border:1px solid rgba(247,183,201,.65);
+      background: rgba(255,255,255,.86);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 18px 55px rgba(0,0,0,.18);
+    }
+    .modal-fab button, .modal-fab a{
+      width:44px;
+      height:44px;
+      border-radius:999px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border:1px solid rgba(247,183,201,.75);
+      background: white;
+      transition: transform .12s ease, filter .15s ease, box-shadow .2s ease;
+      box-shadow: 0 10px 25px rgba(0,0,0,.10);
+    }
+    .modal-fab button:hover, .modal-fab a:hover{ filter: brightness(1.03); }
+    .modal-fab button:active, .modal-fab a:active{ transform: scale(.97); }
+
+    .modal-bottom-bar{
+      position: sticky;
+      bottom: 0;
+      z-index: 75;
+      background: rgba(255,255,255,.92);
+      border-top: 1px solid rgba(247,183,201,.65);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 12px;
+    }
+
+    .header-compact #siteNav{ padding-top: .55rem; padding-bottom: .55rem; }
+    .header-compact .logo{ font-size: 2.2rem; line-height: 1; }
+    .header-compact .header-sub{ opacity: .85; transform: translateY(-1px); }
+    @media (min-width: 640px){
+      .header-compact .logo{ font-size: 3rem; }
+    }
+
+    /* ✅ Chips / Filtros */
+    .chip{
+      border: 1px solid rgba(247,183,201,.65);
+      background: rgba(255,255,255,.85);
+      border-radius: 999px;
+      padding: 10px 14px;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: #444;
+      transition: transform .12s ease, background .15s ease, border-color .2s ease, color .2s ease;
+      user-select: none;
+      white-space: nowrap;
+    }
+    .chip:hover{ transform: translateY(-1px); }
+    .chip.is-active{
+      background: rgba(228,140,168,.14);
+      border-color: rgba(228,140,168,.75);
+      color: #8a2f4d;
+    }
+
+    /* ✅ Botão coração */
+    .fav-btn{
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid rgba(247,183,201,.75);
+      background: rgba(255,255,255,.92);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 10px 25px rgba(0,0,0,.12);
+      transition: transform .12s ease, filter .15s ease;
+    }
+    .fav-btn:hover{ filter: brightness(1.02); }
+    .fav-btn:active{ transform: scale(.97); }
+
+    @media (prefers-reduced-motion: reduce){
+      *{ animation:none !important; transition:none !important; scroll-behavior:auto !important; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header id="siteHeader" class="bg-white/90 backdrop-blur-md sticky top-0 z-50 border-b border-pink-50 transition-all duration-200">
+    <nav id="siteNav" class="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-3 transition-all duration-200">
+      <div class="w-28 hidden md:block"></div>
+
+      <div class="text-center leading-none">
+        <h1 class="text-4xl sm:text-5xl text-stone-800 logo">Jussara Modas</h1>
+        <p class="header-sub uppercase tracking-[0.32em] text-[10px] sm:text-[11px] text-pink-600 font-bold mt-2 transition-all duration-200">
+          Moda Modesta & Chic
+        </p>
+      </div>
+
+      <div class="w-28 text-right relative">
+        <!-- DESKTOP -->
+        <div class="hidden md:flex flex-col items-end gap-2">
+          <a href="https://www.instagram.com/jussa_ramodas/" target="_blank" rel="noopener"
+             class="text-pink-600 hover:text-pink-800 text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-b border-transparent hover:border-pink-200 transition">
+            Instagram
+          </a>
+
+          <a href="sobre.html"
+             class="text-stone-600 hover:text-pink-700 text-[11px] sm:text-[12px] font-bold uppercase tracking-widest border-b border-transparent hover:border-pink-200 transition">
+            Sobre
+          </a>
+        </div>
+
+        <!-- MOBILE: 3 pontinhos -->
+        <div class="md:hidden flex justify-end">
+          <button id="mobileMenuBtn" type="button"
+            class="w-11 h-11 rounded-full bg-white/90 border border-pink-100 shadow-sm flex items-center justify-center"
+            aria-label="Abrir menu"
+            aria-haspopup="true"
+            aria-expanded="false">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M5 12h.01M12 12h.01M19 12h.01" stroke="#1f2937" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- MENU FLUTUANTE (mobile) -->
+        <div id="mobileMenu"
+             class="hidden md:hidden absolute right-0 mt-3 w-56 rounded-2xl border border-pink-100 bg-white/95 backdrop-blur-md shadow-xl overflow-hidden">
+          <a href="sobre.html"
+             class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-stone-700 hover:bg-pink-50">
+            Sobre
+          </a>
+          <a href="https://www.instagram.com/jussa_ramodas/" target="_blank" rel="noopener"
+             class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-pink-700 hover:bg-pink-50">
+            Instagram
+          </a>
+          <a id="menuWhats" href="#" target="_blank" rel="noopener"
+             class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-emerald-700 hover:bg-pink-50">
+            WhatsApp
+          </a>
+          <a id="menuGrupo" href="https://chat.whatsapp.com/LmTzGuYone2E3e6hqDFvlR" target="_blank" rel="noopener"
+             class="block px-4 py-3 text-sm font-bold uppercase tracking-widest text-pink-700 hover:bg-pink-50">
+            Grupo de Novidades
+          </a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- BARRA UX -->
+    <div class="border-t border-pink-50 bg-white/70">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex flex-col gap-3">
+        <div class="flex items-center justify-between gap-3">
+          <div class="flex items-center gap-2">
+            <span class="text-[11px] uppercase tracking-[0.28em] text-stone-500 font-semibold">Vitrine</span>
+            <span class="w-10 h-px bg-pink-200"></span>
+            <span id="countProdutos" class="text-[11px] uppercase tracking-[0.28em] text-pink-700 font-semibold">0 peças</span>
+          </div>
+
+          <!-- ✅ Botão para mostrar/esconder filtros/pesquisa -->
+          <button id="toggleFiltersBtn"
+            class="rounded-2xl border border-pink-100 bg-white px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.25em] text-stone-700 hover:bg-pink-50 transition flex items-center gap-2">
+            <span id="toggleFiltersLabel">Filtros</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
+        </div>
+
+        <!-- ✅ Painel de filtros (abre/fecha) -->
+        <div id="filtersPanel" class="hidden">
+          <div class="flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div class="flex gap-2 w-full sm:w-[420px]">
+              <label class="sr-only" for="searchInput">Buscar</label>
+              <input id="searchInput" type="text" placeholder="Buscar: plissada, camisa, saia..."
+                     class="w-full rounded-2xl border border-pink-100 bg-white px-4 py-3 text-sm sm:text-[15px] text-stone-800 placeholder:text-stone-400 shadow-sm focus:border-pink-300"
+                     autocomplete="off" />
+              <button id="clearBtn"
+                      class="shrink-0 rounded-2xl border border-pink-100 bg-white px-4 py-3 text-sm font-semibold text-pink-700 hover:bg-pink-50 transition">
+                Limpar
+              </button>
+            </div>
+
+            <!-- chips -->
+            <div class="flex items-center gap-2 overflow-x-auto custom-scroll py-1">
+              <button class="chip is-active" data-cat="all" type="button">Todas</button>
+              <button class="chip" data-cat="Camisas" type="button">Camisas</button>
+              <button class="chip" data-cat="Saias" type="button">Saias</button>
+              <button class="chip" data-cat="Conjuntos" type="button">Conjuntos</button>
+              <button class="chip" data-cat="Looks" type="button">Looks</button>
+              <button class="chip" data-cat="favs" type="button">Favoritos</button>
+            </div>
+          </div>
+
+          <div class="mt-3 flex flex-col sm:flex-row gap-3 sm:items-center sm:justify-between">
+            <div class="text-[11px] text-stone-500 leading-relaxed">
+              Dica: use os filtros por categoria e salve ❤️ seus favoritos para ver depois.
+            </div>
+
+            <a href="https://chat.whatsapp.com/LmTzGuYone2E3e6hqDFvlR" target="_blank" rel="noopener"
+               class="inline-flex items-center justify-center gap-2 rounded-2xl border border-pink-100 bg-white px-4 py-3 text-[11px] font-extrabold uppercase tracking-[0.25em] text-pink-700 hover:bg-pink-50 transition">
+              Grupo de Novidades
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M14 3h7v7" stroke="#d46a8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M10 14L21 3" stroke="#d46a8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M21 14v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h6" stroke="#d46a8c" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- BENEFÍCIOS -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 py-16 border-t border-pink-100/50">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+      <div class="p-6">
+        <div class="text-pink-500 mb-4 flex justify-center">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        </div>
+        <h4 class="font-bold text-stone-800 uppercase tracking-widest text-xs mb-2">Curadoria Premium</h4>
+        <p class="text-stone-500 text-sm">Peças selecionadas a dedo para garantir qualidade e elegância.</p>
+      </div>
+      <div class="p-6">
+        <div class="text-pink-500 mb-4 flex justify-center">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 8h2a2 2 0 012 2v6a2 2 0 01-2 2h-2v4l-4-4H9a1.994 1.994 0 01-1.414-.586m0 0L11 14h4a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2v4l.586-.586z"></path></svg>
+        </div>
+        <h4 class="font-bold text-stone-800 uppercase tracking-widest text-xs mb-2">Atendimento Humano</h4>
+        <p class="text-stone-500 text-sm">Dúvidas sobre tamanhos? Chamamos você pessoalmente no WhatsApp.</p>
+      </div>
+      <div class="p-6">
+        <div class="text-pink-500 mb-4 flex justify-center">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M5 13l4 4L19 7"></path></svg>
+        </div>
+        <h4 class="font-bold text-stone-800 uppercase tracking-widest text-xs mb-2">Envio Seguro</h4>
+        <p class="text-stone-500 text-sm">Sua peça chega impecável e perfumada na sua casa.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ✅ INFORMAÇÕES IMPORTANTES -->
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 pb-6">
+    <div class="bg-white/85 border border-pink-100 rounded-[32px] p-6 sm:p-8 backdrop-blur-md shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+        <div>
+          <h2 class="text-2xl sm:text-3xl font-extrabold text-stone-900 mb-2">Informações Importantes</h2>
+          <p class="text-stone-600 text-sm leading-relaxed">
+            Transparência total pra você comprar com segurança 🙂 Se tiver dúvida, chama no WhatsApp.
+          </p>
+        </div>
+
+        <a href="https://chat.whatsapp.com/LmTzGuYone2E3e6hqDFvlR" target="_blank" rel="noopener"
+           class="btn-luxury text-white px-6 py-4 rounded-2xl font-extrabold uppercase tracking-widest text-[11px] text-center">
+          Entrar no Grupo de Novidades
+        </a>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+        <div class="rounded-2xl border border-pink-100 bg-white p-4">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-extrabold mb-1">Envio</p>
+          <p class="text-stone-700 text-sm">Enviamos para todo Brasil. Entrega local sob consulta.</p>
+        </div>
+        <div class="rounded-2xl border border-pink-100 bg-white p-4">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-extrabold mb-1">Pagamento</p>
+          <p class="text-stone-700 text-sm">Pix e cartão (consulte parcelamento no WhatsApp).</p>
+        </div>
+        <div class="rounded-2xl border border-pink-100 bg-white p-4">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-extrabold mb-1">Trocas</p>
+          <p class="text-stone-700 text-sm">Trocas e ajustes sob análise. Envie fotos e medidas.</p>
+        </div>
+        <div class="rounded-2xl border border-pink-100 bg-white p-4">
+          <p class="text-[10px] uppercase tracking-[0.3em] text-stone-500 font-extrabold mb-1">Atendimento</p>
+          <p class="text-stone-700 text-sm">Seg–Sáb. Resposta rápida no WhatsApp.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- VITRINE -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+    <div id="vitrine" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6"></div>
+
+    <div id="emptyState" class="hidden mt-10 bg-white/90 border border-pink-100 rounded-3xl p-8 text-center backdrop-blur-md">
+      <p class="text-stone-900 font-semibold text-lg mb-2">Nada encontrado</p>
+      <p class="text-stone-600 text-sm mb-6">Tente outro termo, troque a categoria ou limpe a busca.</p>
+      <button id="emptyClear" class="btn-luxury text-white px-8 py-4 rounded-full font-bold uppercase tracking-wider text-sm">
+        Limpar busca
+      </button>
+    </div>
+  </main>
+
+  <!-- MODAL -->
+  <div id="productModal" class="fixed inset-0 bg-stone-900/95 hidden items-center justify-center z-[60] p-0 md:p-4" aria-hidden="true">
+    <div class="bg-white w-full h-full md:h-auto md:max-w-6xl md:rounded-[40px] overflow-hidden flex flex-col md:flex-row modal-animate relative">
+
+      <!-- MENU FLUTUANTE -->
+      <div class="modal-fab" aria-label="Ações do produto">
+        <button type="button" onclick="closeProduct()" aria-label="Fechar">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M18 6L6 18M6 6l12 12" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+
+        <button type="button" onclick="prevProduct()" aria-label="Produto anterior" title="Anterior">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M15 18l-6-6 6-6" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <button type="button" onclick="nextProduct()" aria-label="Próximo produto" title="Próximo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M9 6l6 6-6 6" stroke="#1f2937" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+		
+		<button id="shareProductBtn" type="button" aria-label="Compartilhar peça" title="Compartilhar">
+		  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<path d="M4 12v7a1 1 0 001 1h14a1 1 0 001-1v-7" stroke="#1f2937" stroke-width="2" stroke-linecap="round"/>
+			<path d="M12 16V3m0 0l-4 4m4-4l4 4" stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+		  </svg>
+		</button>
+
+
+        <!-- ✅ Favorito no modal -->
+        <button id="modalFavBtn" type="button" aria-label="Salvar nos favoritos" title="Salvar nos favoritos">
+          <svg id="modalFavIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M12 21s-7-4.4-9.3-8.1C.9 9.9 2.3 6.9 5.2 5.6c1.8-.8 3.9-.4 5.3 1 1.4-1.4 3.5-1.8 5.3-1 2.9 1.3 4.3 4.3 2.5 7.3C19 16.6 12 21 12 21z"
+              stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <a id="fabWhats" href="#" target="_blank" rel="noopener" aria-label="Chamar no WhatsApp" title="WhatsApp"
+           class="btn-luxury border-0" style="background: linear-gradient(135deg,#25D366 0%, #128C7E 100%); box-shadow:0 14px 40px rgba(18,140,126,.25);">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" style="color:white;">
+            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+          </svg>
+        </a>
+      </div>
+
+      <!-- Imagem -->
+      <div class="w-full md:w-3/5 bg-black flex flex-col relative overflow-hidden h-[58vh] md:h-[85vh]">
+        <div id="zoomWrapper" class="zoom-container w-full h-full flex items-center justify-center">
+		<img id="modalImg" src="" alt="" class="w-full h-full object-cover cursor-zoom-in"
+			 onclick="openLightbox(this.src, this.alt)" />
+        </div>
+
+        <div class="absolute bottom-20 left-4 bg-black/45 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur-sm pointer-events-none hidden md:block">
+          Passe o mouse para ampliar
+        </div>
+        <div class="absolute bottom-20 left-4 bg-black/45 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur-sm pointer-events-none md:hidden">
+          Use dois dedos para zoom
+        </div>
+
+        <div id="thumbContainer" class="absolute bottom-4 left-0 right-0 flex justify-center gap-3 p-2"></div>
+      </div>
+
+      <!-- Conteúdo -->
+      <div class="md:w-2/5 flex flex-col bg-white overflow-hidden">
+        <div class="p-6 sm:p-8 md:p-12 overflow-y-auto custom-scroll">
+          <span class="text-pink-600 text-[10px] font-bold tracking-[0.3em] mb-2 uppercase">Destaque da Coleção</span>
+
+          <h2 id="modalTitle" class="text-3xl sm:text-4xl md:text-5xl font-extrabold text-stone-900 mb-2 leading-tight"></h2>
+
+          <p id="modalPrice" class="text-base sm:text-lg text-stone-500 italic mb-6 font-medium"></p>
+
+          <div class="space-y-6 mb-8 border-t border-stone-100 pt-6">
+            <p id="modalDesc" class="text-stone-700 leading-relaxed text-sm sm:text-base"></p>
+
+            <div>
+              <p class="text-[10px] font-bold text-stone-500 uppercase tracking-[0.2em] mb-3">Tamanhos</p>
+              <div id="modalSizes" class="flex flex-wrap gap-2"></div>
+            </div>
+          </div>
+
+          <p class="text-[11px] text-stone-500 leading-relaxed">
+            Dica: mande sua altura, seu peso (se quiser) e o tamanho que costuma usar 🙂 Assim indicamos certinho.
+          </p>
+        </div>
+
+        <!-- Barra inferior (mobile) -->
+        <div class="modal-bottom-bar md:hidden">
+          <a id="whatsappLinkMobile" href="#" target="_blank" rel="noopener"
+            class="btn-luxury text-white w-full py-5 px-8 rounded-2xl font-extrabold text-center uppercase tracking-widest text-[12px] flex items-center justify-center gap-3 shadow-xl">
+            Falar com Vendedora
+          </a>
+        </div>
+
+        <!-- CTA normal (desktop) -->
+        <div class="p-6 sm:p-8 md:p-12 pt-0 hidden md:block">
+          <a id="whatsappLink" href="#" target="_blank" rel="noopener"
+            class="btn-luxury text-white w-full py-5 px-8 rounded-2xl font-extrabold text-center uppercase tracking-widest text-[12px] flex items-center justify-center gap-3 shadow-xl">
+            Falar com Vendedora
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+	<!-- LIGHTBOX (Tela cheia da foto) -->
+	<div id="imgLightbox" class="fixed inset-0 bg-black/95 hidden items-center justify-center z-[80]" aria-hidden="true">
+	  <div class="absolute top-4 left-4 right-4 flex items-center justify-between gap-3 z-[90]">
+		<div class="text-white/80 text-xs font-bold uppercase tracking-widest">
+		  Toque para fechar
+		</div>
+		<button id="closeLightboxBtn" type="button"
+		  class="w-11 h-11 rounded-full bg-white/10 border border-white/20 flex items-center justify-center"
+		  aria-label="Fechar imagem">
+		  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+			<path d="M18 6L6 18M6 6l12 12" stroke="white" stroke-width="2.2" stroke-linecap="round"/>
+		  </svg>
+		</button>
+	  </div>
+
+	  <div id="lightboxZoom" class="w-full h-full flex items-center justify-center p-4">
+		<img id="lightboxImg" src="" alt="" class="max-w-full max-h-full object-contain select-none" />
+	  </div>
+	</div>
+
+  <!-- Whats flutuante -->
+  <a id="floatWhats" href="#" target="_blank" rel="noopener"
+     class="fixed bottom-5 right-5 z-50 btn-luxury text-white rounded-full px-5 py-4 shadow-2xl flex items-center gap-2">
+    <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"/>
+    </svg>
+    <span class="hidden sm:inline font-bold uppercase tracking-wider text-xs">WhatsApp</span>
+  </a>
+
+  <script>
+    // ==========================================
+    // 📝 PRODUTOS (✅ adicionada categoria + id)
+    // ==========================================
+    const produtos = [
+      { id: "p1", categoria: "Camisas", nome: "Camisa Social Tricoline", preco: "Consulte o Valor", tamanhos: ["M"], descricao: "Tecido leve e macio em tricoline premium. Perfeita para ocasiões especiais ou elegância diária.", imagens: ["imagens/1_1.jpg"] },
+      { id: "p2", categoria: "Conjuntos", nome: "Conjunto Camisa & Plissada", preco: "Consulte o Valor", tamanhos: ["M (Camisa)", "GG (Saia)"], descricao: "Look completo com camisa em tricoline e saia plissada fluida. Cores: Marsala, Azul Marinho, Branco e Preto.", imagens: ["imagens/2_1.jpg"] },
+      { id: "p3", categoria: "Saias", nome: "Saia Midi 4 Babados", preco: "Consulte o Valor", tamanhos: ["M", "G"], descricao: "Malha crepe premium com movimento encantador. Valoriza a silhueta com elegância modesta.", imagens: ["imagens/3_1.jpg", "imagens/3_2.jpg"] },
+      { id: "p4", categoria: "Camisas", nome: "Camisa Manga Princesa Violet", preco: "Consulte o Valor", tamanhos: ["P", "M", "G"], descricao: "Tom roxo exclusivo com mangas princesa. Estrutura impecável e design atemporal.", imagens: ["imagens/4_1.jpg", "imagens/4_2.jpg"] },
+      { id: "p5", categoria: "Looks", nome: "Look T-shirt Ore & Plissada", preco: "Consulte o Valor", tamanhos: ["P", "M", "GG"], descricao: "T-shirt 100% algodão e saia plissada. Conforto e propósito em uma única produção.", imagens: ["imagens/5_1.jpg", "imagens/5_2.jpg"] },
+      { id: "p6", categoria: "Camisas", nome: "Camisa Social Ateliê", preco: "Consulte o Valor", tamanhos: ["P", "M", "G"], descricao: "Acabamento de luxo em tricoline. Peça chave para um guarda-roupa versátil.", imagens: ["imagens/6_1.jpg"] }
+    ];
+
+    // ==========================================
+    // ⚙️ WHATSAPP + GRUPO
+    // ==========================================
+    const WHATS_NUMBER = "5516997081430";
+    const WHATS_GRUPO = "https://chat.whatsapp.com/LmTzGuYone2E3e6hqDFvlR";
+
+    // ==========================================
+    // ⭐ FAVORITOS (localStorage)
+    // ==========================================
+    const FAV_KEY = "jm_favs_v1";
+    function loadFavs(){
+      try{
+        const raw = localStorage.getItem(FAV_KEY);
+        const arr = raw ? JSON.parse(raw) : [];
+        return Array.isArray(arr) ? arr : [];
+      }catch(e){ return []; }
+    }
+    function saveFavs(arr){
+      try{ localStorage.setItem(FAV_KEY, JSON.stringify(arr)); }catch(e){}
+    }
+    function isFav(productId){
+      return favs.includes(productId);
+    }
+    function toggleFav(productId){
+      if(isFav(productId)){
+        favs = favs.filter(id => id !== productId);
+      }else{
+        favs.push(productId);
+      }
+      saveFavs(favs);
+      // re-render
+      carregarProdutos();
+      // atualiza modal se estiver aberto
+      if(currentIndex >= 0){
+        updateModalFavUI();
+      }
+    }
+
+    let favs = loadFavs();
+
+    // ==========================================
+    // 🔎 ELEMENTOS
+    // ==========================================
+    const vitrine = document.getElementById("vitrine");
+    const modal = document.getElementById("productModal");
+    const modalImg = document.getElementById("modalImg");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalPrice = document.getElementById("modalPrice");
+    const modalDesc = document.getElementById("modalDesc");
+    const modalSizes = document.getElementById("modalSizes");
+    const thumbContainer = document.getElementById("thumbContainer");
+    const whatsappLink = document.getElementById("whatsappLink");
+    const whatsappLinkMobile = document.getElementById("whatsappLinkMobile");
+    const fabWhats = document.getElementById("fabWhats");
+    const zoomWrapper = document.getElementById("zoomWrapper");
+
+    const searchInput = document.getElementById("searchInput");
+    const clearBtn = document.getElementById("clearBtn");
+    const emptyState = document.getElementById("emptyState");
+    const emptyClear = document.getElementById("emptyClear");
+    const countProdutos = document.getElementById("countProdutos");
+    const floatWhats = document.getElementById("floatWhats");
+
+    const modalFavBtn = document.getElementById("modalFavBtn");
+    const modalFavIcon = document.getElementById("modalFavIcon");
+
+    // filtros
+    const chips = Array.from(document.querySelectorAll(".chip"));
+    let selectedCat = "all";
+
+    // painel filtros abre/fecha
+    const toggleFiltersBtn = document.getElementById("toggleFiltersBtn");
+    const toggleFiltersLabel = document.getElementById("toggleFiltersLabel");
+    const filtersPanel = document.getElementById("filtersPanel");
+
+    // PinchZoom
+    let pinchInstance = null;
+    let currentIndex = -1;
+
+    function buildWhatsLink(text){
+      return `https://wa.me/${WHATS_NUMBER}?text=${encodeURIComponent(text)}`;
+    }
+
+    // ✅ Whats geral (inteligente)
+    floatWhats.href = buildWhatsLink(
+      "Olá Jussara!\n" +
+      "Vim pela vitrine e gostaria de:\n" +
+      "• Ver novidades / lançamentos\n" +
+      "• Saber valores e envio\n\n" +
+      "Pode me ajudar?"
+    );
+
+    // ==========================================
+    // 🧠 BUSCA + FILTRO
+    // ==========================================
+    function normalize(str){
+      return (str || "")
+        .toString()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g,"")
+        .toLowerCase()
+        .trim();
+    }
+
+    function filterProducts(){
+      const q = normalize(searchInput.value);
+
+      return produtos.filter(p=>{
+        // categoria
+        const catOk =
+          selectedCat === "all" ? true :
+          selectedCat === "favs" ? isFav(p.id) :
+          (p.categoria === selectedCat);
+
+        if(!catOk) return false;
+
+        // busca
+        if(!q) return true;
+        const hay = normalize(`${p.nome} ${p.preco} ${p.descricao} ${(p.tamanhos||[]).join(" ")} ${p.categoria}`);
+        return hay.includes(q);
+      });
+    }
+
+    function updateCount(n){
+      countProdutos.textContent = `${n} ${n === 1 ? "peça" : "peças"}`;
+    }
+
+    // ==========================================
+    // 🖼️ RENDER
+    // ==========================================
+    function renderFavIconSVG(filled){
+      if(filled){
+        return `
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="#e48ca8" aria-hidden="true">
+            <path d="M12 21s-7-4.4-9.3-8.1C.9 9.9 2.3 6.9 5.2 5.6c1.8-.8 3.9-.4 5.3 1 1.4-1.4 3.5-1.8 5.3-1 2.9 1.3 4.3 4.3 2.5 7.3C19 16.6 12 21 12 21z"/>
+          </svg>
+        `;
+      }
+      return `
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 21s-7-4.4-9.3-8.1C.9 9.9 2.3 6.9 5.2 5.6c1.8-.8 3.9-.4 5.3 1 1.4-1.4 3.5-1.8 5.3-1 2.9 1.3 4.3 4.3 2.5 7.3C19 16.6 12 21 12 21z"
+            stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      `;
+    }
+
+    function carregarProdutos(){
+      const list = filterProducts();
+      updateCount(list.length);
+
+      if(!list.length){
+        vitrine.innerHTML = "";
+        emptyState.classList.remove("hidden");
+        return;
+      }
+      emptyState.classList.add("hidden");
+
+      vitrine.innerHTML = list.map((p)=>{
+        const index = produtos.indexOf(p);
+        const selo = index === 0 ? "Novo" : (index === 2 ? "Mais querido" : "Exclusivo");
+        const fav = isFav(p.id);
+
+        return `
+          <div class="product-card rounded-[25px] overflow-hidden cursor-pointer relative"
+               onclick="openProduct(${index})"
+               role="button" tabindex="0" onkeydown="if(event.key==='Enter'){openProduct(${index})}">
+            <div class="aspect-[3/4] overflow-hidden relative bg-stone-100">
+
+              <!-- ✅ favorito no card -->
+              <button class="fav-btn absolute top-3 right-3 z-10"
+                      type="button"
+                      aria-label="${fav ? "Remover dos favoritos" : "Salvar nos favoritos"}"
+                      onclick="event.stopPropagation(); toggleFav('${p.id}')">
+                ${renderFavIconSVG(fav)}
+              </button>
+
+              <img src="${p.imagens[0]}" alt="${p.nome}"
+                   loading="lazy" decoding="async"
+                   class="w-full h-full object-cover transition-transform duration-500">
+
+              <div class="absolute top-3 left-3">
+                <span class="bg-white/90 text-pink-700 text-[10px] px-3 py-1 rounded-full uppercase tracking-widest shadow border border-pink-100">
+                  ${selo}
+                </span>
+              </div>
+
+              <div class="absolute bottom-3 left-3">
+                <span class="bg-black/45 text-white text-[10px] px-3 py-1 rounded-full backdrop-blur-sm border border-white/10">
+                  ${p.categoria}
+                </span>
+              </div>
+
+              <div class="absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-black/25 to-transparent"></div>
+            </div>
+
+            <div class="p-4 text-center">
+              <h3 class="text-stone-900 text-[13px] sm:text-[15px] md:text-lg font-extrabold mb-1 leading-snug">${p.nome}</h3>
+              <p class="text-pink-600 text-[10px] font-bold tracking-widest uppercase">Ver detalhes</p>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // expor para onclick do HTML
+    window.openProduct = openProduct;
+    window.toggleFav = toggleFav;
+
+    // ==========================================
+    // 🔎 ZOOM DESKTOP
+    // ==========================================
+    function zoomMove(e){
+      const img = modalImg;
+      const box = img.getBoundingClientRect();
+      const x = ((e.clientX - box.left) / box.width) * 100;
+      const y = ((e.clientY - box.top) / box.height) * 100;
+      img.style.transformOrigin = `${x}% ${y}%`;
+    }
+    function zoomReset(){ modalImg.style.transformOrigin = "center center"; }
+
+    function enableDesktopZoom(){
+      const canHover = window.matchMedia("(hover:hover) and (pointer:fine)").matches;
+      if(!canHover) return;
+      zoomWrapper.addEventListener("mousemove", zoomMove);
+      zoomWrapper.addEventListener("mouseleave", zoomReset);
+    }
+    function disableDesktopZoom(){
+      zoomWrapper.removeEventListener("mousemove", zoomMove);
+      zoomWrapper.removeEventListener("mouseleave", zoomReset);
+      zoomReset();
+    }
+
+    // ==========================================
+    // 🪟 MODAL + NAVEGAÇÃO
+    // ==========================================
+    function buildSmartWhatsMessage(p){
+      const sizes = (p.tamanhos || []).join(", ") || "—";
+      return (
+        `Olá Jussara!\n` +
+        `Vim pela vitrine e quero informações dessa peça:\n\n` +
+        `• Peça: ${p.nome}\n` +
+        `• Categoria: ${p.categoria}\n` +
+        `• Tamanhos: ${sizes}\n\n` +
+        `Pode me dizer, por favor:\n` +
+        `1) Valor e disponibilidade do meu tamanho?\n` +
+        `2) Formas de pagamento (Pix/cartão e parcelamento)?\n` +
+        `3) Prazo e valor do envio?\n\n`
+      );
+    }
+
+    function updateModalFavUI(){
+      if(currentIndex < 0) return;
+      const p = produtos[currentIndex];
+      const fav = isFav(p.id);
+
+      if(fav){
+        modalFavIcon.innerHTML = `<path d="M12 21s-7-4.4-9.3-8.1C.9 9.9 2.3 6.9 5.2 5.6c1.8-.8 3.9-.4 5.3 1 1.4-1.4 3.5-1.8 5.3-1 2.9 1.3 4.3 4.3 2.5 7.3C19 16.6 12 21 12 21z" fill="#e48ca8"/>`;
+      }else{
+        modalFavIcon.innerHTML = `<path d="M12 21s-7-4.4-9.3-8.1C.9 9.9 2.3 6.9 5.2 5.6c1.8-.8 3.9-.4 5.3 1 1.4-1.4 3.5-1.8 5.3-1 2.9 1.3 4.3 4.3 2.5 7.3C19 16.6 12 21 12 21z"
+            stroke="#1f2937" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>`;
+      }
+      modalFavBtn.setAttribute("aria-label", fav ? "Remover dos favoritos" : "Salvar nos favoritos");
+      modalFavBtn.title = fav ? "Remover dos favoritos" : "Salvar nos favoritos";
+    }
+
+    function setProduct(index){
+      currentIndex = index;
+      const p = produtos[index];
+
+      modalTitle.textContent = p.nome;
+      modalPrice.textContent = p.preco;
+      modalDesc.textContent = p.descricao;
+
+      modalImg.src = p.imagens[0];
+      modalImg.alt = p.nome;
+
+      if(p.imagens.length > 1){
+        thumbContainer.innerHTML = p.imagens.map((img, i)=>`
+          <button type="button"
+            class="w-12 h-12 rounded-full overflow-hidden border-2 border-white shadow-lg"
+            aria-label="Trocar imagem ${i+1}"
+            onclick="changeModalImage('${img}')">
+            <img src="${img}" alt="" loading="lazy" decoding="async" class="w-full h-full object-cover">
+          </button>
+        `).join("");
+      }else{
+        thumbContainer.innerHTML = "";
+      }
+
+      modalSizes.innerHTML = (p.tamanhos || []).map(s=>`
+        <span class="px-4 py-2 bg-rose-50 text-stone-700 rounded-full text-[11px] font-bold border border-pink-100">${s}</span>
+      `).join("");
+
+      // ✅ Whats inteligente
+      const link = buildWhatsLink(buildSmartWhatsMessage(p));
+      whatsappLink.href = link;
+      whatsappLinkMobile.href = link;
+      fabWhats.href = link;
+
+      // ✅ favoritos no modal
+      updateModalFavUI();
+    }
+
+    function openProduct(index){
+      setProduct(index);
+
+      modal.classList.remove("hidden");
+      modal.classList.add("flex");
+      modal.setAttribute("aria-hidden","false");
+      document.body.style.overflow = "hidden";
+
+      const isMobile = window.matchMedia("(max-width: 767px)").matches;
+      if(isMobile){
+        disableDesktopZoom();
+        if(!pinchInstance){
+          pinchInstance = new PinchZoom(zoomWrapper, {});
+        }
+      }else{
+        enableDesktopZoom();
+      }
+    }
+
+    function changeModalImage(src){
+      modalImg.classList.add("opacity-0");
+      setTimeout(()=>{
+        modalImg.src = src;
+        modalImg.classList.remove("opacity-0");
+      }, 140);
+    }
+    window.changeModalImage = changeModalImage;
+
+    function closeProduct(){
+      modal.classList.add("hidden");
+      modal.classList.remove("flex");
+      modal.setAttribute("aria-hidden","true");
+      document.body.style.overflow = "auto";
+      currentIndex = -1;
+    }
+    window.closeProduct = closeProduct;
+
+    function prevProduct(){
+      if(currentIndex < 0) return;
+      const nextIdx = (currentIndex - 1 + produtos.length) % produtos.length;
+      setProduct(nextIdx);
+    }
+    function nextProduct(){
+      if(currentIndex < 0) return;
+      const nextIdx = (currentIndex + 1) % produtos.length;
+      setProduct(nextIdx);
+    }
+    window.prevProduct = prevProduct;
+    window.nextProduct = nextProduct;
+
+    modal.addEventListener("click",(e)=>{ if(e.target === modal) closeProduct(); });
+
+    document.addEventListener("keydown",(e)=>{
+      if(modal.classList.contains("hidden")) return;
+      if(e.key === "Escape") closeProduct();
+      if(e.key === "ArrowLeft") prevProduct();
+      if(e.key === "ArrowRight") nextProduct();
+    });
+
+    // modal fav click
+    modalFavBtn.addEventListener("click", ()=>{
+      if(currentIndex < 0) return;
+      toggleFav(produtos[currentIndex].id);
+    });
+
+    // ==========================================
+    // 🔁 BUSCA + LIMPAR
+    // ==========================================
+    let searchTimer = null;
+    searchInput.addEventListener("input", ()=>{
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(carregarProdutos, 120);
+    });
+
+    function clearSearch(){
+      searchInput.value = "";
+      carregarProdutos();
+      searchInput.focus();
+    }
+    clearBtn.addEventListener("click", clearSearch);
+    emptyClear.addEventListener("click", clearSearch);
+
+    // ==========================================
+    // ✅ CHIPS (categoria/favs)
+    // ==========================================
+    function setActiveChip(cat){
+      selectedCat = cat;
+      chips.forEach(ch=>{
+        const c = ch.getAttribute("data-cat");
+        if(c === cat) ch.classList.add("is-active");
+        else ch.classList.remove("is-active");
+      });
+      carregarProdutos();
+    }
+
+    chips.forEach(ch=>{
+      ch.addEventListener("click", ()=>{
+        const cat = ch.getAttribute("data-cat");
+        setActiveChip(cat);
+      });
+    });
+
+    // ==========================================
+    // ✅ Mostrar/esconder painel filtros
+    // ==========================================
+    const FILTERS_KEY = "jm_filters_open_v1";
+    function setFiltersOpen(open){
+      if(open){
+        filtersPanel.classList.remove("hidden");
+        toggleFiltersLabel.textContent = "Fechar";
+        localStorage.setItem(FILTERS_KEY, "1");
+      }else{
+        filtersPanel.classList.add("hidden");
+        toggleFiltersLabel.textContent = "Filtros";
+        localStorage.setItem(FILTERS_KEY, "0");
+      }
+    }
+
+    toggleFiltersBtn.addEventListener("click", ()=>{
+      const willOpen = filtersPanel.classList.contains("hidden");
+      setFiltersOpen(willOpen);
+    });
+
+    // ==========================================
+    // ☰ MENU MOBILE
+    // ==========================================
+    const mobileMenuBtn = document.getElementById("mobileMenuBtn");
+    const mobileMenu = document.getElementById("mobileMenu");
+    const menuWhats = document.getElementById("menuWhats");
+
+    function closeMobileMenu(){
+      if(!mobileMenu || !mobileMenuBtn) return;
+      mobileMenu.classList.add("hidden");
+      mobileMenuBtn.setAttribute("aria-expanded","false");
+    }
+    function toggleMobileMenu(){
+      if(!mobileMenu || !mobileMenuBtn) return;
+      const willOpen = mobileMenu.classList.contains("hidden");
+      if(willOpen){
+        mobileMenu.classList.remove("hidden");
+        mobileMenuBtn.setAttribute("aria-expanded","true");
+      }else{
+        closeMobileMenu();
+      }
+    }
+
+    if(mobileMenuBtn && mobileMenu){
+      mobileMenuBtn.addEventListener("click",(e)=>{
+        e.stopPropagation();
+        toggleMobileMenu();
+      });
+
+      document.addEventListener("click",(e)=>{
+        if(!mobileMenu.contains(e.target) && e.target !== mobileMenuBtn){
+          closeMobileMenu();
+        }
+      });
+
+      document.addEventListener("keydown",(e)=>{
+        if(e.key === "Escape") closeMobileMenu();
+      });
+
+      window.addEventListener("scroll", closeMobileMenu, { passive:true });
+    }
+
+    if(menuWhats){
+      const msgMenu =
+        "Olá Jussara! 😊\n" +
+        "Vim pela vitrine e queria:\n" +
+        "• Valores\n• Formas de pagamento\n• Prazo de envio\n\n" +
+        "Pode me ajudar? 💕";
+      menuWhats.href = buildWhatsLink(msgMenu);
+    }
+
+    // ==========================================
+    // ⬇️ HEADER ENCOLHE AO ROLAR
+    // ==========================================
+    const siteHeader = document.getElementById("siteHeader");
+    function updateHeaderCompact(){
+      if(!siteHeader) return;
+      if(window.scrollY > 60) siteHeader.classList.add("header-compact");
+      else siteHeader.classList.remove("header-compact");
+    }
+    updateHeaderCompact();
+    window.addEventListener("scroll", updateHeaderCompact, { passive:true });
+
+    // ==========================================
+    // ✅ INIT
+    // ==========================================
+    // abre filtros por padrão na primeira visita
+    const savedOpen = localStorage.getItem(FILTERS_KEY);
+    setFiltersOpen(savedOpen === null ? true : savedOpen === "1");
+	
+	// ==========================================
+	// 🔗 Abrir produto via ?p=id
+	// ==========================================
+	const params = new URLSearchParams(window.location.search);
+	const paramProduct = params.get("p");
+
+	if(paramProduct){
+	  const index = produtos.findIndex(p => p.id === paramProduct);
+	  if(index >= 0){
+		setTimeout(()=> openProduct(index), 300);
+	  }
+	}
+	
+	
+// ==========================================
+// 🖼️ LIGHTBOX (foto em tela cheia)
+// ==========================================
+const imgLightbox = document.getElementById("imgLightbox");
+const closeLightboxBtn = document.getElementById("closeLightboxBtn");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxZoom = document.getElementById("lightboxZoom");
+
+let lightboxPinch = null;
+
+function openLightbox(src, altText=""){
+  if(!imgLightbox || !lightboxImg) return;
+
+  lightboxImg.src = src;
+  lightboxImg.alt = altText || "";
+
+  imgLightbox.classList.remove("hidden");
+  imgLightbox.classList.add("flex");
+  imgLightbox.setAttribute("aria-hidden","false");
+
+  // trava o scroll
+  document.body.style.overflow = "hidden";
+
+  // pinch zoom no celular
+  const isMobile = window.matchMedia("(max-width: 767px)").matches;
+  if(isMobile){
+    if(!lightboxPinch){
+      lightboxPinch = new PinchZoom(lightboxZoom, {});
+    }
+  }
+}
+
+	function closeLightbox(){
+	  if(!imgLightbox) return;
+	  imgLightbox.classList.add("hidden");
+	  imgLightbox.classList.remove("flex");
+	  imgLightbox.setAttribute("aria-hidden","true");
+
+	  // volta o scroll (mantém travado se o modal ainda estiver aberto)
+	  if(!modal.classList.contains("hidden")){
+		document.body.style.overflow = "hidden";
+	  }else{
+		document.body.style.overflow = "auto";
+	  }
+	}
+
+	// fecha pelo botão
+	if(closeLightboxBtn){
+	  closeLightboxBtn.addEventListener("click", closeLightbox);
+	}
+
+	// fecha clicando fora (ou na própria imagem)
+	if(imgLightbox){
+	  imgLightbox.addEventListener("click", (e)=>{
+		// fecha se clicar no fundo, na imagem ou na área do zoom
+		if(e.target === imgLightbox || e.target === lightboxImg || e.target === lightboxZoom){
+		  closeLightbox();
+		}
+	  });
+	}
+
+	// fecha no ESC
+	document.addEventListener("keydown",(e)=>{
+	  if(!imgLightbox || imgLightbox.classList.contains("hidden")) return;
+	  if(e.key === "Escape") closeLightbox();
+	});
+
+	// deixa disponível para chamar
+	window.openLightbox = openLightbox;
+	
+	// ==========================================
+	// 🔗 COMPARTILHAR PEÇA
+	// ==========================================
+	const shareProductBtn = document.getElementById("shareProductBtn");
+
+	function shareCurrentProduct(){
+	  if(currentIndex < 0) return;
+
+	  const p = produtos[currentIndex];
+	  const url = window.location.href.split("?")[0] + "?p=" + p.id;
+
+	  const text = `Olha essa peça da Jussara Modas 😍\n\n${p.nome}\n${url}`;
+
+	  if(navigator.share){
+		navigator.share({
+		  title: p.nome,
+		  text: text,
+		  url: url
+		});
+	  }else{
+		navigator.clipboard.writeText(url);
+		alert("Link copiado para compartilhar 💕");
+	  }
+	}
+
+	if(shareProductBtn){
+	  shareProductBtn.addEventListener("click", shareCurrentProduct);
+	}
+
+    carregarProdutos();
+  </script>
+  
+	<!-- GALERIA INSTAGRAM -->
+	<section class="max-w-7xl mx-auto px-4 sm:px-6 mt-20 mb-10">
+	  <div class="text-center mb-10">
+		<h2 class="text-3xl sm:text-4xl font-extrabold text-stone-900 mb-3">
+		  Inspire-se 💕
+		</h2>
+		<p class="text-stone-600 text-sm">
+		  Veja mais looks e novidades no nosso Instagram
+		</p>
+	  </div>
+
+	  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+
+		<a href="https://www.instagram.com/jussa_ramodas/" target="_blank"
+		   class="group relative overflow-hidden rounded-3xl border border-pink-100 bg-white shadow-sm">
+		  <img src="imagens/1_1.jpg"
+			   class="w-full h-56 object-cover transition duration-500 group-hover:scale-105">
+		  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+			<span class="text-white font-bold text-xs uppercase tracking-widest">
+			  Ver no Instagram
+			</span>
+		  </div>
+		</a>
+
+		<a href="https://www.instagram.com/jussa_ramodas/" target="_blank"
+		   class="group relative overflow-hidden rounded-3xl border border-pink-100 bg-white shadow-sm">
+		  <img src="imagens/2_1.jpg"
+			   class="w-full h-56 object-cover transition duration-500 group-hover:scale-105">
+		  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+			<span class="text-white font-bold text-xs uppercase tracking-widest">
+			  Ver no Instagram
+			</span>
+		  </div>
+		</a>
+
+		<a href="https://www.instagram.com/jussa_ramodas/" target="_blank"
+		   class="group relative overflow-hidden rounded-3xl border border-pink-100 bg-white shadow-sm">
+		  <img src="imagens/3_1.jpg"
+			   class="w-full h-56 object-cover transition duration-500 group-hover:scale-105">
+		  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+			<span class="text-white font-bold text-xs uppercase tracking-widest">
+			  Ver no Instagram
+			</span>
+		  </div>
+		</a>
+
+		<a href="https://www.instagram.com/jussa_ramodas/" target="_blank"
+		   class="group relative overflow-hidden rounded-3xl border border-pink-100 bg-white shadow-sm">
+		  <img src="imagens/4_1.jpg"
+			   class="w-full h-56 object-cover transition duration-500 group-hover:scale-105">
+		  <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+			<span class="text-white font-bold text-xs uppercase tracking-widest">
+			  Ver no Instagram
+			</span>
+		  </div>
+		</a>
+
+	  </div>
+
+	  <div class="text-center mt-10">
+		<a href="https://www.instagram.com/jussa_ramodas/" target="_blank"
+		   class="btn-luxury text-white px-8 py-4 rounded-2xl font-extrabold uppercase tracking-widest text-[11px]">
+		  Seguir no Instagram
+		</a>
+	  </div>
+	</section>
+
+  <footer class="bg-white/70 mt-24 py-16 px-6 border-t border-pink-100 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto text-center">
+      <h1 class="text-5xl text-pink-900 logo mb-6 uppercase tracking-wider">Jussara Modas</h1>
+      <p class="max-w-md mx-auto text-stone-600 text-base italic leading-relaxed mb-10">
+        "Beleza que reflete a luz interior e a elegância de uma mulher virtuosa."
+      </p>
+
+      <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-10 mb-10">
+        <a href="https://www.instagram.com/jussa_ramodas/" target="_blank" rel="noopener"
+           class="text-pink-700 hover:text-pink-900 font-bold text-xs uppercase tracking-[0.2em] border-b border-pink-200 pb-1">
+          Instagram
+        </a>
+        <a href="https://wa.me/5516997081430" target="_blank" rel="noopener"
+           class="text-pink-700 hover:text-pink-900 font-bold text-xs uppercase tracking-[0.2em] border-b border-pink-200 pb-1">
+          WhatsApp
+        </a>
+        <a href="https://chat.whatsapp.com/LmTzGuYone2E3e6hqDFvlR" target="_blank" rel="noopener"
+           class="text-pink-700 hover:text-pink-900 font-bold text-xs uppercase tracking-[0.2em] border-b border-pink-200 pb-1">
+          Grupo de Novidades
+        </a>
+      </div>
+
+      <p class="text-[10px] text-stone-400 uppercase tracking-[0.4em]">&copy; 2026 Jussara Modas — Beleza com Propósito</p>
+    </div>
+  </footer>
+
+</body>
+</html>

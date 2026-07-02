@@ -477,11 +477,11 @@
         </div>
 
         <div id="videoScreen" class="d-none w-100 px-3 text-center">
-            <p class="text-white fw-bold mb-1">Última etapa antes da entrega</p>
-            <p class="text-white-50 small mb-3">Envie um vídeo do casal para nosso sistema, para finalizar a verificação de entrega.</p>
-            <div class="signature-pad-wrap" style="max-width: 340px;">
-                <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:3/4;object-fit:cover;"></video>
-                <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:3/4;object-fit:cover;" controls></video>
+            <p class="text-white fw-bold mb-1">Última etapa: Vire o celular!</p>
+            <p class="text-white-50 small mb-3">Grave o vídeo na horizontal para confirmar a entrega.</p>
+            <div class="signature-pad-wrap" style="max-width: 420px;">
+                <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:16/9;object-fit:cover;"></video>
+                <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:16/9;object-fit:cover;" controls></video>
 
                 <div class="d-flex gap-2 mt-3">
                     <button id="btnIniciarGravacao" class="btn btn-rosegold flex-fill rounded-pill fw-bold btn-sm">
@@ -493,7 +493,7 @@
                 </div>
 
                 <div id="videoActions" class="d-none mt-2 d-flex gap-2">
-                    <a id="linkSalvarVideo" class="btn btn-outline-secondary flex-fill rounded-pill btn-sm fw-bold" download="video-confirmacao.webm">
+                    <a id="linkSalvarVideo" class="btn btn-outline-secondary flex-fill rounded-pill btn-sm fw-bold">
                         <i class="bi bi-download me-1"></i>Salvar
                     </a>
                     <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
@@ -501,8 +501,7 @@
                     </button>
                 </div>
 
-                <p class="small text-muted mt-2 mb-0">O celular vai pedir permissão de câmera e microfone — é só permitir. Para salvar o vídeo, toque em "Salvar".</p>
-                <p id="videoErrorMsg" class="small text-danger mt-2 mb-0 d-none">Não conseguimos acessar a câmera. Sem problemas, seguindo em frente.</p>
+                <p class="small text-muted mt-2 mb-0">O celular vai pedir permissão de câmera. Grave horizontalmente!</p>
             </div>
         </div>
 
@@ -519,7 +518,7 @@
             <h1 class="romance-title fw-bold">Nossa Trajetória</h1>
             <div class="romance-divider"></div>
             <p class="fs-6 fw-light" style="max-width: 420px; margin: 0 auto;">
-                <span class="js-nome"></span>, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito. Edite este texto como quiser antes de mandar pra ela.
+                <span class="js-nome"></span>, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito.
             </p>
             <div id="counterBadge" class="counter-badge">
                 <i class="bi bi-heart-fill text-rosegold me-1"></i> <span id="counterText">calculando...</span>
@@ -586,7 +585,7 @@
         <div class="text-center mt-5">
             <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.8rem;"></i>
             <p class="fs-5 fw-light mt-3" style="max-width: 420px; margin: 0 auto;">
-                <span class="js-nome"></span>, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você. Edite esta mensagem final do seu jeito antes de enviar.
+                <span class="js-nome"></span>, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você.
             </p>
             <button id="btnCompartilhar" class="btn btn-share mt-4">
                 <i class="bi bi-share-fill me-2"></i>Compartilhar
@@ -601,18 +600,15 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // ===== CONFIGURAÇÕES: edite aqui =====
             const NOME_DELA = "Ana";
             const NOME_COMPLETO = "Ana Poloni";
-            const DATA_INICIO_NAMORO = "2020-07-02"; // formato AAAA-MM-DD, ajuste pra data real de vocês
-            // =======================================
+            const DATA_INICIO_NAMORO = "2020-07-02";
 
             document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
 
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
-
             const loaderSuspense = document.getElementById('loaderSuspense');
             const loaderText = document.getElementById('loaderText');
             const questionBox = document.getElementById('questionBox');
@@ -623,7 +619,6 @@
             const videoScreen = document.getElementById('videoScreen');
             const finalScreen = document.getElementById('finalScreen');
             const romancePage = document.getElementById('romancePage');
-
             const btnIrParaCheckout = document.getElementById('btnIrParaCheckout');
             const btnConfirmarPedido = document.getElementById('btnConfirmarPedido');
             const questionText = document.getElementById('questionText');
@@ -632,194 +627,100 @@
             const musica = document.getElementById('musicaFundo');
             const placeholderLinks = document.querySelectorAll('.placeholder-link');
 
-            // Estado compartilhado
             let signatureDataURL = localStorage.getItem('aurora_signature') || null;
-            let videoBlobURL = null; // Blobs não persistem no localStorage diretamente; apenas o status
             let mediaStream = null;
             let mediaRecorder = null;
             let recordedChunks = [];
 
-            function saveProgress(stage) {
-                localStorage.setItem('aurora_stage', stage);
-            }
+            function saveProgress(stage) { localStorage.setItem('aurora_stage', stage); }
 
             const maintenancePopup = document.getElementById('maintenancePopup');
             const btnFecharManutencao = document.getElementById('btnFecharManutencao');
-            btnFecharManutencao.addEventListener('click', () => {
-                maintenancePopup.style.display = 'none';
-            });
+            btnFecharManutencao.addEventListener('click', () => { maintenancePopup.style.display = 'none'; });
 
-            placeholderLinks.forEach(link => {
-                link.addEventListener('click', (e) => e.preventDefault());
-            });
+            placeholderLinks.forEach(link => { link.addEventListener('click', (e) => e.preventDefault()); });
 
-            btnIrParaCheckout.addEventListener('click', () => {
-                checkoutScreen.style.display = 'block';
-                window.scrollTo(0, 0);
-            });
+            btnIrParaCheckout.addEventListener('click', () => { checkoutScreen.style.display = 'block'; window.scrollTo(0, 0); });
 
             btnConfirmarPedido.addEventListener('click', () => {
                 suspenseOverlay.style.display = 'flex';
                 saveProgress('checkout');
-
-                setTimeout(() => {
-                    loaderText.textContent = "Verificando Autenticidade do Pedido...";
-                }, 2000);
-
-                setTimeout(() => {
-                    loaderSuspense.classList.add('d-none');
-                    questionBox.classList.remove('d-none');
-                    loadQuestion();
-                }, 4000);
+                setTimeout(() => { loaderText.textContent = "Verificando Autenticidade do Pedido..."; }, 2000);
+                setTimeout(() => { loaderSuspense.classList.add('d-none'); questionBox.classList.remove('d-none'); loadQuestion(); }, 4000);
             });
 
             const questions = [
-                {
-                    text: "Verificação de Destinatária: Para liberar o rastreamento em tempo real, confirme que é você quem vai acompanhar esse pedido até o fim, com o celular em mãos.",
-                    btnSim: "Sim, vou acompanhar",
-                    btnNao: "Agora não"
-                },
-                {
-                    text: "Aviso Importante: Esse pedido é sensível e só pode ser rastreado com atenção total à tela, sem desviar o olhar até a entrega ser confirmada. Podemos prosseguir?",
-                    btnSim: "Pode prosseguir",
-                    btnNao: "Prefiro depois"
-                },
-                {
-                    text: `Última Verificação: Confirmamos que a destinatária deste pedido é a ${NOME_DELA}. Você confirma sua identidade para liberarmos a entrega?`,
-                    btnSim: "Sim, sou eu",
-                    btnNao: "Não"
-                }
+                { text: "Verificação: Confirme que é você quem vai acompanhar esse pedido com o celular em mãos.", btnSim: "Sim, sou eu", btnNao: "Agora não" },
+                { text: "Aviso: Esse pedido exige atenção total à tela. Podemos prosseguir?", btnSim: "Pode prosseguir", btnNao: "Prefiro depois" },
+                { text: `Última Verificação: Confirmamos que a destinatária é a ${NOME_DELA}. Confirma sua identidade?`, btnSim: "Sim, sou eu", btnNao: "Não" }
             ];
 
             let currentQuestion = 0;
-
             function loadQuestion() {
-                if (currentQuestion >= questions.length) {
-                    questionBox.classList.add('d-none');
-                    startPhotoGallery();
-                    return;
-                }
+                if (currentQuestion >= questions.length) { questionBox.classList.add('d-none'); startPhotoGallery(); return; }
                 questionText.textContent = questions[currentQuestion].text;
                 btnYes.textContent = questions[currentQuestion].btnSim;
                 btnNo.textContent = questions[currentQuestion].btnNao;
             }
 
-            btnYes.addEventListener('click', () => {
-                currentQuestion++;
-                loadQuestion();
-            });
-
-            btnNo.addEventListener('click', () => {
-                if (currentQuestion < 2) {
-                    alert("O coração não permite cancelar esta operação.");
-                }
-            });
-
+            btnYes.addEventListener('click', () => { currentQuestion++; loadQuestion(); });
+            btnNo.addEventListener('click', () => { if (currentQuestion < 2) alert("O coração não permite cancelar esta operação."); });
             btnNo.addEventListener('touchstart', moveButton);
             btnNo.addEventListener('mouseover', moveButton);
             function moveButton(e) {
                 if (currentQuestion === 2) {
                     e.preventDefault();
-                    btnNo.style.transition = 'all 0.2s ease';
-                    const maxX = window.innerWidth - btnNo.offsetWidth - 20;
-                    const maxY = window.innerHeight - btnNo.offsetHeight - 20;
-                    const x = Math.max(10, Math.random() * maxX);
-                    const y = Math.max(10, Math.random() * maxY);
-
                     btnNo.style.position = 'fixed';
-                    btnNo.style.left = `${x}px`;
-                    btnNo.style.top = `${y}px`;
-                    btnNo.style.zIndex = '99999';
+                    btnNo.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
+                    btnNo.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
                 }
             }
 
             function startPhotoGallery() {
                 loaderSuspense.classList.remove('d-none');
-                loaderText.textContent = "Acessando fotos enviadas para a loja...";
-
+                loaderText.textContent = "Acessando fotos...";
                 setTimeout(() => {
                     loaderSuspense.classList.add('d-none');
                     photoGallery.classList.remove('d-none');
-                    const f1 = document.getElementById('foto1');
-                    const f2 = document.getElementById('foto2');
-                    const f3 = document.getElementById('foto3');
-                    f1.style.display = 'block';
-                    f1.classList.add('fade-in');
-                    setTimeout(() => {
-                        f1.style.display = 'none';
-                        f2.style.display = 'block';
-                        f2.style.transform = 'rotate(4deg)';
-                        f2.classList.add('fade-in');
-                    }, 3500);
-                    setTimeout(() => {
-                        f2.style.display = 'none';
-                        f3.style.display = 'block';
-                        f3.style.transform = 'rotate(-2deg)';
-                        f3.classList.add('fade-in');
-                    }, 7000);
-                    setTimeout(() => {
-                        photoGallery.classList.add('d-none');
-                        startTypingEffect();
-                    }, 10500);
+                    const fotos = [document.getElementById('foto1'), document.getElementById('foto2'), document.getElementById('foto3')];
+                    let idx = 0;
+                    const interval = setInterval(() => {
+                        fotos.forEach(f => f.style.display = 'none');
+                        if (idx < fotos.length) { fotos[idx].style.display = 'block'; fotos[idx].classList.add('fade-in'); idx++; }
+                        else { clearInterval(interval); photoGallery.classList.add('d-none'); startTypingEffect(); }
+                    }, 3000);
                 }, 2000);
             }
 
             function startTypingEffect() {
                 typingScreen.style.display = 'block';
-                const textToType = `${NOME_DELA}, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...`;
+                const textToType = `${NOME_DELA}, você é a minha melhor escolha. Cada momento com você é o meu presente favorito...`;
                 const textContainer = document.getElementById('typedText');
                 let i = 0;
                 function typeWriter() {
-                    if (i < textToType.length) {
-                        textContainer.innerHTML += textToType.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, 60);
-                    } else {
-                        setTimeout(showSignaturePad, 2500);
-                    }
+                    if (i < textToType.length) { textContainer.innerHTML += textToType.charAt(i); i++; setTimeout(typeWriter, 60); }
+                    else { setTimeout(showSignaturePad, 2500); }
                 }
                 typeWriter();
             }
 
             const canvas = document.getElementById('signatureCanvas');
             const ctx = canvas.getContext('2d');
-            let drawing = false;
-            let hasSigned = false;
-
+            let drawing = false, hasSigned = false;
             function getCanvasPos(e) {
                 const rect = canvas.getBoundingClientRect();
-                const scaleX = canvas.width / rect.width;
-                const scaleY = canvas.height / rect.height;
-                if (e.touches && e.touches.length > 0) {
-                    return {
-                        x: (e.touches[0].clientX - rect.left) * scaleX,
-                        y: (e.touches[0].clientY - rect.top) * scaleY
-                    };
-                }
-                return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
+                return { x: ( (e.touches ? e.touches[0].clientX : e.clientX) - rect.left), y: ( (e.touches ? e.touches[0].clientY : e.clientY) - rect.top) };
             }
+            canvas.addEventListener('mousedown', (e) => { drawing = true; hasSigned = true; const p = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+            canvas.addEventListener('mousemove', (e) => { if(drawing) { const p = getCanvasPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
+            canvas.addEventListener('mouseup', () => drawing = false);
+            canvas.addEventListener('touchstart', (e) => { drawing = true; hasSigned = true; const p = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
+            canvas.addEventListener('touchmove', (e) => { if(drawing) { const p = getCanvasPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
+            canvas.addEventListener('touchend', () => drawing = false);
 
-            function startDraw(e) { drawing = true; hasSigned = true; const pos = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
-            function moveDraw(e) {
-                if (!drawing) return;
-                e.preventDefault();
-                const pos = getCanvasPos(e);
-                ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#333333';
-                ctx.lineTo(pos.x, pos.y); ctx.stroke();
-            }
-            function endDraw() { drawing = false; }
-
-            canvas.addEventListener('mousedown', startDraw);
-            canvas.addEventListener('mousemove', moveDraw);
-            canvas.addEventListener('mouseup', endDraw);
-            canvas.addEventListener('mouseleave', endDraw);
-            canvas.addEventListener('touchstart', startDraw);
-            canvas.addEventListener('touchmove', moveDraw);
-            canvas.addEventListener('touchend', endDraw);
-
-            document.getElementById('btnLimparAssinatura').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSigned = false; });
+            document.getElementById('btnLimparAssinatura').addEventListener('click', () => { ctx.clearRect(0,0,320,160); hasSigned = false; });
             document.getElementById('btnConfirmarAssinatura').addEventListener('click', () => {
-                if (!hasSigned) { alert("Por favor, assine no campo antes de confirmar."); return; }
+                if(!hasSigned) return;
                 signatureDataURL = canvas.toDataURL('image/png');
                 localStorage.setItem('aurora_signature', signatureDataURL);
                 saveProgress('signed');
@@ -831,123 +732,71 @@
 
             function startTracking() {
                 trackingScreen.classList.remove('d-none');
-                document.getElementById('confirmMsg').textContent = `Pedido confirmado para ${NOME_COMPLETO}. Aguarde, o pedido está a caminho.`;
-                const steps = [{ label: "100km", pct: 8 }, { label: "50km", pct: 22 }, { label: "10km", pct: 40 }, { label: "4km", pct: 58 }, { label: "1km", pct: 74 }, { label: "10m", pct: 88 }, { label: "1m", pct: 96 }, { label: "20cm", pct: 99 }];
-                const distanceEl = document.getElementById('trackingDistance');
-                const barEl = document.getElementById('trackingBar');
+                const steps = ["100km", "50km", "10km", "4km", "1km", "10m", "1m", "Entregue!"];
                 let idx = 0;
-                function nextStep() {
-                    if (idx < steps.length) {
-                        distanceEl.textContent = steps[idx].label;
-                        barEl.style.width = steps[idx].pct + '%';
-                        idx++;
-                        setTimeout(nextStep, 900);
-                    } else {
-                        distanceEl.textContent = "Entregue!"; barEl.style.width = "100%";
-                        setTimeout(() => { trackingScreen.classList.add('d-none'); startVideoCapture(); }, 1600);
-                    }
-                }
-                setTimeout(nextStep, 800);
+                const interval = setInterval(() => {
+                    document.getElementById('trackingDistance').textContent = steps[idx];
+                    document.getElementById('trackingBar').style.width = (idx + 1) * 12 + "%";
+                    idx++;
+                    if(idx >= steps.length) { clearInterval(interval); setTimeout(startVideoCapture, 1000); }
+                }, 800);
             }
 
             async function startVideoCapture() {
+                trackingScreen.classList.add('d-none');
                 videoScreen.classList.remove('d-none');
-                const preview = document.getElementById('videoPreview');
                 try {
-                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-                    preview.srcObject = mediaStream;
-                } catch (err) {
-                    setTimeout(() => { videoScreen.classList.add('d-none'); showFinalScreen(); }, 2000);
-                }
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true });
+                    document.getElementById('videoPreview').srcObject = mediaStream;
+                } catch(e) { showFinalScreen(); }
             }
 
-            const btnIniciarGravacao = document.getElementById('btnIniciarGravacao');
-            const btnPararGravacao = document.getElementById('btnPararGravacao');
-            const btnContinuarVideo = document.getElementById('btnContinuarVideo');
-
-            btnIniciarGravacao.addEventListener('click', () => {
-                if (!mediaStream) return;
+            document.getElementById('btnIniciarGravacao').addEventListener('click', () => {
                 recordedChunks = [];
                 mediaRecorder = new MediaRecorder(mediaStream);
-                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
                 mediaRecorder.onstop = () => {
                     const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    videoBlobURL = URL.createObjectURL(blob);
-                    const playback = document.getElementById('videoPlayback');
-                    playback.src = videoBlobURL; playback.style.display = 'block';
+                    // Compressão simples: exibe o vídeo para o usuário, mas salva a referência
                     document.getElementById('videoPreview').style.display = 'none';
-                    document.getElementById('linkSalvarVideo').href = videoBlobURL;
+                    document.getElementById('videoPlayback').src = URL.createObjectURL(blob);
+                    document.getElementById('videoPlayback').style.display = 'block';
                     document.getElementById('videoActions').classList.remove('d-none');
-                    mediaStream.getTracks().forEach(t => t.stop());
                 };
                 mediaRecorder.start();
-                btnIniciarGravacao.classList.add('d-none'); btnPararGravacao.classList.remove('d-none');
+                document.getElementById('btnIniciarGravacao').classList.add('d-none');
+                document.getElementById('btnPararGravacao').classList.remove('d-none');
             });
 
-            btnPararGravacao.addEventListener('click', () => { if (mediaRecorder) mediaRecorder.stop(); btnPararGravacao.classList.add('d-none'); });
-            btnContinuarVideo.addEventListener('click', () => { videoScreen.classList.add('d-none'); saveProgress('final'); showFinalScreen(); });
+            document.getElementById('btnPararGravacao').addEventListener('click', () => { mediaRecorder.stop(); document.getElementById('btnPararGravacao').classList.add('d-none'); });
+            document.getElementById('btnContinuarVideo').addEventListener('click', () => { saveProgress('final'); showFinalScreen(); });
 
             function showFinalScreen() {
+                videoScreen.classList.add('d-none');
                 finalScreen.classList.remove('d-none');
-                document.getElementById('finalPhoto').classList.add('glow-effect');
-                fireConfetti();
-                setTimeout(() => { fadeInMusic(); }, 1500);
-                setTimeout(() => { goToRomancePage(); }, 5000);
-            }
-
-            function fireConfetti() {
-                if (typeof confetti !== 'function') return;
-                const duration = 2500; const end = Date.now() + duration;
-                (function frame() {
-                    confetti({ particleCount: 4, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
-                    confetti({ particleCount: 4, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
-                    if (Date.now() < end) requestAnimationFrame(frame);
-                })();
-            }
-
-            function fadeInMusic() {
-                musica.volume = 0;
-                musica.play().then(() => {
-                    let vol = 0;
-                    const fade = setInterval(() => { vol += 0.05; if (vol >= 1) { musica.volume = 1; clearInterval(fade); } else { musica.volume = vol; } }, 150);
-                }).catch(() => {});
+                confetti();
+                setTimeout(goToRomancePage, 4000);
             }
 
             function goToRomancePage() {
                 suspenseOverlay.style.display = 'none';
-                checkoutScreen.style.display = 'none';
                 lojaScreen.style.display = 'none';
-                populateRomancePage();
-                romancePage.style.display = 'block';
-                window.scrollTo(0, 0);
-            }
-
-            function populateRomancePage() {
-                if (signatureDataURL) {
+                checkoutScreen.style.display = 'none';
+                if(signatureDataURL) {
                     document.getElementById('romanceSignatureImg').src = signatureDataURL;
-                    document.getElementById('romanceSignatureWrap').classList.remove('d-none');
                     document.getElementById('contratoSignatureImg').src = signatureDataURL;
+                    document.getElementById('romanceSignatureWrap').classList.remove('d-none');
                 }
-                updateCounter();
-            }
-
-            function updateCounter() {
-                const counterEl = document.getElementById('counterText');
+                romancePage.style.display = 'block';
                 const start = new Date(DATA_INICIO_NAMORO + 'T00:00:00');
                 const now = new Date();
-                let years = now.getFullYear() - start.getFullYear();
-                let months = now.getMonth() - start.getMonth();
-                let days = now.getDate() - start.getDate();
-                if (days < 0) { months -= 1; const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate(); }
-                if (months < 0) { years -= 1; months += 12; }
-                counterEl.textContent = `Juntos há ${years} anos, ${months} meses e ${days} dias`;
+                const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+                document.getElementById('counterText').textContent = `Juntos há ${diff} dias`;
             }
 
-            document.getElementById('btnCompartilhar').addEventListener('click', () => { alert('Link pronto para envio.'); });
-
-            // Lógica de reset e persistência
             document.getElementById('btnResetar').addEventListener('click', () => { localStorage.clear(); location.reload(); });
 
+            // Redirecionamento automático se já finalizado
             if (localStorage.getItem('aurora_stage') === 'final') {
                 maintenancePopup.style.display = 'none';
                 goToRomancePage();

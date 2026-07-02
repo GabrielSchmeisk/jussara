@@ -118,6 +118,15 @@
             border-radius: 999px; padding: 10px 22px; font-weight: bold;
         }
         .btn-share:hover { background: var(--rosegold); color: white; }
+
+        .rotate-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
+        .rotate-hint .phone-icon { font-size: 3.2rem; display: inline-block; animation: rotatePhone 1.8s ease-in-out infinite; }
+        @keyframes rotatePhone {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(90deg); }
+        }
+        .rec-dot { width: 10px; height: 10px; background: #ff3b3b; border-radius: 50%; display: inline-block; margin-right: 6px; animation: recBlink 1s step-start infinite; }
+        @keyframes recBlink { 50% { opacity: 0; } }
     </style>
 </head>
 <body>
@@ -205,8 +214,8 @@
                 <div class="bg-white p-3 rounded shadow-sm border mb-3">
                     <h6 class="fw-bold text-dark"><i class="bi bi-gender-male text-primary me-2"></i>Aliança Masculina - Esgrifa Branca+</h6>
                     <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
-                    <select class="form-select border-rosegold mb-2">
-                        <option selected>Selecione o aro</option>
+                    <select id="tamanhoMasc" class="form-select border-rosegold mb-2">
+                        <option value="" selected>Selecione o aro</option>
                         <option value="18">18</option>
                         <option value="19">19</option>
                         <option value="20">20</option>
@@ -214,14 +223,14 @@
                         <option value="22">22</option>
                     </select>
                     <label class="form-label small text-muted">Gravação (Ex: Nome e Data)</label>
-                    <input type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
+                    <input id="gravacaoMasc" type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
                 </div>
 
                 <div class="bg-white p-3 rounded shadow-sm border mb-3">
                     <h6 class="fw-bold text-dark"><i class="bi bi-gender-female text-danger me-2"></i>Aliança Feminina - Esgrifa Branca+</h6>
                     <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
-                    <select class="form-select border-rosegold mb-2">
-                        <option selected>Selecione o aro</option>
+                    <select id="tamanhoFem" class="form-select border-rosegold mb-2">
+                        <option value="" selected>Selecione o aro</option>
                         <option value="10">10</option>
                         <option value="11">11</option>
                         <option value="12">12</option>
@@ -229,20 +238,23 @@
                         <option value="14">14</option>
                     </select>
                     <label class="form-label small text-muted">Gravação (Ex: Nome e Data)</label>
-                    <input type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
+                    <input id="gravacaoFem" type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
                 </div>
 
                 <div class="bg-white p-3 rounded shadow-sm border mb-3">
                     <h6 class="fw-bold text-dark"><i class="bi bi-gem text-info me-2"></i>Anel Solitário Libélula (Flor Rosa) - Brinde</h6>
                     <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
-                    <select class="form-select border-rosegold">
-                        <option selected>Selecione o aro</option>
+                    <select id="tamanhoSolitario" class="form-select border-rosegold">
+                        <option value="" selected>Selecione o aro</option>
                         <option value="10">10</option>
                         <option value="11">11</option>
                         <option value="12">12</option>
                         <option value="13">13</option>
                         <option value="14">14</option>
                     </select>
+                </div>
+                <div id="selecaoErro" class="text-danger small fw-bold mt-2 d-none">
+                    <i class="bi bi-exclamation-circle me-1"></i>Selecione todos os tamanhos antes de continuar.
                 </div>
             </div>
 
@@ -478,22 +490,26 @@
         </div>
 
         <div id="videoScreen" class="d-none w-100 px-3 text-center">
-            <div id="orientacaoMsg" class="text-white">
-                <i class="bi bi-phone-landscape fs-1"></i>
-                <p class="mt-2">Por favor, vire o seu celular para a horizontal para continuar.</p>
+            <div id="orientacaoMsg" class="text-white rotate-hint">
+                <i class="bi bi-phone-landscape phone-icon"></i>
+                <p class="mt-2 mb-0 fw-bold">Vire o celular para a posição vertical para continuar.</p>
+            </div>
+            <div id="permissaoNegadaMsg" class="text-white d-none">
+                <i class="bi bi-camera-video-off fs-1 text-danger"></i>
+                <p class="mt-2 mb-0">Precisamos de acesso à câmera e ao microfone para continuar. Verifique as permissões do navegador e recarregue a página.</p>
             </div>
             <div id="conteudoGravacao" class="d-none">
                 <p class="text-white fw-bold mb-1">Grave para confirmar a entrega.</p>
                 <div class="signature-pad-wrap" style="max-width: 420px;">
-                    <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:16/9;object-fit:cover;"></video>
-                    <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:16/9;object-fit:cover;" controls></video>
+                    <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:9/16;object-fit:cover;"></video>
+                    <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:9/16;object-fit:cover;" controls></video>
 
                     <div class="d-flex gap-2 mt-3">
                         <button id="btnIniciarGravacao" class="btn btn-rosegold flex-fill rounded-pill fw-bold btn-sm">
                             <i class="bi bi-record-circle me-1"></i>Gravar
                         </button>
                         <button id="btnPararGravacao" class="btn btn-danger flex-fill rounded-pill fw-bold btn-sm d-none">
-                            Parar
+                            <span class="rec-dot"></span>Parar
                         </button>
                     </div>
 
@@ -598,19 +614,62 @@
         </div>
     </div>
 
-    <audio id="musicaFundo" src="musica.mp3" preload="auto"></audio>
+    <audio id="musicaFundo" src="musica.mp3" preload="auto" loop></audio>
 
     <script>
         const db = new Dexie("AuroraDB");
         db.version(1).stores({ arquivos: 'id' });
 
+        let mediaStream = null;
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let gravacaoBlob = null;
+        let permissoesLiberadas = false;
+
+        function ehVertical() {
+            const angle = (screen.orientation && typeof screen.orientation.angle === 'number')
+                ? screen.orientation.angle
+                : window.orientation || 0;
+            if (angle === 90 || angle === -90 || angle === 270) return false;
+            return window.innerHeight >= window.innerWidth;
+        }
+
+        async function solicitarPermissoes() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({
+                    video: { facingMode: "user", width: { ideal: 720 }, height: { ideal: 1280 } },
+                    audio: true
+                });
+                permissoesLiberadas = true;
+                const preview = document.getElementById('videoPreview');
+                if (preview) preview.srcObject = mediaStream;
+            } catch (err) {
+                permissoesLiberadas = false;
+                console.error('Permissão de câmera/microfone negada:', err);
+            }
+        }
+
         function verificarOrientacao() {
             const orientacaoMsg = document.getElementById('orientacaoMsg');
             const conteudoGravacao = document.getElementById('conteudoGravacao');
-            
-            if (window.innerHeight < window.innerWidth) {
+            const permissaoNegadaMsg = document.getElementById('permissaoNegadaMsg');
+            const videoScreen = document.getElementById('videoScreen');
+
+            if (videoScreen.classList.contains('d-none')) return;
+
+            if (!permissoesLiberadas) {
+                orientacaoMsg.classList.add('d-none');
+                conteudoGravacao.classList.add('d-none');
+                permissaoNegadaMsg.classList.remove('d-none');
+                return;
+            }
+            permissaoNegadaMsg.classList.add('d-none');
+
+            if (ehVertical()) {
                 orientacaoMsg.classList.add('d-none');
                 conteudoGravacao.classList.remove('d-none');
+                const preview = document.getElementById('videoPreview');
+                if (mediaStream && !preview.srcObject) preview.srcObject = mediaStream;
             } else {
                 orientacaoMsg.classList.remove('d-none');
                 conteudoGravacao.classList.add('d-none');
@@ -619,10 +678,68 @@
 
         window.addEventListener("orientationchange", verificarOrientacao);
         window.addEventListener("resize", verificarOrientacao);
+        if (screen.orientation) {
+            screen.orientation.addEventListener('change', verificarOrientacao);
+        }
+
+        function getSupportedMimeType() {
+            const tipos = [
+                'video/webm;codecs=vp9,opus',
+                'video/webm;codecs=vp8,opus',
+                'video/webm',
+                'video/mp4'
+            ];
+            for (const t of tipos) {
+                if (window.MediaRecorder && MediaRecorder.isTypeSupported && MediaRecorder.isTypeSupported(t)) return t;
+            }
+            return '';
+        }
+
+        function baixarVideoAutomaticamente(blob, mimeType) {
+            try {
+                const extensao = mimeType.includes('mp4') ? 'mp4' : 'webm';
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `aurora_momento_${Date.now()}.${extensao}`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            } catch (err) {
+                console.error('Falha ao baixar o vídeo automaticamente:', err);
+            }
+        }
+
+        async function salvarVideoComSeguranca(blob) {
+            try {
+                await db.arquivos.put({ id: 'video_casal', data: blob });
+                return true;
+            } catch (err) {
+                console.error('Falha ao salvar no IndexedDB, tentando novamente:', err);
+                try {
+                    await db.arquivos.put({ id: 'video_casal_backup', data: blob });
+                    return true;
+                } catch (err2) {
+                    console.error('Falha crítica ao salvar o vídeo:', err2);
+                    return false;
+                }
+            }
+        }
+
+        function tentarTocarMusica() {
+            const audio = document.getElementById('musicaFundo');
+            const promessa = audio.play();
+            if (promessa !== undefined) {
+                promessa.catch(() => {
+                    const liberar = () => { audio.play().catch(() => {}); };
+                    document.body.addEventListener('click', liberar, { once: true });
+                    document.body.addEventListener('touchstart', liberar, { once: true });
+                });
+            }
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const NOME_DELA = "Ana";
-            const DATA_INICIO_NAMORO = "2020-07-02";
             document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
 
             const lojaScreen = document.getElementById('lojaScreen');
@@ -630,6 +747,8 @@
             const suspenseOverlay = document.getElementById('suspenseOverlay');
             const videoScreen = document.getElementById('videoScreen');
             const romancePage = document.getElementById('romancePage');
+
+            solicitarPermissoes();
 
             if (localStorage.getItem('aurora_stage') === 'final') {
                 document.getElementById('maintenancePopup').style.display = 'none';
@@ -640,53 +759,89 @@
             setTimeout(() => { btnLimparStorage.style.display = 'inline-block'; }, 2000);
             btnLimparStorage.addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
 
-            document.getElementById('btnIrParaCheckout').addEventListener('click', () => { checkoutScreen.style.display = 'block'; });
+            document.getElementById('btnIrParaCheckout').addEventListener('click', () => {
+                const tamMasc = document.getElementById('tamanhoMasc').value;
+                const tamFem = document.getElementById('tamanhoFem').value;
+                const tamSolitario = document.getElementById('tamanhoSolitario').value;
+                const erroBox = document.getElementById('selecaoErro');
+
+                if (!tamMasc || !tamFem || !tamSolitario) {
+                    erroBox.classList.remove('d-none');
+                    erroBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                erroBox.classList.add('d-none');
+                checkoutScreen.style.display = 'block';
+                window.scrollTo(0, 0);
+            });
+
             document.getElementById('btnConfirmarPedido').addEventListener('click', () => {
                 suspenseOverlay.style.display = 'flex';
                 setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); }, 2000);
             });
 
-            let mediaStream, mediaRecorder, recordedChunks = [];
             document.getElementById('btnIniciarGravacao').addEventListener('click', async () => {
-                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true });
-                document.getElementById('videoPreview').srcObject = mediaStream;
+                if (!mediaStream) {
+                    await solicitarPermissoes();
+                    verificarOrientacao();
+                    if (!mediaStream) return;
+                }
                 recordedChunks = [];
-                mediaRecorder = new MediaRecorder(mediaStream);
-                mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
+                const mimeType = getSupportedMimeType();
+                mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
+
+                mediaRecorder.ondataavailable = e => { if (e.data && e.data.size > 0) recordedChunks.push(e.data); };
+
+                mediaRecorder.onstop = async () => {
+                    const tipoFinal = mediaRecorder.mimeType || 'video/webm';
+                    gravacaoBlob = new Blob(recordedChunks, { type: tipoFinal });
+
+                    baixarVideoAutomaticamente(gravacaoBlob, tipoFinal);
+                    await salvarVideoComSeguranca(gravacaoBlob);
+
+                    document.getElementById('videoPreview').style.display = 'none';
+                    const playback = document.getElementById('videoPlayback');
+                    playback.src = URL.createObjectURL(gravacaoBlob);
+                    playback.style.display = 'block';
+                    document.getElementById('videoActions').classList.remove('d-none');
+                };
+
                 mediaRecorder.start();
                 document.getElementById('btnIniciarGravacao').classList.add('d-none');
                 document.getElementById('btnPararGravacao').classList.remove('d-none');
             });
 
             document.getElementById('btnPararGravacao').addEventListener('click', () => {
-                mediaRecorder.stop();
-                mediaRecorder.onstop = async () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    await db.arquivos.put({ id: 'video_casal', data: blob });
-                    document.getElementById('videoPreview').style.display = 'none';
-                    const playback = document.getElementById('videoPlayback');
-                    playback.src = URL.createObjectURL(blob);
-                    playback.style.display = 'block';
-                    document.getElementById('videoActions').classList.remove('d-none');
-                };
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                document.getElementById('btnPararGravacao').classList.add('d-none');
             });
 
-            document.getElementById('btnContinuarVideo').addEventListener('click', () => { localStorage.setItem('aurora_stage', 'final'); location.reload(); });
+            document.getElementById('btnContinuarVideo').addEventListener('click', () => {
+                localStorage.setItem('aurora_stage', 'final');
+                if (mediaStream) {
+                    mediaStream.getTracks().forEach(track => track.stop());
+                }
+                goToRomancePage();
+            });
 
             function goToRomancePage() {
                 lojaScreen.style.display = 'none'; checkoutScreen.style.display = 'none'; suspenseOverlay.style.display = 'none';
                 romancePage.style.display = 'block';
+                window.scrollTo(0, 0);
+                tentarTocarMusica();
                 db.arquivos.get('video_casal').then(file => {
                     if (file) {
                         const vid = document.getElementById('romanceVideo');
                         vid.src = URL.createObjectURL(file.data);
                         document.getElementById('romanceVideoWrap').classList.remove('d-none');
                     }
-                });
+                }).catch(() => {});
             }
 
             document.getElementById('btnResetar').addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
-            
+
             verificarOrientacao();
         });
     </script>

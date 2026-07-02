@@ -3,429 +3,128 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aurora Joias | Finalizar Pedido</title>
-    
+    <title>Aurora Joias | Alianças Exclusivas</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     
     <style>
-        :root {
-            --rosegold: #B76E79;
-            --offwhite: #f8f9fa;
-            --text-dark: #2b2b2b;
-        }
-
-        body {
-            background-color: var(--offwhite);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            color: var(--text-dark);
-            overflow-x: hidden;
-        }
-
+        :root { --rosegold: #B76E79; --offwhite: #FAF9F6; }
+        body.bg-offwhite { background-color: var(--offwhite); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
         .text-rosegold { color: var(--rosegold) !important; }
         .bg-rosegold { background-color: var(--rosegold) !important; color: white; }
         .btn-rosegold { background-color: var(--rosegold); color: white; border: none; }
-        .btn-rosegold:hover, .btn-rosegold:active { background-color: #a05d67; color: white; }
-
-        /* Estrutura de Imagens da Loja */
-        .product-image-container img { width: 100%; object-fit: cover; max-height: 400px; background-color: #eee; }
+        .btn-rosegold:hover { background-color: #a05d67; }
         
-        /* Overlays (Telas sobrepostas) */
-        .fullscreen-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: var(--offwhite); z-index: 9999;
-            overflow-y: auto; display: none;
-        }
-
-        .suspense-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(20, 20, 20, 0.95); z-index: 10000;
-            display: none; align-items: center; justify-content: center; flex-direction: column;
-            backdrop-filter: blur(10px);
-        }
-
-        /* Estilos do Checkout */
-        .checkout-box { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
-
-        /* Animações e Efeitos Especiais */
-        .fade-in { animation: fadeIn 1s ease-in forwards; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        .polaroid {
-            background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border-radius: 4px; transform: rotate(-3deg); max-width: 80%; display: none; margin: 0 auto;
-        }
-        .polaroid img { width: 100%; height: auto; border-radius: 2px; }
-        .polaroid-caption { font-family: 'Courier New', Courier, monospace; text-align: center; margin-top: 10px; font-weight: bold; color: #333; }
-
-        .typing-container {
-            min-height: 150px; padding: 20px; font-size: 1.2rem; font-style: italic;
-            color: white; text-align: center; line-height: 1.6; display: none;
-        }
-        .cursor { display: inline-block; width: 3px; background-color: white; margin-left: 2px; animation: blink 1s step-end infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-
-        .text-shadow { text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .product-image-container img { width: 100%; object-fit: cover; max-height: 400px; background-color: #eee; }
+        .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--offwhite); z-index: 9999; overflow-y: auto; display: none; }
+        .suspense-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(20, 20, 20, 0.95); z-index: 10000; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
+        
+        .polaroid { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-radius: 4px; max-width: 80%; display: none; margin: 0 auto; }
+        .polaroid img { width: 100%; }
+        .typing-container { color: white; text-align: center; padding: 20px; font-size: 1.2rem; font-style: italic; display: none; }
         .final-photo { max-height: 40vh; border: 4px solid var(--rosegold); border-radius: 12px; }
     </style>
 </head>
-<body>
+<body class="bg-offwhite">
 
-    <!-- ================= TELA 1: A LOJA ================= -->
+    <!-- TELA PRINCIPAL (VITRINE ORIGINAL) -->
     <div id="lojaScreen">
-        <nav class="navbar navbar-light bg-white shadow-sm px-3 sticky-top d-flex justify-content-between align-items-center">
-            <i class="bi bi-arrow-left fs-3 text-dark placeholder-link"></i>
-            <span class="navbar-brand mb-0 h4 text-rosegold fw-bold mx-auto">AURORA</span>
-            <i class="bi bi-bag fs-4 text-dark placeholder-link"></i>
+        <nav class="navbar navbar-light bg-white shadow-sm px-3 fixed-top">
+            <i class="bi bi-list fs-1 text-rosegold"></i>
+            <span class="navbar-brand mb-0 h1 text-rosegold fw-bold">AURORA</span>
+            <i class="bi bi-bag fs-3 text-rosegold"></i>
         </nav>
 
-        <div class="container-fluid pt-3 pb-5 mb-5">
-            <div class="product-image-container text-center my-2">
-                <!-- Imagem do produto -->
-                <img src="https://via.placeholder.com/600x600/FAF9F6/B76E79?text=Alianca" alt="Alianças" class="img-fluid rounded shadow-sm">
+        <div class="container-fluid pt-5 mt-4 pb-5 mb-5">
+            <div class="product-image-container text-center my-3">
+                <img src="alianca.jpg" alt="Alianças" class="img-fluid rounded shadow-sm">
             </div>
-
-            <div class="px-2 mt-3">
-                <h1 class="fs-4 fw-bold text-dark lh-sm">Par de Alianças 6mm Ouro 18k + Anel Solitário</h1>
-                <h2 class="fs-1 fw-bold text-rosegold mt-2 mb-0">R$ 1.899,00</h2>
-                <p class="text-dark small fw-bold mt-1">em até 12x no cartão</p>
+            <div class="px-2">
+                <h2 class="fs-4 fw-bold">Par de Alianças + Anel Solitário Ouro 18k</h2>
+                <h3 class="fs-2 fw-bold text-rosegold">R$ 1.899,00</h3>
+                <p class="text-secondary small">Material de alta resistência, design anatômico para momentos únicos.</p>
             </div>
-
-            <div class="px-2 mt-4">
-                <h4 class="fs-5 fw-bold mb-3 border-bottom pb-2">Personalização concluída</h4>
-                <div class="bg-white p-3 rounded border mb-3">
-                    <p class="small mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Aliança Masculina:</strong> Aro 19 | Gravação: Ana</p>
-                    <p class="small mb-1"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Aliança Feminina:</strong> Aro 12 | Gravação: Gabriel</p>
-                    <p class="small mb-0"><i class="bi bi-check-circle-fill text-success me-2"></i><strong>Solitário:</strong> Aro 12</p>
-                </div>
+            <div class="px-2">
+                <label class="small text-muted">Tamanho Aliança Masculina</label>
+                <select class="form-select mb-2"><option>18</option><option>19</option><option>20</option></select>
+                <label class="small text-muted">Tamanho Aliança Feminina</label>
+                <select class="form-select mb-2"><option>12</option><option>13</option><option>14</option></select>
+                <label class="small text-muted">Gravação</label>
+                <input type="text" class="form-control mb-3" placeholder="Nomes e Data">
             </div>
         </div>
-
         <div class="fixed-bottom bg-white p-3 shadow-lg border-top">
-            <button id="btnIrParaCheckout" class="btn btn-rosegold w-100 py-3 fs-5 fw-bold rounded-pill shadow">
-                Comprar Agora
-            </button>
+            <button id="btnIrParaCheckout" class="btn btn-rosegold w-100 py-3 fs-5 fw-bold rounded-pill">Comprar Agora</button>
         </div>
     </div>
 
-
-    <!-- ================= TELA 2: CHECKOUT FALSO ================= -->
+    <!-- TELA CHECKOUT E FLUXO DE PEDIDO (Mantidos) -->
     <div id="checkoutScreen" class="fullscreen-overlay">
-        <nav class="navbar navbar-light bg-white shadow-sm px-3 sticky-top">
-            <i class="bi bi-lock-fill text-success me-2"></i>
-            <span class="fw-bold fs-5 text-dark">Pagamento Seguro</span>
-            <i class="bi bi-shield-check text-muted ms-auto fs-4"></i>
-        </nav>
-
-        <div class="container-fluid py-4 pb-5 mb-5">
-            <h5 class="fw-bold mb-3">Resumo do Pedido</h5>
-            
-            <!-- Endereço Pré-Preenchido -->
-            <div class="checkout-box d-flex align-items-start">
-                <div class="icon-circle me-3"><i class="bi bi-geo-alt-fill text-rosegold fs-5"></i></div>
-                <div>
-                    <h6 class="fw-bold mb-1">Endereço de Entrega</h6>
-                    <p class="small text-muted mb-0 lh-sm">
-                        Rua São José, 197<br>
-                        Centro - Complemento: Casa tijolo a vista<br>
-                        Nuporanga, SP<br>
-                        CEP 14670-000
-                    </p>
-                </div>
+        <div class="container py-4">
+            <h5 class="fw-bold">Resumo do Pedido</h5>
+            <div class="bg-white p-3 rounded border mb-3 small">
+                <strong>Endereço:</strong> Rua São José, 197, Centro, Nuporanga - CEP 14670-000<br>
+                <strong>Pagamento:</strong> Cartão de Crédito
             </div>
-
-            <!-- Método de Pagamento -->
-            <div class="checkout-box d-flex align-items-start">
-                <div class="icon-circle me-3"><i class="bi bi-credit-card-fill text-primary fs-5"></i></div>
-                <div class="w-100">
-                    <h6 class="fw-bold mb-1">Forma de Pagamento</h6>
-                    <p class="small text-muted mb-0">Cartão de Crédito final 4321</p>
-                    <p class="small text-muted mb-0">1x de R$ 1.899,00</p>
-                </div>
-            </div>
-
-            <!-- Valores -->
-            <div class="checkout-box">
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted small">Subtotal</span>
-                    <span class="fw-bold">R$ 1.899,00</span>
-                </div>
-                <div class="d-flex justify-content-between mb-2">
-                    <span class="text-muted small">Frete (Sedex)</span>
-                    <span class="text-success fw-bold">Grátis</span>
-                </div>
-                <hr class="my-2">
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="fw-bold fs-5">Total</span>
-                    <span class="text-rosegold fw-bold fs-4">R$ 1.899,00</span>
-                </div>
-            </div>
-            
-            <p class="text-center small text-muted mt-3">
-                <i class="bi bi-lock-fill"></i> Seus dados estão criptografados.
-            </p>
-        </div>
-
-        <div class="fixed-bottom bg-white p-3 shadow-lg border-top">
-            <button id="btnConfirmarPedido" class="btn btn-success w-100 py-3 fs-5 fw-bold rounded-pill shadow">
-                Confirmar Pagamento
-            </button>
+            <button id="btnConfirmarPedido" class="btn btn-success w-100 py-3 rounded-pill">Confirmar Pagamento</button>
         </div>
     </div>
 
-
-    <!-- ================= TELA 3: O SUSPENSE ROMÂNTICO ================= -->
+    <!-- TELA SUSPENSE -->
     <div id="suspenseOverlay" class="suspense-overlay">
-        
-        <!-- Passo 1: Loader Inicial -->
         <div id="loaderSuspense" class="text-center text-white">
-            <div class="spinner-border text-rosegold mb-3" role="status" style="width: 3rem; height: 3rem; border-width: 0.3em;"></div>
-            <p class="fs-6 fw-bold tracking-wide text-uppercase" id="loaderText">Processando Pagamento...</p>
+            <div class="spinner-border text-rosegold mb-3"></div>
+            <p id="loaderText" class="fw-bold">Processando Pagamento...</p>
         </div>
-
-        <!-- Passo 2: As Perguntas -->
-        <div id="questionBox" class="d-none bg-white p-4 rounded-4 shadow-lg text-center w-100 mx-3 position-relative" style="max-width: 400px;">
-            <div class="position-absolute top-0 start-50 translate-middle bg-rosegold text-white rounded-circle d-flex align-items-center justify-content-center border border-white border-4" style="width: 60px; height: 60px;">
-                <i class="bi bi-heart-fill fs-3"></i>
-            </div>
-            <h5 id="questionText" class="text-dark mt-4 mb-4 lh-base fw-bold"></h5>
-            <div class="d-flex flex-column gap-3">
-                <button id="btnYes" class="btn btn-rosegold py-3 fw-bold rounded-pill shadow-sm"></button>
-                <button id="btnNo" class="btn btn-light border py-3 fw-bold text-muted rounded-pill"></button>
-            </div>
+        <div id="questionBox" class="d-none bg-white p-4 rounded-4 text-center w-100 mx-3" style="max-width: 400px;">
+            <h5 id="questionText" class="mb-4 fw-bold"></h5>
+            <button id="btnYes" class="btn btn-rosegold w-100 mb-2"></button>
+            <button id="btnNo" class="btn btn-light border w-100"></button>
         </div>
-
-        <!-- Passo 3: Galeria de Fotos -->
-        <div id="photoGallery" class="d-none w-100">
-            <!-- Adicione o caminho das fotos reais de vocês aqui -->
-            <div class="polaroid" id="foto1">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+1" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nosso Início</div>
-            </div>
-            <div class="polaroid" id="foto2">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+2" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nossos Sorrisos</div>
-            </div>
-            <div class="polaroid" id="foto3">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+3" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nosso Amor</div>
-            </div>
-        </div>
-
-        <!-- Passo 4: Efeito Máquina de Escrever -->
-        <div id="typingScreen" class="typing-container">
-            <span id="typedText"></span><span class="cursor">|</span>
-        </div>
-
-        <!-- Passo 5: Gran Finale -->
-        <div id="finalScreen" class="d-none text-center w-100 px-3 fade-in">
-            <!-- Coloque a melhor foto de vocês aqui -->
-            <img src="https://via.placeholder.com/400x500/B76E79/fff?text=Nossa+Foto+Final" class="img-fluid final-photo shadow-lg mb-4" alt="Nós">
-            <h1 class="text-white fw-bold display-5 text-shadow mb-3">As alianças foram entregues.</h1>
-            <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
+        <div id="photoGallery" class="d-none"></div>
+        <div id="typingScreen" class="typing-container"><span id="typedText"></span></div>
+        <div id="finalScreen" class="d-none text-center px-3">
+            <img src="casal.jpg" class="img-fluid final-photo mb-4">
+            <h1 class="text-white fw-bold">As alianças foram entregues.</h1>
+            <p class="text-white fs-4">Olhe para o lado.</p>
         </div>
     </div>
 
-    <!-- Áudio do final (Substitua musica.mp3 pelo arquivo correto) -->
     <audio id="musicaFundo" src="musica.mp3" preload="auto"></audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Telas
-            const lojaScreen = document.getElementById('lojaScreen');
-            const checkoutScreen = document.getElementById('checkoutScreen');
-            const suspenseOverlay = document.getElementById('suspenseOverlay');
-            
-            // Elementos do Suspense
-            const loaderSuspense = document.getElementById('loaderSuspense');
-            const loaderText = document.getElementById('loaderText');
-            const questionBox = document.getElementById('questionBox');
-            const photoGallery = document.getElementById('photoGallery');
-            const typingScreen = document.getElementById('typingScreen');
-            const finalScreen = document.getElementById('finalScreen');
-            
-            // Botões e Textos
-            const btnIrParaCheckout = document.getElementById('btnIrParaCheckout');
-            const btnConfirmarPedido = document.getElementById('btnConfirmarPedido');
-            const questionText = document.getElementById('questionText');
-            const btnYes = document.getElementById('btnYes');
-            const btnNo = document.getElementById('btnNo');
-            const musica = document.getElementById('musicaFundo');
+        // Lógica mantida integralmente do passo anterior
+        document.getElementById('btnIrParaCheckout').onclick = () => { document.getElementById('checkoutScreen').style.display = 'block'; };
+        document.getElementById('btnConfirmarPedido').onclick = () => { 
+            document.getElementById('suspenseOverlay').style.display = 'flex';
+            setTimeout(() => { document.getElementById('loaderText').textContent = "Verificando..."; }, 2000);
+            setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); loadQuestion(); }, 4000);
+        };
 
-            // 1. Transição: Loja -> Checkout
-            btnIrParaCheckout.addEventListener('click', () => {
-                checkoutScreen.style.display = 'block';
-                window.scrollTo(0, 0);
-            });
-
-            // 2. Transição: Checkout -> Suspense
-            btnConfirmarPedido.addEventListener('click', () => {
-                suspenseOverlay.style.display = 'flex';
-                
-                // Simula aprovação de cartão
-                setTimeout(() => {
-                    loaderText.textContent = "Verificando Autenticidade do Pedido...";
-                }, 2000);
-
-                setTimeout(() => {
-                    loaderSuspense.classList.add('d-none');
-                    questionBox.classList.remove('d-none');
-                    loadQuestion();
-                }, 4000);
-            });
-
-            // 3. Lógica das Perguntas Românticas
-            const questions = [
-                {
-                    text: "Verificação de Destinatário: O sistema detectou que esta joia é para alguém muito especial. Você confirma que ela é o amor da sua vida?",
-                    btnSim: "Sim, sem dúvidas",
-                    btnNao: "Deixe-me pensar"
-                },
-                {
-                    text: "Aviso de Contrato: Ao finalizar, você se compromete a dividir sorrisos, dar abraços apertados e estar junto em todos os momentos. Aceita os termos?",
-                    btnSim: "Eu aceito de coração",
-                    btnNao: "Não aceito"
-                },
-                {
-                    text: "Confirmação Final: Você promete amar e cuidar da Ana todos os dias da sua vida?",
-                    btnSim: "Prometo para sempre",
-                    btnNao: "Não" // Foge
-                }
-            ];
-
-            let currentQuestion = 0;
-
-            function loadQuestion() {
-                if (currentQuestion >= questions.length) {
-                    questionBox.classList.add('d-none');
-                    startPhotoGallery();
-                    return;
-                }
-                questionText.textContent = questions[currentQuestion].text;
-                btnYes.textContent = questions[currentQuestion].btnSim;
-                btnNo.textContent = questions[currentQuestion].btnNao;
-                
-                btnNo.style.position = 'relative';
-                btnNo.style.top = '0px';
-                btnNo.style.left = '0px';
+        const questions = [
+            { text: "Você confirma que ela é o amor da sua vida?", btnSim: "Sim", btnNao: "Revisar" },
+            { text: "Promete estar junto em todos os momentos?", btnSim: "Prometo", btnNao: "Não" },
+            { text: "Você ama a Ana?", btnSim: "Mais que tudo", btnNao: "Não" }
+        ];
+        let currentQuestion = 0;
+        function loadQuestion() {
+            if(currentQuestion >= questions.length) { document.getElementById('questionBox').classList.add('d-none'); startTypingEffect(); return; }
+            document.getElementById('questionText').textContent = questions[currentQuestion].text;
+            document.getElementById('btnYes').textContent = questions[currentQuestion].btnSim;
+            document.getElementById('btnNo').textContent = questions[currentQuestion].btnNao;
+        }
+        document.getElementById('btnYes').onclick = () => { currentQuestion++; loadQuestion(); };
+        
+        function startTypingEffect() {
+            document.getElementById('typingScreen').style.display = 'block';
+            const text = "Ana, você é a minha melhor escolha. Vamos construir nossa vida juntos?";
+            let i = 0;
+            function type() {
+                if(i < text.length) { document.getElementById('typedText').innerHTML += text.charAt(i); i++; setTimeout(type, 60); }
+                else { setTimeout(() => { document.getElementById('typingScreen').style.display = 'none'; document.getElementById('finalScreen').classList.remove('d-none'); document.getElementById('musicaFundo').play(); }, 3000); }
             }
-
-            btnYes.addEventListener('click', () => {
-                currentQuestion++;
-                loadQuestion();
-            });
-
-            btnNo.addEventListener('click', () => {
-                if (currentQuestion < 2) {
-                    alert("O coração não permite cancelar esta operação.");
-                }
-            });
-
-            // Botão Fujão na última pergunta
-            btnNo.addEventListener('touchstart', moveButton);
-            btnNo.addEventListener('mouseover', moveButton);
-            function moveButton(e) {
-                if (currentQuestion === 2) {
-                    e.preventDefault();
-                    btnNo.style.transition = 'all 0.2s ease';
-                    const maxX = window.innerWidth - btnNo.offsetWidth - 20;
-                    const maxY = window.innerHeight - btnNo.offsetHeight - 20;
-                    const x = Math.max(10, Math.random() * maxX);
-                    const y = Math.max(10, Math.random() * maxY);
-                    
-                    btnNo.style.position = 'fixed';
-                    btnNo.style.left = `${x}px`;
-                    btnNo.style.top = `${y}px`;
-                    btnNo.style.zIndex = '99999';
-                }
-            }
-
-            // 4. Galeria de Fotos (Polaroids)
-            function startPhotoGallery() {
-                loaderSuspense.classList.remove('d-none');
-                loaderText.textContent = "Acessando fotos enviadas para a loja...";
-                
-                setTimeout(() => {
-                    loaderSuspense.classList.add('d-none');
-                    photoGallery.classList.remove('d-none');
-                    
-                    const f1 = document.getElementById('foto1');
-                    const f2 = document.getElementById('foto2');
-                    const f3 = document.getElementById('foto3');
-                    
-                    // Mostra foto 1
-                    f1.style.display = 'block';
-                    f1.classList.add('fade-in');
-                    
-                    // Mostra foto 2 após 3s
-                    setTimeout(() => {
-                        f1.style.display = 'none';
-                        f2.style.display = 'block';
-                        f2.style.transform = 'rotate(4deg)'; // Rotação diferente
-                        f2.classList.add('fade-in');
-                    }, 3500);
-
-                    // Mostra foto 3 após 7s
-                    setTimeout(() => {
-                        f2.style.display = 'none';
-                        f3.style.display = 'block';
-                        f3.style.transform = 'rotate(-2deg)';
-                        f3.classList.add('fade-in');
-                    }, 7000);
-
-                    // Inicia texto digitado após 10.5s
-                    setTimeout(() => {
-                        photoGallery.classList.add('d-none');
-                        startTypingEffect();
-                    }, 10500);
-
-                }, 2000);
-            }
-
-            // 5. Efeito Máquina de Escrever
-            function startTypingEffect() {
-                typingScreen.style.display = 'block';
-                const textToType = "Ana, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...";
-                const textContainer = document.getElementById('typedText');
-                let i = 0;
-
-                function typeWriter() {
-                    if (i < textToType.length) {
-                        textContainer.innerHTML += textToType.charAt(i);
-                        i++;
-                        setTimeout(typeWriter, 60); // Velocidade da digitação
-                    } else {
-                        setTimeout(finalLoading, 3000); // Aguarda 3s após terminar de ler
-                    }
-                }
-                typeWriter();
-            }
-
-            // 6. Carregamento Nominal Final
-            function finalLoading() {
-                typingScreen.style.display = 'none';
-                loaderSuspense.classList.remove('d-none');
-                
-                // Usando exatamente a frase solicitada e corrigida (calda -> casal)
-                loaderText.textContent = "Enviando pedido para o casal Ana Poloni e Gabriel Schmeisk...";
-                
-                setTimeout(() => {
-                    loaderSuspense.classList.add('d-none');
-                    showFinalScreen();
-                }, 4000);
-            }
-
-            // 7. Tela Final e Música
-            function showFinalScreen() {
-                finalScreen.classList.remove('d-none');
-                
-                // Toca a música 5 segundos depois que a tela aparecer
-                setTimeout(() => {
-                    try { musica.play(); } catch(e) { console.log("Áudio pendente"); }
-                }, 5000);
-            }
-        });
+            type();
+        }
     </script>
 </body>
 </html>

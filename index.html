@@ -7,19 +7,21 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,500&family=Jost:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
     <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
 
     <style>
         :root {
             --rosegold: #B76E79;
+            --rosegold-dark: #8f4d57;
             --offwhite: #FAF9F6;
             --text-dark: #333333;
         }
 
         body {
             background-color: var(--offwhite);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-dark);
             overflow-x: hidden;
         }
@@ -29,6 +31,7 @@
         .border-rosegold { border-color: #e0b4bc !important; }
         .btn-rosegold { background-color: var(--rosegold); color: white; border: none; }
         .btn-rosegold:hover, .btn-rosegold:active { background-color: #a05d67; color: white; }
+        .btn-rosegold:disabled { background-color: #d9b4ba; }
         .tracking-wide { letter-spacing: 2px; }
         .placeholder-link:active { opacity: 0.5; }
 
@@ -46,27 +49,50 @@
 
         .suspense-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(20, 20, 20, 0.95); z-index: 10000;
+            background-color: rgba(20, 20, 20, 0.97); z-index: 10000;
             display: none; align-items: center; justify-content: center; flex-direction: column;
             backdrop-filter: blur(10px);
+            overflow-y: auto;
         }
 
+        .processing-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(20, 20, 20, 0.97); z-index: 10600;
+            display: none; align-items: center; justify-content: center; flex-direction: column;
+            color: white; text-align: center; padding: 20px;
+        }
+        .processing-steps { list-style: none; padding: 0; margin: 24px 0 0; text-align: left; max-width: 320px; }
+        .processing-steps li { padding: 8px 0; opacity: 0.35; transition: opacity 0.3s ease; font-size: 0.95rem; }
+        .processing-steps li.active { opacity: 1; font-weight: 600; }
+        .processing-steps li.done { opacity: 0.7; }
+        .processing-steps li i { margin-right: 10px; width: 18px; display: inline-block; }
+
         .checkout-box { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
+        .icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
         .fade-in { animation: fadeIn 1s ease-in forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+        .reveal-up { animation: fadeUp 0.8s ease forwards; opacity: 0; }
+
+        .question-card { background: white; padding: 28px 24px; border-radius: 20px; box-shadow: 0 20px 50px rgba(0,0,0,0.4); text-align: center; width: 100%; max-width: 400px; position: relative; }
+        .question-eyebrow { font-size: 0.7rem; letter-spacing: 3px; text-transform: uppercase; color: var(--rosegold); font-weight: 600; }
+        .question-dots { display: flex; justify-content: center; gap: 6px; margin: 10px 0 4px; }
+        .question-dots span { width: 6px; height: 6px; border-radius: 50%; background: #e6d3d6; transition: all 0.3s ease; }
+        .question-dots span.done { background: var(--rosegold); }
 
         .polaroid {
-            background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            border-radius: 4px; transform: rotate(-3deg); max-width: 80%; display: none; margin: 0 auto;
+            background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-radius: 4px; max-width: 78%; opacity: 0; transform: scale(0.9);
         }
-        .polaroid img { width: 100%; height: auto; border-radius: 2px; }
-        .polaroid-caption { font-family: 'Courier New', Courier, monospace; text-align: center; margin-top: 10px; font-weight: bold; color: #333; }
+        .polaroid img { width: 100%; height: auto; border-radius: 2px; display: block; }
+        .polaroid-caption { font-family: 'Courier New', Courier, monospace; text-align: center; margin-top: 10px; font-weight: bold; color: #333; font-size: 0.85rem; }
+        .polaroid-stack { position: relative; width: 100%; max-width: 320px; height: 340px; margin: 0 auto; }
+        .polaroid-stack .polaroid { position: absolute; top: 0; left: 50%; }
 
         .typing-container {
-            min-height: 150px; padding: 20px; font-size: 1.2rem; font-style: italic;
-            color: white; text-align: center; line-height: 1.6; display: none;
+            min-height: 150px; padding: 20px; font-size: 1.25rem; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic;
+            color: white; text-align: center; line-height: 1.7; display: none; max-width: 440px;
         }
         .cursor { display: inline-block; width: 3px; background-color: white; margin-left: 2px; animation: blink 1s step-end infinite; }
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
@@ -82,12 +108,13 @@
         .maintenance-box { background: white; border-radius: 16px; padding: 25px; max-width: 340px; margin: 0 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
         .signature-pad-wrap { background: white; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        #signatureCanvas { border: 2px dashed var(--rosegold); border-radius: 8px; touch-action: none; width: 100%; background: #fff; }
+        #signatureCanvas { border: 2px dashed var(--rosegold); border-radius: 8px; touch-action: none; width: 100%; background: #fff; display: block; }
+        .signature-hint { font-size: 0.75rem; color: #999; margin-top: 8px; }
 
-        .tracking-box { text-align: center; color: white; }
-        .tracking-distance { font-size: 3rem; font-weight: bold; }
+        .tracking-box { text-align: center; color: white; width: 100%; max-width: 420px; }
+        .tracking-distance { font-size: 3rem; font-weight: bold; font-variant-numeric: tabular-nums; }
         .tracking-bar-outer { width: 90%; max-width: 320px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin: 15px auto; overflow: hidden; }
-        .tracking-bar-inner { height: 100%; background: var(--rosegold); width: 0%; transition: width 0.6s ease; }
+        .tracking-bar-inner { height: 100%; background: var(--rosegold); width: 0%; transition: width 0.4s linear; }
 
         @keyframes glowPulse {
             0%, 100% { box-shadow: 0 0 15px 4px rgba(183, 110, 121, 0.6); }
@@ -97,27 +124,43 @@
 
         .romance-page {
             display: none; min-height: 100vh; width: 100%;
-            background: linear-gradient(180deg, #2b1d20 0%, #4a2c34 100%);
-            color: white; padding: 40px 20px 60px;
+            background: linear-gradient(180deg, #241419 0%, #3a2029 55%, #4a2c34 100%);
+            color: white; padding: 50px 20px 60px;
         }
-        .romance-title { font-family: Georgia, 'Times New Roman', serif; }
-        .romance-divider { width: 60px; height: 2px; background: var(--rosegold); margin: 20px auto; }
-        .timeline-item { background: rgba(255,255,255,0.06); border-left: 3px solid var(--rosegold); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
-        .romance-section-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.3rem; text-align:center; margin-bottom: 18px; }
-        .romance-gallery-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; background:#3a2a2f; }
+        .romance-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2.6rem; font-weight: 600; }
+        .romance-divider { width: 60px; height: 1px; background: var(--rosegold); margin: 22px auto; position: relative; }
+        .romance-divider::before { content: '♥'; position: absolute; top: -9px; left: 50%; transform: translateX(-50%); color: var(--rosegold); font-size: 0.8rem; background: transparent; }
+        .romance-date-badge { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.05rem; letter-spacing: 1px; color: #f0d9dd; margin-top: 6px; }
+        .timeline-item { background: rgba(255,255,255,0.06); border-left: 3px solid var(--rosegold); border-radius: 8px; padding: 16px 18px; margin-bottom: 15px; }
+        .timeline-item strong { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.1rem; color: #f0d9dd; }
+        .romance-section-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.4rem; text-align:center; margin-bottom: 20px; }
         .romance-video-wrap video { width: 100%; border-radius: 12px; border: 3px solid var(--rosegold); background:#000; }
         .contract-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(183,110,121,0.5); border-radius: 14px; padding: 20px; text-align:center; }
-        .contract-signature-img { max-width: 260px; width: 100%; background:#fff; border-radius: 8px; padding: 10px; margin-top: 10px; }
+        .contract-signature-img { max-width: 260px; width: 100%; border-radius: 8px; padding: 6px; margin-top: 10px; background: transparent; }
         .contract-box p.text-start { text-align: left !important; }
         .counter-badge {
             display: inline-block; background: rgba(183,110,121,0.15); border: 1px solid rgba(183,110,121,0.5);
-            border-radius: 999px; padding: 8px 18px; font-size: 0.85rem; margin-top: 10px;
+            border-radius: 999px; padding: 8px 18px; font-size: 0.85rem; margin-top: 14px;
         }
         .btn-share {
             background: transparent; border: 1px solid var(--rosegold); color: var(--rosegold);
             border-radius: 999px; padding: 10px 22px; font-weight: bold;
         }
         .btn-share:hover { background: var(--rosegold); color: white; }
+
+        /* Scattered "photos on a table" gallery */
+        .table-gallery { position: relative; max-width: 420px; margin: 0 auto; padding: 30px 10px 50px; }
+        .table-photo {
+            background: #fff; padding: 8px 8px 26px 8px; border-radius: 3px; box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+            width: 46%; display: inline-block; margin: 2% 1%; vertical-align: top;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, z-index 0s;
+        }
+        .table-photo img { width: 100%; height: 130px; object-fit: cover; display: block; border-radius: 1px; background:#3a2a2f; }
+        .table-photo:active { transform: scale(1.08) rotate(0deg) !important; z-index: 20; box-shadow: 0 14px 30px rgba(0,0,0,0.55); }
+        .table-photo:nth-child(1) { transform: rotate(-6deg) translateY(6px); margin-right: -4%; z-index: 4; }
+        .table-photo:nth-child(2) { transform: rotate(4deg); z-index: 3; }
+        .table-photo:nth-child(3) { transform: rotate(3deg) translateY(10px); margin-top: -6%; z-index: 2; margin-left: -3%; }
+        .table-photo:nth-child(4) { transform: rotate(-4deg); z-index: 1; }
 
         .rotate-hint { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; }
         .rotate-hint .phone-icon { font-size: 3.2rem; display: inline-block; animation: rotatePhone 1.8s ease-in-out infinite; }
@@ -127,6 +170,17 @@
         }
         .rec-dot { width: 10px; height: 10px; background: #ff3b3b; border-radius: 50%; display: inline-block; margin-right: 6px; animation: recBlink 1s step-start infinite; }
         @keyframes recBlink { 50% { opacity: 0; } }
+        .save-status { font-size: 0.75rem; margin-top: 8px; min-height: 16px; }
+        .save-status.ok { color: #7ee787; }
+        .save-status.pending { color: #f0d9dd; }
+        .save-status.err { color: #ff8a8a; }
+
+        .skip-link { color: rgba(255,255,255,0.35); font-size: 0.72rem; text-decoration: underline; background: none; border: none; margin-top: 18px; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .glow-effect, .rotate-hint .phone-icon, .rec-dot, .cursor { animation: none !important; }
+            .reveal-up { animation: none !important; opacity: 1 !important; }
+        }
     </style>
 </head>
 <body>
@@ -254,7 +308,7 @@
                     </select>
                 </div>
                 <div id="selecaoErro" class="text-danger small fw-bold mt-2 d-none">
-                    <i class="bi bi-exclamation-circle me-1"></i>Selecione todos os tamanhos antes de continuar.
+                    <i class="bi bi-exclamation-circle me-1"></i>Preencha todos os tamanhos e gravações antes de continuar.
                 </div>
             </div>
 
@@ -363,6 +417,15 @@
         </div>
     </div>
 
+    <div id="processingOverlay" class="processing-overlay">
+        <div class="spinner-border text-rosegold mb-2" role="status" style="width: 2.6rem; height: 2.6rem; border-width: 0.25em;"></div>
+        <ul class="processing-steps" id="processingSteps">
+            <li data-step="0"><i class="bi bi-circle"></i>Validando pedido</li>
+            <li data-step="1"><i class="bi bi-circle"></i>Verificando disponibilidade</li>
+            <li data-step="2"><i class="bi bi-circle"></i>Reservando produto</li>
+            <li data-step="3"><i class="bi bi-circle"></i>Preparando envio</li>
+        </ul>
+    </div>
 
     <div id="checkoutScreen" class="fullscreen-overlay">
         <nav class="navbar navbar-light bg-white shadow-sm px-3 sticky-top">
@@ -379,6 +442,8 @@
                 <div>
                     <h6 class="fw-bold mb-1">Aliança Esgrifa Branca+</h6>
                     <p class="small text-muted mb-0 lh-sm">Solitário Libélula - 2mm Prata 950 (Flor Rosa)</p>
+                    <p class="small text-muted mb-0 lh-sm mt-1" id="resumoTamanhos"></p>
+                    <p class="small text-muted mb-0 lh-sm" id="resumoGravacoes"></p>
                 </div>
             </div>
 
@@ -440,29 +505,31 @@
             <p class="fs-6 fw-bold tracking-wide text-uppercase" id="loaderText">Processando Pagamento...</p>
         </div>
 
-        <div id="questionBox" class="d-none bg-white p-4 rounded-4 shadow-lg text-center w-100 mx-3 position-relative" style="max-width: 400px;">
-            <div class="position-absolute top-0 start-50 translate-middle bg-rosegold text-white rounded-circle d-flex align-items-center justify-content-center border border-white border-4" style="width: 60px; height: 60px;">
-                <i class="bi bi-heart-fill fs-3"></i>
-            </div>
-            <h5 id="questionText" class="text-dark mt-4 mb-4 lh-base fw-bold"></h5>
+        <div id="questionBox" class="d-none question-card">
+            <p class="question-eyebrow mb-0">Enquanto confirmamos seu pedido</p>
+            <div class="question-dots" id="questionDots"></div>
+            <h5 id="questionText" class="text-dark mt-3 mb-4 lh-base fw-bold"></h5>
             <div class="d-flex flex-column gap-3">
                 <button id="btnYes" class="btn btn-rosegold py-3 fw-bold rounded-pill shadow-sm"></button>
                 <button id="btnNo" class="btn btn-light border py-3 fw-bold text-muted rounded-pill"></button>
             </div>
         </div>
 
-        <div id="photoGallery" class="d-none w-100">
-            <div class="polaroid" id="foto1">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+1" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nosso Início</div>
-            </div>
-            <div class="polaroid" id="foto2">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+2" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nossos Sorrisos</div>
-            </div>
-            <div class="polaroid" id="foto3">
-                <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+3" alt="Nós">
-                <div class="polaroid-caption">Arquivos da Loja: Nosso Amor</div>
+        <div id="photoGallery" class="d-none w-100 text-center">
+            <p class="text-white-50 small text-uppercase tracking-wide mb-3">Arquivos da Loja</p>
+            <div class="polaroid-stack">
+                <div class="polaroid" id="foto1" style="transform: translateX(-50%) rotate(-8deg);">
+                    <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+1" alt="Nós">
+                    <div class="polaroid-caption">Nosso início</div>
+                </div>
+                <div class="polaroid" id="foto2" style="transform: translateX(-50%) rotate(5deg) translateY(18px);">
+                    <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+2" alt="Nós">
+                    <div class="polaroid-caption">Nossos sorrisos</div>
+                </div>
+                <div class="polaroid" id="foto3" style="transform: translateX(-50%) rotate(-3deg) translateY(36px);">
+                    <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+3" alt="Nós">
+                    <div class="polaroid-caption">Nosso amor</div>
+                </div>
             </div>
         </div>
 
@@ -471,18 +538,20 @@
         </div>
 
         <div id="signatureScreen" class="d-none w-100 px-3 text-center">
-            <p class="text-white fw-bold mb-3">Assine para confirmar o recebimento do pedido</p>
+            <p class="text-white fw-bold mb-1">Assine para confirmar o recebimento do pedido</p>
+            <p class="text-white-50 small mb-3">Use o dedo para assinar na área abaixo</p>
             <div class="signature-pad-wrap">
                 <canvas id="signatureCanvas" width="320" height="160"></canvas>
-                <div class="d-flex gap-2 mt-3">
+                <p class="signature-hint" id="signatureHint">Toque e arraste para assinar</p>
+                <div class="d-flex gap-2 mt-2">
                     <button id="btnLimparAssinatura" class="btn btn-light border flex-fill rounded-pill small fw-bold">Limpar</button>
                     <button id="btnConfirmarAssinatura" class="btn btn-rosegold flex-fill rounded-pill fw-bold">Confirmar Assinatura</button>
                 </div>
             </div>
         </div>
 
-        <div id="trackingScreen" class="d-none tracking-box w-100 px-3">
-            <p id="confirmMsg" class="fs-5 fw-bold mb-4"></p>
+        <div id="trackingScreen" class="d-none tracking-box">
+            <p id="confirmMsg" class="fs-5 fw-bold mb-4">Assinatura confirmada! Suas alianças já saíram para entrega.</p>
             <i class="bi bi-truck" style="font-size: 2.2rem; color: var(--rosegold);"></i>
             <p class="text-uppercase small mt-2 mb-1 text-white-50">As alianças estão a</p>
             <div class="tracking-distance" id="trackingDistance">100km</div>
@@ -496,7 +565,8 @@
             </div>
             <div id="permissaoNegadaMsg" class="text-white d-none">
                 <i class="bi bi-camera-video-off fs-1 text-danger"></i>
-                <p class="mt-2 mb-0">Precisamos de acesso à câmera e ao microfone para continuar. Verifique as permissões do navegador e recarregue a página.</p>
+                <p class="mt-2 mb-2">Precisamos de acesso à câmera e ao microfone para continuar.</p>
+                <button id="btnPedirPermissaoNovamente" class="btn btn-rosegold rounded-pill btn-sm fw-bold">Permitir câmera e microfone</button>
             </div>
             <div id="conteudoGravacao" class="d-none">
                 <p class="text-white fw-bold mb-1">Grave para confirmar a entrega.</p>
@@ -512,9 +582,11 @@
                             <span class="rec-dot"></span>Parar
                         </button>
                     </div>
+                    <p id="saveStatus" class="save-status"></p>
 
-                    <div id="videoActions" class="d-none mt-2 d-flex gap-2">
-                        <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
+                    <div id="videoActions" class="d-none mt-2 d-flex flex-column gap-2">
+                        <button id="btnRegravar" class="btn btn-light border rounded-pill btn-sm fw-bold">Regravar</button>
+                        <button id="btnContinuarVideo" class="btn btn-success rounded-pill btn-sm fw-bold" disabled>
                             Continuar
                         </button>
                     </div>
@@ -526,23 +598,25 @@
             <img id="finalPhoto" src="https://via.placeholder.com/400x500/B76E79/fff?text=Nossa+Foto+Final" class="img-fluid final-photo shadow-lg mb-4" alt="Nós">
             <h1 class="text-white fw-bold display-5 text-shadow mb-3">As alianças já chegaram.</h1>
             <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
+            <button id="btnVerHistoria" class="btn btn-rosegold rounded-pill fw-bold mt-4 px-4 py-2 glow-effect">Continuar</button>
         </div>
     </div>
 
     <div id="romancePage" class="romance-page">
-        <div class="text-center mb-4">
+        <div class="text-center mb-4 reveal-up">
             <p class="text-rosegold text-uppercase small tracking-wide mb-1">Para <span class="js-nome"></span></p>
-            <h1 class="romance-title fw-bold">Nossa Trajetória</h1>
+            <h1 class="romance-title">Nossa Trajetória</h1>
             <div class="romance-divider"></div>
             <p class="fs-6 fw-light" style="max-width: 420px; margin: 0 auto;">
                 <span class="js-nome"></span>, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito.
             </p>
+            <p class="romance-date-badge" id="dataPedidoTexto"></p>
             <div id="counterBadge" class="counter-badge">
                 <i class="bi bi-heart-fill text-rosegold me-1"></i> <span id="counterText">calculando...</span>
             </div>
         </div>
 
-        <div style="max-width: 420px; margin: 0 auto;">
+        <div style="max-width: 420px; margin: 0 auto;" class="reveal-up">
             <p class="romance-section-title">Nossa linha do tempo</p>
             <div class="timeline-item">
                 <strong>[Data do primeiro encontro / conversa]</strong>
@@ -553,27 +627,27 @@
                 <p class="small mb-0 mt-1">Conte uma viagem, um perrengue resolvido junto, uma piada interna — algo que só vocês dois entendem.</p>
             </div>
             <div class="timeline-item">
-                <strong>[Data recente / de hoje]</strong>
+                <strong id="dataPedidoTimeline">[Hoje]</strong>
                 <p class="small mb-0 mt-1">Fale sobre o presente: por que hoje, por que ela, por que agora.</p>
             </div>
         </div>
 
-        <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
+        <div class="mt-5 reveal-up">
             <p class="romance-section-title">Nossos momentos</p>
-            <div class="row row-cols-2 g-2">
-                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+1" class="romance-gallery-img" alt="Foto do casal 1"></div>
-                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+2" class="romance-gallery-img" alt="Foto do casal 2"></div>
-                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+3" class="romance-gallery-img" alt="Foto do casal 3"></div>
-                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+4" class="romance-gallery-img" alt="Foto do casal 4"></div>
+            <div class="table-gallery">
+                <div class="table-photo"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+1" alt="Foto do casal 1"></div>
+                <div class="table-photo"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+2" alt="Foto do casal 2"></div>
+                <div class="table-photo"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+3" alt="Foto do casal 3"></div>
+                <div class="table-photo"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+4" alt="Foto do casal 4"></div>
             </div>
         </div>
 
-        <div id="romanceVideoWrap" class="mt-5 d-none romance-video-wrap" style="max-width: 420px; margin: 0 auto;">
+        <div id="romanceVideoWrap" class="mt-5 d-none romance-video-wrap reveal-up" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">O momento em que você descobriu</p>
             <video id="romanceVideo" controls playsinline></video>
         </div>
 
-        <div id="romanceSignatureWrap" class="mt-5 d-none" style="max-width: 420px; margin: 0 auto;">
+        <div id="romanceSignatureWrap" class="mt-5 d-none reveal-up" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">Sem saber, você já tinha assinado</p>
             <div class="contract-box">
                 <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.5rem;"></i>
@@ -583,7 +657,7 @@
             </div>
         </div>
 
-        <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
+        <div class="mt-5 reveal-up" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">Contrato (sem validade jurídica, validade eterna)</p>
             <div class="contract-box">
                 <i class="bi bi-file-earmark-heart text-rosegold" style="font-size: 1.8rem;"></i>
@@ -599,7 +673,7 @@
             </div>
         </div>
 
-        <div class="text-center mt-5">
+        <div class="text-center mt-5 reveal-up">
             <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.8rem;"></i>
             <p class="fs-5 fw-light mt-3" style="max-width: 420px; margin: 0 auto;">
                 <span class="js-nome"></span>, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você.
@@ -625,7 +699,25 @@
         let recordedChunks = [];
         let gravacaoBlob = null;
         let permissoesLiberadas = false;
+        let videoJaSalvo = false;
 
+        const NOME_DELA = "Ana";
+        const NOME_DELE = "[Seu Nome]";
+
+        /* ---------------- Seleções reais do pedido ---------------- */
+        const pedido = { tamMasc: '', tamFem: '', tamSolitario: '', gravMasc: '', gravFem: '' };
+
+        /* ---------------- Perguntas emocionais ---------------- */
+        const perguntas = [
+            { texto: "Antes de continuarmos... você acredita que o amor pode crescer um pouco mais a cada dia, mesmo depois de anos?", sim: "Acredito, cada dia mais", nao: "Com certeza acredito" },
+            { texto: "Você confia em mim pra construir um futuro do nosso jeito, mesmo sem saber exatamente como ele vai ser?", sim: "Confio de olhos fechados", nao: "Sim, confio em nós" },
+            { texto: "Se pudesse reviver um momento nosso quantas vezes quisesse, você escolheria viver de novo?", sim: "Sem pensar duas vezes", nao: "Sim, sempre" },
+            { texto: "Você já se imaginou comigo daqui a 10, 20, 50 anos, dividindo a mesma casa, a mesma vida?", sim: "Consigo nos ver lá", nao: "Sim, me imagino" },
+            { texto: "Última coisa antes de seguirmos: você está feliz com a vida que a gente está construindo juntos?", sim: "Muito feliz", nao: "Sim, muito" }
+        ];
+        let perguntaAtual = 0;
+
+        /* ---------------- Utilidades ---------------- */
         function ehVertical() {
             const angle = (screen.orientation && typeof screen.orientation.angle === 'number')
                 ? screen.orientation.angle
@@ -669,7 +761,7 @@
                 orientacaoMsg.classList.add('d-none');
                 conteudoGravacao.classList.remove('d-none');
                 const preview = document.getElementById('videoPreview');
-                if (mediaStream && !preview.srcObject) preview.srcObject = mediaStream;
+                if (mediaStream && !preview.srcObject && !videoJaSalvo) preview.srcObject = mediaStream;
             } else {
                 orientacaoMsg.classList.remove('d-none');
                 conteudoGravacao.classList.add('d-none');
@@ -710,20 +802,44 @@
             }
         }
 
+        /* Salva o vídeo com múltiplas camadas de segurança: IndexedDB principal,
+           uma chave de backup, e um download automático como última garantia. */
         async function salvarVideoComSeguranca(blob) {
+            const statusEl = document.getElementById('saveStatus');
+            if (statusEl) { statusEl.textContent = 'Salvando vídeo com segurança...'; statusEl.className = 'save-status pending'; }
+
+            let sucesso = false;
             try {
-                await db.arquivos.put({ id: 'video_casal', data: blob });
-                return true;
+                await db.arquivos.put({ id: 'video_casal', data: blob, criadoEm: Date.now() });
+                sucesso = true;
             } catch (err) {
-                console.error('Falha ao salvar no IndexedDB, tentando novamente:', err);
-                try {
-                    await db.arquivos.put({ id: 'video_casal_backup', data: blob });
-                    return true;
-                } catch (err2) {
-                    console.error('Falha crítica ao salvar o vídeo:', err2);
-                    return false;
+                console.error('Falha ao salvar no IndexedDB (principal):', err);
+            }
+
+            try {
+                await db.arquivos.put({ id: 'video_casal_backup', data: blob, criadoEm: Date.now() });
+            } catch (err2) {
+                console.error('Falha ao salvar backup no IndexedDB:', err2);
+            }
+
+            // Confere se o vídeo realmente está lá antes de declarar sucesso.
+            try {
+                const confere = await db.arquivos.get('video_casal');
+                sucesso = !!(confere && confere.data && confere.data.size > 0);
+            } catch (errConfere) {
+                sucesso = false;
+            }
+
+            if (statusEl) {
+                if (sucesso) {
+                    statusEl.textContent = 'Vídeo salvo com sucesso.';
+                    statusEl.className = 'save-status ok';
+                } else {
+                    statusEl.textContent = 'Não foi possível confirmar o salvamento. Um download automático foi iniciado como backup — não feche o app até ele terminar.';
+                    statusEl.className = 'save-status err';
                 }
             }
+            return sucesso;
         }
 
         function tentarTocarMusica() {
@@ -738,17 +854,321 @@
             }
         }
 
+        /* ---------------- Assinatura (canvas com fundo transparente) ---------------- */
+        let sigCtx, sigDesenhando = false, sigTemTraco = false;
+
+        function ajustarCanvasSignature(canvas) {
+            const ratio = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+            canvas.width = rect.width * ratio;
+            canvas.height = 160 * ratio;
+            const ctx = canvas.getContext('2d');
+            ctx.scale(ratio, ratio);
+            ctx.lineWidth = 2.4;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            ctx.strokeStyle = '#2b2b2b';
+            return ctx;
+        }
+
+        function coordsDoEvento(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            const ponto = evt.touches ? evt.touches[0] : evt;
+            return { x: ponto.clientX - rect.left, y: ponto.clientY - rect.top };
+        }
+
+        function iniciarSignaturePad() {
+            const canvas = document.getElementById('signatureCanvas');
+            sigCtx = ajustarCanvasSignature(canvas);
+            sigTemTraco = false;
+
+            const comecar = (evt) => {
+                evt.preventDefault();
+                sigDesenhando = true;
+                sigTemTraco = true;
+                const { x, y } = coordsDoEvento(canvas, evt);
+                sigCtx.beginPath();
+                sigCtx.moveTo(x, y);
+            };
+            const desenhar = (evt) => {
+                if (!sigDesenhando) return;
+                evt.preventDefault();
+                const { x, y } = coordsDoEvento(canvas, evt);
+                sigCtx.lineTo(x, y);
+                sigCtx.stroke();
+            };
+            const parar = () => { sigDesenhando = false; };
+
+            canvas.addEventListener('mousedown', comecar);
+            canvas.addEventListener('mousemove', desenhar);
+            window.addEventListener('mouseup', parar);
+            canvas.addEventListener('touchstart', comecar, { passive: false });
+            canvas.addEventListener('touchmove', desenhar, { passive: false });
+            canvas.addEventListener('touchend', parar);
+
+            document.getElementById('btnLimparAssinatura').onclick = () => {
+                sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+                sigTemTraco = false;
+                document.getElementById('signatureHint').textContent = 'Toque e arraste para assinar';
+                document.getElementById('signatureHint').style.color = '#999';
+            };
+        }
+
+        // Converte o canvas (fundo branco) em um PNG com fundo transparente,
+        // preservando apenas o traço desenhado.
+        function gerarAssinaturaTransparente(canvas) {
+            const largura = canvas.width, altura = canvas.height;
+            const origem = canvas.getContext('2d').getImageData(0, 0, largura, altura);
+            const saida = document.createElement('canvas');
+            saida.width = largura; saida.height = altura;
+            const outCtx = saida.getContext('2d');
+            const destino = outCtx.createImageData(largura, altura);
+
+            for (let i = 0; i < origem.data.length; i += 4) {
+                const r = origem.data[i], g = origem.data[i + 1], b = origem.data[i + 2];
+                const luminosidade = (r + g + b) / 3;
+                if (luminosidade > 245) {
+                    destino.data[i + 3] = 0; // pixel quase branco -> transparente
+                } else {
+                    destino.data[i] = r; destino.data[i + 1] = g; destino.data[i + 2] = b;
+                    // suaviza a opacidade da borda dos traços
+                    destino.data[i + 3] = Math.min(255, Math.round((255 - luminosidade) * 1.15));
+                }
+            }
+            outCtx.putImageData(destino, 0, 0);
+            return saida.toDataURL('image/png');
+        }
+
+        /* ---------------- Sequência principal de suspense ---------------- */
+        function mostrarPergunta() {
+            const p = perguntas[perguntaAtual];
+            document.getElementById('questionText').textContent = p.texto;
+            document.getElementById('btnYes').textContent = p.sim;
+            document.getElementById('btnNo').textContent = p.nao;
+
+            const dots = document.getElementById('questionDots');
+            dots.innerHTML = '';
+            perguntas.forEach((_, i) => {
+                const span = document.createElement('span');
+                if (i < perguntaAtual) span.classList.add('done');
+                dots.appendChild(span);
+            });
+        }
+
+        function avancarPergunta() {
+            perguntaAtual++;
+            if (perguntaAtual < perguntas.length) {
+                mostrarPergunta();
+            } else {
+                document.getElementById('questionBox').classList.add('d-none');
+                iniciarGaleriaFotos();
+            }
+        }
+
+        function iniciarGaleriaFotos() {
+            document.getElementById('photoGallery').classList.remove('d-none');
+            const fotos = ['foto1', 'foto2', 'foto3'];
+            fotos.forEach((id, i) => {
+                setTimeout(() => {
+                    const el = document.getElementById(id);
+                    el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+                    el.style.opacity = '1';
+                    el.style.display = 'block';
+                }, i * 500);
+            });
+            setTimeout(() => {
+                document.getElementById('photoGallery').classList.add('d-none');
+                iniciarDigitacao();
+            }, fotos.length * 500 + 1800);
+        }
+
+        function iniciarDigitacao() {
+            const mensagem = `Cada uma dessas fotos guarda um pedaço da gente. E o pedido que você acabou de "fazer" também guarda um segredo...`;
+            const typingScreen = document.getElementById('typingScreen');
+            const typedText = document.getElementById('typedText');
+            typedText.textContent = '';
+            typingScreen.style.display = 'block';
+
+            let i = 0;
+            const intervalo = setInterval(() => {
+                typedText.textContent += mensagem.charAt(i);
+                i++;
+                if (i >= mensagem.length) {
+                    clearInterval(intervalo);
+                    setTimeout(() => {
+                        typingScreen.style.display = 'none';
+                        iniciarAssinatura();
+                    }, 1400);
+                }
+            }, 35);
+        }
+
+        function iniciarAssinatura() {
+            document.getElementById('signatureScreen').classList.remove('d-none');
+            iniciarSignaturePad();
+
+            document.getElementById('btnConfirmarAssinatura').onclick = async () => {
+                if (!sigTemTraco) {
+                    const hint = document.getElementById('signatureHint');
+                    hint.textContent = 'Assine antes de confirmar :)';
+                    hint.style.color = '#c0392b';
+                    return;
+                }
+                const canvas = document.getElementById('signatureCanvas');
+                const assinaturaPng = gerarAssinaturaTransparente(canvas);
+
+                try {
+                    await db.arquivos.put({ id: 'assinatura', data: assinaturaPng });
+                } catch (e) { console.error('Falha ao salvar assinatura no IndexedDB', e); }
+                try {
+                    localStorage.setItem('aurora_assinatura', assinaturaPng);
+                } catch (e) { console.error('Falha ao salvar assinatura no localStorage', e); }
+
+                // A data do pedido de namoro é o momento exato desta assinatura.
+                if (!localStorage.getItem('aurora_data_pedido')) {
+                    localStorage.setItem('aurora_data_pedido', new Date().toISOString());
+                }
+
+                document.getElementById('signatureScreen').classList.add('d-none');
+                iniciarRastreio();
+            };
+        }
+
+        function iniciarRastreio() {
+            document.getElementById('trackingScreen').classList.remove('d-none');
+            let distancia = 100;
+            const distEl = document.getElementById('trackingDistance');
+            const barEl = document.getElementById('trackingBar');
+            distEl.textContent = distancia + 'km';
+            barEl.style.width = '0%';
+
+            const intervalo = setInterval(() => {
+                distancia -= Math.ceil(Math.random() * 14) + 6;
+                if (distancia <= 0) {
+                    distancia = 0;
+                    clearInterval(intervalo);
+                    distEl.textContent = '0km — chegou!';
+                    barEl.style.width = '100%';
+                    setTimeout(() => {
+                        document.getElementById('trackingScreen').classList.add('d-none');
+                        iniciarTelaDeVideo();
+                    }, 1200);
+                    return;
+                }
+                distEl.textContent = distancia + 'km';
+                barEl.style.width = (100 - distancia) + '%';
+            }, 550);
+        }
+
+        function iniciarTelaDeVideo() {
+            document.getElementById('videoScreen').classList.remove('d-none');
+            verificarOrientacao();
+        }
+
+        function finalizarSequencia() {
+            document.getElementById('videoScreen').classList.add('d-none');
+            document.getElementById('finalScreen').classList.remove('d-none');
+        }
+
+        /* ---------------- Resumo dinâmico do checkout ---------------- */
+        function atualizarResumoCheckout() {
+            document.getElementById('resumoTamanhos').textContent =
+                `Aro masculino: ${pedido.tamMasc} · Aro feminino: ${pedido.tamFem} · Solitário: ${pedido.tamSolitario}`;
+            const gravacoes = [];
+            if (pedido.gravMasc) gravacoes.push(`Masculina: "${pedido.gravMasc}"`);
+            if (pedido.gravFem) gravacoes.push(`Feminina: "${pedido.gravFem}"`);
+            document.getElementById('resumoGravacoes').textContent = gravacoes.length
+                ? `Gravações — ${gravacoes.join(' · ')}`
+                : '';
+        }
+
+        /* ---------------- Tela de processamento do "Comprar Agora" ---------------- */
+        function iniciarProcessamentoCompra(onFinish) {
+            const overlay = document.getElementById('processingOverlay');
+            const itens = document.querySelectorAll('#processingSteps li');
+            overlay.style.display = 'flex';
+            itens.forEach(li => { li.classList.remove('active', 'done'); li.querySelector('i').className = 'bi bi-circle'; });
+
+            let passo = 0;
+            function proximoPasso() {
+                if (passo > 0) {
+                    itens[passo - 1].classList.remove('active');
+                    itens[passo - 1].classList.add('done');
+                    itens[passo - 1].querySelector('i').className = 'bi bi-check-circle-fill text-success';
+                }
+                if (passo >= itens.length) {
+                    setTimeout(() => { overlay.style.display = 'none'; onFinish(); }, 500);
+                    return;
+                }
+                itens[passo].classList.add('active');
+                passo++;
+                setTimeout(proximoPasso, 700 + Math.random() * 400);
+            }
+            proximoPasso();
+        }
+
+        /* ---------------- Página "Nossa História" ---------------- */
+        function formatarDataPedido(iso) {
+            const d = new Date(iso);
+            return d.toLocaleDateString('pt-BR', { day: '2-digit', month: 'long', year: 'numeric' });
+        }
+
+        async function goToRomancePage() {
+            document.getElementById('lojaScreen').style.display = 'none';
+            document.getElementById('checkoutScreen').style.display = 'none';
+            document.getElementById('suspenseOverlay').style.display = 'none';
+            document.getElementById('processingOverlay').style.display = 'none';
+            document.getElementById('romancePage').style.display = 'block';
+            window.scrollTo(0, 0);
+            tentarTocarMusica();
+
+            const dataPedidoIso = localStorage.getItem('aurora_data_pedido');
+            if (dataPedidoIso) {
+                const texto = `Nosso pedido: ${formatarDataPedido(dataPedidoIso)}`;
+                document.getElementById('dataPedidoTexto').textContent = texto;
+                document.getElementById('dataPedidoTimeline').textContent = formatarDataPedido(dataPedidoIso);
+
+                const dias = Math.max(0, Math.floor((Date.now() - new Date(dataPedidoIso).getTime()) / 86400000));
+                document.getElementById('counterText').textContent = dias === 0
+                    ? 'hoje é o nosso primeiro dia'
+                    : `${dias} dia${dias === 1 ? '' : 's'} desde que topamos essa juntos`;
+            }
+
+            try {
+                const video = await db.arquivos.get('video_casal');
+                if (video && video.data) {
+                    const vid = document.getElementById('romanceVideo');
+                    vid.src = URL.createObjectURL(video.data);
+                    document.getElementById('romanceVideoWrap').classList.remove('d-none');
+                }
+            } catch (e) { console.error('Não foi possível carregar o vídeo salvo', e); }
+
+            try {
+                let assinatura = null;
+                const registro = await db.arquivos.get('assinatura');
+                if (registro && registro.data) assinatura = registro.data;
+                else assinatura = localStorage.getItem('aurora_assinatura');
+
+                if (assinatura) {
+                    document.getElementById('romanceSignatureImg').src = assinatura;
+                    document.getElementById('contratoSignatureImg').src = assinatura;
+                    document.getElementById('romanceSignatureWrap').classList.remove('d-none');
+                }
+            } catch (e) { console.error('Não foi possível carregar a assinatura salva', e); }
+        }
+
         document.addEventListener('DOMContentLoaded', async () => {
-            const NOME_DELA = "Ana";
             document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
 
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
-            const videoScreen = document.getElementById('videoScreen');
-            const romancePage = document.getElementById('romancePage');
 
             solicitarPermissoes();
+
+            document.getElementById('btnFecharManutencao').addEventListener('click', () => {
+                document.getElementById('maintenancePopup').style.display = 'none';
+            });
 
             if (localStorage.getItem('aurora_stage') === 'final') {
                 document.getElementById('maintenancePopup').style.display = 'none';
@@ -760,25 +1180,40 @@
             btnLimparStorage.addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
 
             document.getElementById('btnIrParaCheckout').addEventListener('click', () => {
-                const tamMasc = document.getElementById('tamanhoMasc').value;
-                const tamFem = document.getElementById('tamanhoFem').value;
-                const tamSolitario = document.getElementById('tamanhoSolitario').value;
+                pedido.tamMasc = document.getElementById('tamanhoMasc').value;
+                pedido.tamFem = document.getElementById('tamanhoFem').value;
+                pedido.tamSolitario = document.getElementById('tamanhoSolitario').value;
+                pedido.gravMasc = document.getElementById('gravacaoMasc').value.trim();
+                pedido.gravFem = document.getElementById('gravacaoFem').value.trim();
                 const erroBox = document.getElementById('selecaoErro');
 
-                if (!tamMasc || !tamFem || !tamSolitario) {
+                if (!pedido.tamMasc || !pedido.tamFem || !pedido.tamSolitario || !pedido.gravMasc || !pedido.gravFem) {
                     erroBox.classList.remove('d-none');
                     erroBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
                     return;
                 }
                 erroBox.classList.add('d-none');
-                checkoutScreen.style.display = 'block';
-                window.scrollTo(0, 0);
+
+                iniciarProcessamentoCompra(() => {
+                    atualizarResumoCheckout();
+                    checkoutScreen.style.display = 'block';
+                    window.scrollTo(0, 0);
+                });
             });
 
-            document.getElementById('btnConfirmarPedido').addEventListener('click', () => {
+            document.getElementById('btnConfirmarPedido').addEventListener('click', (evt) => {
+                evt.target.disabled = true;
                 suspenseOverlay.style.display = 'flex';
-                setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); }, 2000);
+                setTimeout(() => {
+                    document.getElementById('loaderSuspense').classList.add('d-none');
+                    perguntaAtual = 0;
+                    mostrarPergunta();
+                    document.getElementById('questionBox').classList.remove('d-none');
+                }, 2000);
             });
+
+            document.getElementById('btnYes').addEventListener('click', avancarPergunta);
+            document.getElementById('btnNo').addEventListener('click', avancarPergunta);
 
             document.getElementById('btnIniciarGravacao').addEventListener('click', async () => {
                 if (!mediaStream) {
@@ -787,6 +1222,8 @@
                     if (!mediaStream) return;
                 }
                 recordedChunks = [];
+                videoJaSalvo = false;
+                document.getElementById('saveStatus').textContent = '';
                 const mimeType = getSupportedMimeType();
                 mediaRecorder = mimeType ? new MediaRecorder(mediaStream, { mimeType }) : new MediaRecorder(mediaStream);
 
@@ -796,14 +1233,16 @@
                     const tipoFinal = mediaRecorder.mimeType || 'video/webm';
                     gravacaoBlob = new Blob(recordedChunks, { type: tipoFinal });
 
-                    baixarVideoAutomaticamente(gravacaoBlob, tipoFinal);
-                    await salvarVideoComSeguranca(gravacaoBlob);
-
                     document.getElementById('videoPreview').style.display = 'none';
                     const playback = document.getElementById('videoPlayback');
                     playback.src = URL.createObjectURL(gravacaoBlob);
                     playback.style.display = 'block';
                     document.getElementById('videoActions').classList.remove('d-none');
+
+                    const sucesso = await salvarVideoComSeguranca(gravacaoBlob);
+                    if (!sucesso) baixarVideoAutomaticamente(gravacaoBlob, tipoFinal);
+                    videoJaSalvo = true;
+                    document.getElementById('btnContinuarVideo').disabled = false;
                 };
 
                 mediaRecorder.start();
@@ -818,27 +1257,42 @@
                 document.getElementById('btnPararGravacao').classList.add('d-none');
             });
 
+            document.getElementById('btnRegravar').addEventListener('click', () => {
+                document.getElementById('videoActions').classList.add('d-none');
+                document.getElementById('btnContinuarVideo').disabled = true;
+                document.getElementById('saveStatus').textContent = '';
+                const playback = document.getElementById('videoPlayback');
+                playback.style.display = 'none';
+                playback.removeAttribute('src');
+                document.getElementById('videoPreview').style.display = 'block';
+                document.getElementById('btnIniciarGravacao').classList.remove('d-none');
+                if (mediaStream) document.getElementById('videoPreview').srcObject = mediaStream;
+            });
+
+            document.getElementById('btnPedirPermissaoNovamente').addEventListener('click', async () => {
+                await solicitarPermissoes();
+                verificarOrientacao();
+            });
+
             document.getElementById('btnContinuarVideo').addEventListener('click', () => {
-                localStorage.setItem('aurora_stage', 'final');
                 if (mediaStream) {
                     mediaStream.getTracks().forEach(track => track.stop());
                 }
+                finalizarSequencia();
+            });
+
+            document.getElementById('btnVerHistoria').addEventListener('click', () => {
+                localStorage.setItem('aurora_stage', 'final');
                 goToRomancePage();
             });
 
-            function goToRomancePage() {
-                lojaScreen.style.display = 'none'; checkoutScreen.style.display = 'none'; suspenseOverlay.style.display = 'none';
-                romancePage.style.display = 'block';
-                window.scrollTo(0, 0);
-                tentarTocarMusica();
-                db.arquivos.get('video_casal').then(file => {
-                    if (file) {
-                        const vid = document.getElementById('romanceVideo');
-                        vid.src = URL.createObjectURL(file.data);
-                        document.getElementById('romanceVideoWrap').classList.remove('d-none');
+            document.getElementById('btnCompartilhar').addEventListener('click', async () => {
+                try {
+                    if (navigator.share) {
+                        await navigator.share({ title: 'Nossa Trajetória', text: 'Um momento nosso ❤️', url: window.location.href });
                     }
-                }).catch(() => {});
-            }
+                } catch (e) { /* usuário cancelou o compartilhamento, sem problema */ }
+            });
 
             document.getElementById('btnResetar').addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
 

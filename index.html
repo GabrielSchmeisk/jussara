@@ -3,128 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Aurora Joias | Alianças Exclusivas</title>
+    <title>Aurora Joias | Aliança Esgrifa Branca+ Solitário Libélula</title>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-    
+
     <style>
-        :root { --rosegold: #B76E79; --offwhite: #FAF9F6; }
-        body.bg-offwhite { background-color: var(--offwhite); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        :root {
+            --rosegold: #B76E79;
+            --offwhite: #FAF9F6;
+            --text-dark: #333333;
+        }
+
+        body.bg-offwhite {
+            background-color: var(--offwhite);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: var(--text-dark);
+        }
+
+        /* Cores e Utilitários */
         .text-rosegold { color: var(--rosegold) !important; }
         .bg-rosegold { background-color: var(--rosegold) !important; color: white; }
+        .border-rosegold { border-color: #e0b4bc !important; }
         .btn-rosegold { background-color: var(--rosegold); color: white; border: none; }
-        .btn-rosegold:hover { background-color: #a05d67; }
-        
+        .btn-rosegold:hover, .btn-rosegold:active { background-color: #a05d67; color: white; }
+        .tracking-wide { letter-spacing: 2px; }
+        .placeholder-link:active { opacity: 0.5; }
+
+        /* Estrutura de Imagens */
         .product-image-container img { width: 100%; object-fit: cover; max-height: 400px; background-color: #eee; }
-        .fullscreen-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: var(--offwhite); z-index: 9999; overflow-y: auto; display: none; }
-        .suspense-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(20, 20, 20, 0.95); z-index: 10000; display: none; align-items: center; justify-content: center; flex-direction: column; backdrop-filter: blur(10px); }
-        
-        .polaroid { background: white; padding: 10px 10px 30px 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.3); border-radius: 4px; max-width: 80%; display: none; margin: 0 auto; }
-        .polaroid img { width: 100%; }
-        .typing-container { color: white; text-align: center; padding: 20px; font-size: 1.2rem; font-style: italic; display: none; }
-        .final-photo { max-height: 40vh; border: 4px solid var(--rosegold); border-radius: 12px; }
+        .related-img { height: 150px; object-fit: cover; background-color: #eee; border-radius: 8px; }
+
+        /* Selos e Confiança */
+        .trust-badges i { font-size: 1.8rem; color: #555; }
+        .security-bar { font-size: 0.75rem; background-color: #f1f1f1; }
+
+        /* Overlay do Suspense */
+        #suspenseOverlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.9); z-index: 9999;
+            display: flex; align-items: center; justify-content: center;
+            backdrop-filter: blur(8px);
+        }
+        .text-shadow { text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
+        .final-photo { max-height: 45vh; border: 4px solid var(--rosegold); background-color: #eee; }
     </style>
 </head>
 <body class="bg-offwhite">
 
-    <!-- TELA PRINCIPAL (VITRINE ORIGINAL) -->
-    <div id="lojaScreen">
-        <nav class="navbar navbar-light bg-white shadow-sm px-3 fixed-top">
-            <i class="bi bi-list fs-1 text-rosegold"></i>
-            <span class="navbar-brand mb-0 h1 text-rosegold fw-bold">AURORA</span>
-            <i class="bi bi-bag fs-3 text-rosegold"></i>
+    <div class="bg-dark text-white text-center py-1 small fw-light">
+        Frete Grátis para todo o Brasil via Sedex Expresso
+    </div>
+
+    <nav class="navbar navbar-light bg-white shadow-sm px-3 sticky-top d-flex justify-content-between align-items-center">
+        <i class="bi bi-list fs-2 text-rosegold placeholder-link"></i>
+        <span class="navbar-brand mb-0 h1 text-rosegold fw-bold tracking-wide mx-auto">AURORA</span>
+        <div class="d-flex gap-3">
+            <i class="bi bi-search fs-4 text-rosegold placeholder-link"></i>
+            <i class="bi bi-bag fs-4 text-rosegold placeholder-link position-relative">
+                <span class="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle"></span>
+            </i>
+        </div>
+    </nav>
+
+    <div class="container-fluid pt-3 pb-5 mb-5">
+
+        <nav aria-label="breadcrumb" class="small mb-2 px-2">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted placeholder-link">Início</a></li>
+                <li class="breadcrumb-item"><a href="#" class="text-decoration-none text-muted placeholder-link">Alianças</a></li>
+                <li class="breadcrumb-item active text-dark" aria-current="page">Prata 950</li>
+            </ol>
         </nav>
 
-        <div class="container-fluid pt-5 mt-4 pb-5 mb-5">
-            <div class="product-image-container text-center my-3">
-                <img src="alianca.jpg" alt="Alianças" class="img-fluid rounded shadow-sm">
-            </div>
-            <div class="px-2">
-                <h2 class="fs-4 fw-bold">Par de Alianças + Anel Solitário Ouro 18k</h2>
-                <h3 class="fs-2 fw-bold text-rosegold">R$ 1.899,00</h3>
-                <p class="text-secondary small">Material de alta resistência, design anatômico para momentos únicos.</p>
-            </div>
-            <div class="px-2">
-                <label class="small text-muted">Tamanho Aliança Masculina</label>
-                <select class="form-select mb-2"><option>18</option><option>19</option><option>20</option></select>
-                <label class="small text-muted">Tamanho Aliança Feminina</label>
-                <select class="form-select mb-2"><option>12</option><option>13</option><option>14</option></select>
-                <label class="small text-muted">Gravação</label>
-                <input type="text" class="form-control mb-3" placeholder="Nomes e Data">
+        <div class="product-image-container text-center my-2 position-relative">
+            <img src="https://via.placeholder.com/600x600/FAF9F6/B76E79?text=Ali%C3%A7na+Esgrifa+Branca%2B" alt="Par de Alianças Esgrifa Branca+ com Solitário Libélula" class="img-fluid rounded shadow-sm">
+            <div class="badge bg-rosegold position-absolute mt-3 ms-3 top-0 start-0 fs-6 shadow">20% OFF</div>
+            <div class="position-absolute bottom-0 end-0 mb-3 me-3 bg-white rounded-circle p-2 shadow-sm placeholder-link">
+                <i class="bi bi-heart fs-5 text-muted"></i>
             </div>
         </div>
-        <div class="fixed-bottom bg-white p-3 shadow-lg border-top">
-            <button id="btnIrParaCheckout" class="btn btn-rosegold w-100 py-3 fs-5 fw-bold rounded-pill">Comprar Agora</button>
+
+        <div class="px-2 mt-3">
+            <p class="text-muted small mb-1">Ref: AU-31207-PRT</p>
+            <h1 class="fs-4 fw-bold text-dark lh-sm">Aliança Esgrifa Branca+ Solitário Libélula - 2 Milímetros Prata 950 (Flor Rosa)</h1>
+
+            <div class="d-flex align-items-center mb-3 mt-2">
+                <div class="text-warning small">
+                    <i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-half"></i>
+                </div>
+                <span class="ms-2 text-muted small text-decoration-underline placeholder-link">(96 avaliações)</span>
+            </div>
+
+            <h2 class="fs-1 fw-bold text-rosegold mb-0">R$ 749,00</h2>
+            <p class="text-muted mb-0 small"><s>de R$ 939,00</s> <span class="text-success fw-bold ms-1">Economize R$ 190</span></p>
+            <p class="text-dark small fw-bold mt-1">ou 10x de R$ 74,90 sem juros no cartão</p>
+        </div>
+
+        <div class="px-2 mt-4 d-flex justify-content-between align-items-center trust-badges border-top border-bottom py-3">
+            <div class="text-center"><i class="bi bi-credit-card"></i><br><span class="small" style="font-size: 0.65rem;">Até 10x s/ juros</span></div>
+            <div class="text-center text-success"><i class="bi bi-qr-code"></i><br><span class="small" style="font-size: 0.65rem;">10% no Pix</span></div>
+            <div class="text-center"><i class="bi bi-shield-check"></i><br><span class="small" style="font-size: 0.65rem;">Compra Segura</span></div>
+            <div class="text-center"><i class="bi bi-award"></i><br><span class="small" style="font-size: 0.65rem;">Garantia Vitalícia</span></div>
+        </div>
+
+        <div class="px-2 mt-4 bg-white p-3 rounded shadow-sm border">
+            <h5 class="fs-6 fw-bold mb-2"><i class="bi bi-truck text-rosegold me-2"></i>Consultar Frete e Prazo</h5>
+            <div class="input-group input-group-sm mb-2">
+                <input type="text" class="form-control" placeholder="00000-000" maxlength="9">
+                <button class="btn btn-outline-secondary placeholder-link" type="button" onclick="document.getElementById('freteResult').classList.remove('d-none')">Calcular</button>
+            </div>
+            <div id="freteResult" class="d-none mt-2 text-success small fw-bold bg-light p-2 rounded">
+                Sedex Expresso - Frete Grátis (Chega em 2 a 3 dias úteis)
+            </div>
+        </div>
+
+        <div class="px-2 mt-4">
+            <h4 class="fs-5 fw-bold mb-3 border-bottom pb-2">Personalize seu pedido</h4>
+
+            <div class="bg-white p-3 rounded shadow-sm border mb-3">
+                <h6 class="fw-bold text-dark"><i class="bi bi-gender-male text-primary me-2"></i>Aliança Masculina - Esgrifa Branca+</h6>
+                <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
+                <select class="form-select border-rosegold mb-2">
+                    <option selected>Selecione o aro</option>
+                    <option value="18">18</option>
+                    <option value="19">19</option>
+                    <option value="20">20</option>
+                    <option value="21">21</option>
+                    <option value="22">22</option>
+                </select>
+                <label class="form-label small text-muted">Gravação (Ex: Nome e Data)</label>
+                <input type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
+            </div>
+
+            <div class="bg-white p-3 rounded shadow-sm border mb-3">
+                <h6 class="fw-bold text-dark"><i class="bi bi-gender-female text-danger me-2"></i>Aliança Feminina - Esgrifa Branca+</h6>
+                <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
+                <select class="form-select border-rosegold mb-2">
+                    <option selected>Selecione o aro</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                </select>
+                <label class="form-label small text-muted">Gravação (Ex: Nome e Data)</label>
+                <input type="text" class="form-control border-rosegold" placeholder="O que deseja gravar?">
+            </div>
+
+            <div class="bg-white p-3 rounded shadow-sm border mb-3">
+                <h6 class="fw-bold text-dark"><i class="bi bi-gem text-info me-2"></i>Anel Solitário Libélula (Flor Rosa) - Brinde</h6>
+                <label class="form-label small text-muted mt-2">Tamanho (Aro)</label>
+                <select class="form-select border-rosegold">
+                    <option selected>Selecione o aro</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                    <option value="13">13</option>
+                    <option value="14">14</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="px-2 mt-4">
+            <h4 class="fs-6 fw-bold mb-2">Detalhes do Produto</h4>
+            <ul class="small text-muted ps-3 lh-lg">
+                <li><strong>Modelo:</strong> Esgrifa Branca+</li>
+                <li><strong>Material:</strong> Prata 950</li>
+                <li><strong>Peso Aproximado:</strong> 4.2g (o par)</li>
+                <li><strong>Largura:</strong> 2.0 mm</li>
+                <li><strong>Acabamento:</strong> Polido fosco com detalhe floral em esmalte Flor Rosa</li>
+                <li><strong>Anel Solitário:</strong> Design Libélula, zircônia central e detalhe em Flor Rosa</li>
+                <li><strong>Garantia:</strong> Vitalícia contra defeitos de fabricação</li>
+            </ul>
+        </div>
+
+        <div class="px-2 mt-5">
+            <h4 class="fs-6 fw-bold mb-3">Você também pode gostar</h4>
+            <div class="row row-cols-2 g-2">
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm placeholder-link" style="cursor: pointer;">
+                        <img src="https://via.placeholder.com/300x300/eee/999?text=Colar+Lib%C3%A9lula" class="card-img-top related-img" alt="Colar Libélula Prata 950">
+                        <div class="card-body p-2 text-center">
+                            <p class="card-title small fw-bold mb-0 text-truncate">Colar Libélula Prata 950</p>
+                            <p class="text-rosegold fw-bold small mt-1 mb-0">R$ 259,00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm placeholder-link" style="cursor: pointer;">
+                        <img src="https://via.placeholder.com/300x300/eee/999?text=Brinco+Flor+Rosa" class="card-img-top related-img" alt="Brincos Flor Rosa Prata 950">
+                        <div class="card-body p-2 text-center">
+                            <p class="card-title small fw-bold mb-0 text-truncate">Brincos Flor Rosa Prata 950</p>
+                            <p class="text-rosegold fw-bold small mt-1 mb-0">R$ 189,00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm placeholder-link" style="cursor: pointer;">
+                        <img src="https://via.placeholder.com/300x300/eee/999?text=Pulseira+Esgrifa" class="card-img-top related-img" alt="Pulseira Esgrifa Prata 950">
+                        <div class="card-body p-2 text-center">
+                            <p class="card-title small fw-bold mb-0 text-truncate">Pulseira Esgrifa Prata 950</p>
+                            <p class="text-rosegold fw-bold small mt-1 mb-0">R$ 219,00</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm placeholder-link" style="cursor: pointer;">
+                        <img src="https://via.placeholder.com/300x300/eee/999?text=Estojo+Aurora" class="card-img-top related-img" alt="Estojo Presenteável Aurora">
+                        <div class="card-body p-2 text-center">
+                            <p class="card-title small fw-bold mb-0 text-truncate">Estojo Presenteável Aurora</p>
+                            <p class="text-rosegold fw-bold small mt-1 mb-0">R$ 59,00</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="px-2 mt-5 mb-4">
+            <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+                <h4 class="fs-6 fw-bold mb-0">Avaliações (96)</h4>
+                <div class="text-warning small"><i class="bi bi-star-fill"></i> 4.8/5</div>
+            </div>
+            <div class="card border-0 shadow-sm mb-3 bg-white">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="card-subtitle mb-1 fw-bold text-dark small">Rafael T. <i class="bi bi-patch-check-fill text-success"></i></h6>
+                        <span class="text-muted" style="font-size: 0.7rem;">Há 2 dias</span>
+                    </div>
+                    <div class="text-warning mb-2" style="font-size: 0.7rem;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                    <p class="card-text small text-muted mb-0">O detalhe da libélula no solitário é ainda mais bonito de perto. Acabamento impecável e chegou antes do prazo.</p>
+                </div>
+            </div>
+            <div class="card border-0 shadow-sm mb-3 bg-white">
+                <div class="card-body p-3">
+                    <div class="d-flex justify-content-between">
+                        <h6 class="card-subtitle mb-1 fw-bold text-dark small">Beatriz S. <i class="bi bi-patch-check-fill text-success"></i></h6>
+                        <span class="text-muted" style="font-size: 0.7rem;">Há 5 dias</span>
+                    </div>
+                    <div class="text-warning mb-2" style="font-size: 0.7rem;"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+                    <p class="card-text small text-muted mb-0">Prata 950 muito leve e confortável no dia a dia. O tom flor rosa é sutil e super elegante.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- TELA CHECKOUT E FLUXO DE PEDIDO (Mantidos) -->
-    <div id="checkoutScreen" class="fullscreen-overlay">
-        <div class="container py-4">
-            <h5 class="fw-bold">Resumo do Pedido</h5>
-            <div class="bg-white p-3 rounded border mb-3 small">
-                <strong>Endereço:</strong> Rua São José, 197, Centro, Nuporanga - CEP 14670-000<br>
-                <strong>Pagamento:</strong> Cartão de Crédito
+    <footer class="bg-light pt-4 pb-5 border-top text-center" style="margin-bottom: 70px;">
+        <h5 class="text-rosegold fw-bold tracking-wide mb-3">AURORA JOIAS</h5>
+        <div class="d-flex justify-content-center gap-4 mb-3">
+            <i class="bi bi-instagram fs-4 text-muted placeholder-link"></i>
+            <i class="bi bi-whatsapp fs-4 text-muted placeholder-link"></i>
+            <i class="bi bi-envelope fs-4 text-muted placeholder-link"></i>
+        </div>
+        <div class="small text-muted mb-2 placeholder-link">Política de Trocas | Termos de Serviço | Rastreio</div>
+        <p class="small text-muted" style="font-size: 0.7rem;">
+            Aurora Joias Exclusivas S.A. | CNPJ: 45.123.987/0001-09<br>
+            Rua Fictícia, 123 - Centro, São Paulo - SP<br>
+            © 2026 Todos os direitos reservados.
+        </p>
+    </footer>
+
+    <div class="fixed-bottom bg-white p-3 shadow-lg border-top" style="z-index: 1000;">
+        <button id="btnComprar" class="btn btn-rosegold w-100 py-3 fs-5 fw-bold rounded-pill shadow">
+            <i class="bi bi-lock-fill me-2"></i> Finalizar Compra Segura
+        </button>
+    </div>
+
+    <div id="suspenseOverlay" class="d-none">
+        <div id="loader" class="text-center text-white">
+            <div class="spinner-border text-rosegold mb-3" role="status" style="width: 3rem; height: 3rem; border-width: 0.3em;"></div>
+            <p class="fs-6 fw-bold tracking-wide text-uppercase">Criptografando Pedido...</p>
+        </div>
+
+        <div id="questionBox" class="d-none bg-white p-4 rounded-4 shadow-lg text-center w-100 mx-3 position-relative">
+            <div class="position-absolute top-0 start-50 translate-middle bg-danger text-white rounded-circle d-flex align-items-center justify-content-center border border-white border-4" style="width: 60px; height: 60px;">
+                <i class="bi bi-exclamation-triangle-fill fs-3"></i>
             </div>
-            <button id="btnConfirmarPedido" class="btn btn-success w-100 py-3 rounded-pill">Confirmar Pagamento</button>
+            <h5 id="questionText" class="text-dark mt-4 mb-4 lh-base fw-bold"></h5>
+            <div class="d-flex flex-column gap-3">
+                <button id="btnYes" class="btn btn-rosegold py-3 fw-bold rounded-pill shadow-sm"></button>
+                <button id="btnNo" class="btn btn-light border py-3 fw-bold text-muted rounded-pill"></button>
+            </div>
+        </div>
+
+        <div id="finalScreen" class="d-none text-center w-100 px-3">
+            <img src="https://via.placeholder.com/300x400/B76E79/FAF9F6?text=Foto+do+Casal" class="img-fluid rounded-4 shadow-lg mb-4 final-photo" alt="Nós">
+            <h1 class="text-white fw-bold display-4 text-shadow mb-3">As alianças já chegaram.</h1>
+            <p class="text-white fs-4 mt-2 text-shadow fw-light">Olhe para o lado.</p>
         </div>
     </div>
 
-    <!-- TELA SUSPENSE -->
-    <div id="suspenseOverlay" class="suspense-overlay">
-        <div id="loaderSuspense" class="text-center text-white">
-            <div class="spinner-border text-rosegold mb-3"></div>
-            <p id="loaderText" class="fw-bold">Processando Pagamento...</p>
-        </div>
-        <div id="questionBox" class="d-none bg-white p-4 rounded-4 text-center w-100 mx-3" style="max-width: 400px;">
-            <h5 id="questionText" class="mb-4 fw-bold"></h5>
-            <button id="btnYes" class="btn btn-rosegold w-100 mb-2"></button>
-            <button id="btnNo" class="btn btn-light border w-100"></button>
-        </div>
-        <div id="photoGallery" class="d-none"></div>
-        <div id="typingScreen" class="typing-container"><span id="typedText"></span></div>
-        <div id="finalScreen" class="d-none text-center px-3">
-            <img src="casal.jpg" class="img-fluid final-photo mb-4">
-            <h1 class="text-white fw-bold">As alianças foram entregues.</h1>
-            <p class="text-white fs-4">Olhe para o lado.</p>
-        </div>
-    </div>
-
-    <audio id="musicaFundo" src="musica.mp3" preload="auto"></audio>
+    <audio id="musicaFundo" preload="auto"></audio>
 
     <script>
-        // Lógica mantida integralmente do passo anterior
-        document.getElementById('btnIrParaCheckout').onclick = () => { document.getElementById('checkoutScreen').style.display = 'block'; };
-        document.getElementById('btnConfirmarPedido').onclick = () => { 
-            document.getElementById('suspenseOverlay').style.display = 'flex';
-            setTimeout(() => { document.getElementById('loaderText').textContent = "Verificando..."; }, 2000);
-            setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); loadQuestion(); }, 4000);
-        };
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnComprar = document.getElementById('btnComprar');
+            const overlay = document.getElementById('suspenseOverlay');
+            const loader = document.getElementById('loader');
+            const questionBox = document.getElementById('questionBox');
+            const finalScreen = document.getElementById('finalScreen');
+            const questionText = document.getElementById('questionText');
+            const btnYes = document.getElementById('btnYes');
+            const btnNo = document.getElementById('btnNo');
+            const placeholderLinks = document.querySelectorAll('.placeholder-link');
+            const musica = document.getElementById('musicaFundo');
 
-        const questions = [
-            { text: "Você confirma que ela é o amor da sua vida?", btnSim: "Sim", btnNao: "Revisar" },
-            { text: "Promete estar junto em todos os momentos?", btnSim: "Prometo", btnNao: "Não" },
-            { text: "Você ama a Ana?", btnSim: "Mais que tudo", btnNao: "Não" }
-        ];
-        let currentQuestion = 0;
-        function loadQuestion() {
-            if(currentQuestion >= questions.length) { document.getElementById('questionBox').classList.add('d-none'); startTypingEffect(); return; }
-            document.getElementById('questionText').textContent = questions[currentQuestion].text;
-            document.getElementById('btnYes').textContent = questions[currentQuestion].btnSim;
-            document.getElementById('btnNo').textContent = questions[currentQuestion].btnNao;
-        }
-        document.getElementById('btnYes').onclick = () => { currentQuestion++; loadQuestion(); };
-        
-        function startTypingEffect() {
-            document.getElementById('typingScreen').style.display = 'block';
-            const text = "Ana, você é a minha melhor escolha. Vamos construir nossa vida juntos?";
-            let i = 0;
-            function type() {
-                if(i < text.length) { document.getElementById('typedText').innerHTML += text.charAt(i); i++; setTimeout(type, 60); }
-                else { setTimeout(() => { document.getElementById('typingScreen').style.display = 'none'; document.getElementById('finalScreen').classList.remove('d-none'); document.getElementById('musicaFundo').play(); }, 3000); }
+            // Impede navegação nos itens falsos
+            placeholderLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                });
+            });
+
+            // Roteiro de Perguntas
+            const questions = [
+                {
+                    text: "Aviso de Segurança: Detectamos que esta é uma compra definitiva. Você tem certeza de quem será a dona dessa aliança?",
+                    btnSim: "Sim, tenho absoluta certeza",
+                    btnNao: "Revisar pedido"
+                },
+                {
+                    text: "Atenção: Este item exige um contrato de exclusividade de longo prazo. O processo não poderá ser desfeito. Deseja prosseguir?",
+                    btnSim: "Eu aceito os termos",
+                    btnNao: "Cancelar compra"
+                },
+                {
+                    text: "Verificação Final: Você ama a pessoa que está ao seu lado agora?",
+                    btnSim: "Sim, mais que tudo",
+                    btnNao: "Não"
+                }
+            ];
+
+            let currentQuestion = 0;
+
+            btnComprar.addEventListener('click', () => {
+                overlay.classList.remove('d-none');
+
+                // Simula processamento com texto mais técnico para assustar um pouco
+                setTimeout(() => {
+                    loader.classList.add('d-none');
+                    questionBox.classList.remove('d-none');
+                    loadQuestion();
+                }, 3000);
+            });
+
+            function loadQuestion() {
+                if (currentQuestion >= questions.length) {
+                    questionBox.classList.add('d-none');
+                    finalScreen.classList.remove('d-none');
+
+                    setTimeout(() => {
+                        try { musica.play(); } catch(e) {}
+                    }, 5000);
+                    return;
+                }
+
+                questionText.textContent = questions[currentQuestion].text;
+                btnYes.textContent = questions[currentQuestion].btnSim;
+                btnNo.textContent = questions[currentQuestion].btnNao;
+
+                btnNo.style.position = 'relative';
+                btnNo.style.top = '0px';
+                btnNo.style.left = '0px';
+                btnNo.style.transition = 'none'; // Reseta transição
             }
-            type();
-        }
+
+            btnYes.addEventListener('click', () => {
+                currentQuestion++;
+                loadQuestion();
+            });
+
+            btnNo.addEventListener('click', (e) => {
+                if (currentQuestion === 0 || currentQuestion === 1) {
+                    alert("Erro 403: Ação bloqueada pelo destino. Esta compra não pode ser cancelada.");
+                }
+            });
+
+            // Lógica do botão fujão na última pergunta
+            btnNo.addEventListener('touchstart', moveButton);
+            btnNo.addEventListener('mouseover', moveButton);
+
+            function moveButton(e) {
+                if (currentQuestion === 2) {
+                    e.preventDefault();
+                    btnNo.style.transition = 'all 0.2s ease'; // Movimento suave
+
+                    const maxX = window.innerWidth - btnNo.offsetWidth - 20;
+                    const maxY = window.innerHeight - btnNo.offsetHeight - 20;
+
+                    const x = Math.max(10, Math.random() * maxX);
+                    const y = Math.max(10, Math.random() * maxY);
+
+                    btnNo.style.position = 'fixed';
+                    btnNo.style.left = `${x}px`;
+                    btnNo.style.top = `${y}px`;
+                    btnNo.style.zIndex = '99999';
+                }
+            }
+        });
     </script>
 </body>
 </html>

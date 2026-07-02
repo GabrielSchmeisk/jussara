@@ -8,6 +8,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <script src="https://unpkg.com/dexie/dist/dexie.js"></script>
 
     <style>
         :root {
@@ -493,15 +494,10 @@
                 </div>
 
                 <div id="videoActions" class="d-none mt-2 d-flex gap-2">
-                    <a id="linkSalvarVideo" class="btn btn-outline-secondary flex-fill rounded-pill btn-sm fw-bold">
-                        <i class="bi bi-download me-1"></i>Salvar
-                    </a>
                     <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
                         Continuar
                     </button>
                 </div>
-
-                <p class="small text-muted mt-2 mb-0">O celular vai pedir permissão de câmera. Grave horizontalmente!</p>
             </div>
         </div>
 
@@ -590,8 +586,9 @@
             <button id="btnCompartilhar" class="btn btn-share mt-4">
                 <i class="bi bi-share-fill me-2"></i>Compartilhar
             </button>
-            <div class="mt-4">
-                <button id="btnResetar" class="btn btn-outline-danger btn-sm rounded-pill">Resetar site</button>
+            <div class="mt-4 text-center">
+                <button id="btnLimparStorage" class="btn btn-outline-warning btn-sm rounded-pill" style="display: none;">Limpar Dados (Teste)</button>
+                <button id="btnResetar" class="btn btn-outline-danger btn-sm rounded-pill mt-2">Resetar site</button>
             </div>
         </div>
     </div>
@@ -599,208 +596,78 @@
     <audio id="musicaFundo" src="musica.mp3" preload="auto"></audio>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const NOME_DELA = "Ana";
-            const NOME_COMPLETO = "Ana Poloni";
-            const DATA_INICIO_NAMORO = "2020-07-02";
+        const db = new Dexie("AuroraDB");
+        db.version(1).stores({ arquivos: 'id' });
 
+        document.addEventListener('DOMContentLoaded', async () => {
+            const NOME_DELA = "Ana";
+            const DATA_INICIO_NAMORO = "2020-07-02";
             document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
 
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
-            const loaderSuspense = document.getElementById('loaderSuspense');
-            const loaderText = document.getElementById('loaderText');
-            const questionBox = document.getElementById('questionBox');
-            const photoGallery = document.getElementById('photoGallery');
-            const typingScreen = document.getElementById('typingScreen');
-            const signatureScreen = document.getElementById('signatureScreen');
-            const trackingScreen = document.getElementById('trackingScreen');
             const videoScreen = document.getElementById('videoScreen');
-            const finalScreen = document.getElementById('finalScreen');
             const romancePage = document.getElementById('romancePage');
-            const btnIrParaCheckout = document.getElementById('btnIrParaCheckout');
-            const btnConfirmarPedido = document.getElementById('btnConfirmarPedido');
-            const questionText = document.getElementById('questionText');
-            const btnYes = document.getElementById('btnYes');
-            const btnNo = document.getElementById('btnNo');
-            const musica = document.getElementById('musicaFundo');
-            const placeholderLinks = document.querySelectorAll('.placeholder-link');
 
-            let signatureDataURL = localStorage.getItem('aurora_signature') || null;
-            let mediaStream = null;
-            let mediaRecorder = null;
-            let recordedChunks = [];
+            // Verifica se já finalizou
+            if (localStorage.getItem('aurora_stage') === 'final') {
+                document.getElementById('maintenancePopup').style.display = 'none';
+                goToRomancePage();
+            }
 
-            function saveProgress(stage) { localStorage.setItem('aurora_stage', stage); }
+            // Botão secreto de limpar (aparece no rodapé)
+            const btnLimparStorage = document.getElementById('btnLimparStorage');
+            setTimeout(() => { btnLimparStorage.style.display = 'inline-block'; }, 2000);
+            btnLimparStorage.addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
 
-            const maintenancePopup = document.getElementById('maintenancePopup');
-            const btnFecharManutencao = document.getElementById('btnFecharManutencao');
-            btnFecharManutencao.addEventListener('click', () => { maintenancePopup.style.display = 'none'; });
-
-            placeholderLinks.forEach(link => { link.addEventListener('click', (e) => e.preventDefault()); });
-
-            btnIrParaCheckout.addEventListener('click', () => { checkoutScreen.style.display = 'block'; window.scrollTo(0, 0); });
-
-            btnConfirmarPedido.addEventListener('click', () => {
+            document.getElementById('btnIrParaCheckout').addEventListener('click', () => { checkoutScreen.style.display = 'block'; });
+            document.getElementById('btnConfirmarPedido').addEventListener('click', () => {
                 suspenseOverlay.style.display = 'flex';
-                saveProgress('checkout');
-                setTimeout(() => { loaderText.textContent = "Verificando Autenticidade do Pedido..."; }, 2000);
-                setTimeout(() => { loaderSuspense.classList.add('d-none'); questionBox.classList.remove('d-none'); loadQuestion(); }, 4000);
+                setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); }, 2000);
             });
 
-            const questions = [
-                { text: "Verificação: Confirme que é você quem vai acompanhar esse pedido com o celular em mãos.", btnSim: "Sim, sou eu", btnNao: "Agora não" },
-                { text: "Aviso: Esse pedido exige atenção total à tela. Podemos prosseguir?", btnSim: "Pode prosseguir", btnNao: "Prefiro depois" },
-                { text: `Última Verificação: Confirmamos que a destinatária é a ${NOME_DELA}. Confirma sua identidade?`, btnSim: "Sim, sou eu", btnNao: "Não" }
-            ];
-
-            let currentQuestion = 0;
-            function loadQuestion() {
-                if (currentQuestion >= questions.length) { questionBox.classList.add('d-none'); startPhotoGallery(); return; }
-                questionText.textContent = questions[currentQuestion].text;
-                btnYes.textContent = questions[currentQuestion].btnSim;
-                btnNo.textContent = questions[currentQuestion].btnNao;
-            }
-
-            btnYes.addEventListener('click', () => { currentQuestion++; loadQuestion(); });
-            btnNo.addEventListener('click', () => { if (currentQuestion < 2) alert("O coração não permite cancelar esta operação."); });
-            btnNo.addEventListener('touchstart', moveButton);
-            btnNo.addEventListener('mouseover', moveButton);
-            function moveButton(e) {
-                if (currentQuestion === 2) {
-                    e.preventDefault();
-                    btnNo.style.position = 'fixed';
-                    btnNo.style.left = `${Math.random() * (window.innerWidth - 100)}px`;
-                    btnNo.style.top = `${Math.random() * (window.innerHeight - 50)}px`;
-                }
-            }
-
-            function startPhotoGallery() {
-                loaderSuspense.classList.remove('d-none');
-                loaderText.textContent = "Acessando fotos...";
-                setTimeout(() => {
-                    loaderSuspense.classList.add('d-none');
-                    photoGallery.classList.remove('d-none');
-                    const fotos = [document.getElementById('foto1'), document.getElementById('foto2'), document.getElementById('foto3')];
-                    let idx = 0;
-                    const interval = setInterval(() => {
-                        fotos.forEach(f => f.style.display = 'none');
-                        if (idx < fotos.length) { fotos[idx].style.display = 'block'; fotos[idx].classList.add('fade-in'); idx++; }
-                        else { clearInterval(interval); photoGallery.classList.add('d-none'); startTypingEffect(); }
-                    }, 3000);
-                }, 2000);
-            }
-
-            function startTypingEffect() {
-                typingScreen.style.display = 'block';
-                const textToType = `${NOME_DELA}, você é a minha melhor escolha. Cada momento com você é o meu presente favorito...`;
-                const textContainer = document.getElementById('typedText');
-                let i = 0;
-                function typeWriter() {
-                    if (i < textToType.length) { textContainer.innerHTML += textToType.charAt(i); i++; setTimeout(typeWriter, 60); }
-                    else { setTimeout(showSignaturePad, 2500); }
-                }
-                typeWriter();
-            }
-
-            const canvas = document.getElementById('signatureCanvas');
-            const ctx = canvas.getContext('2d');
-            let drawing = false, hasSigned = false;
-            function getCanvasPos(e) {
-                const rect = canvas.getBoundingClientRect();
-                return { x: ( (e.touches ? e.touches[0].clientX : e.clientX) - rect.left), y: ( (e.touches ? e.touches[0].clientY : e.clientY) - rect.top) };
-            }
-            canvas.addEventListener('mousedown', (e) => { drawing = true; hasSigned = true; const p = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-            canvas.addEventListener('mousemove', (e) => { if(drawing) { const p = getCanvasPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
-            canvas.addEventListener('mouseup', () => drawing = false);
-            canvas.addEventListener('touchstart', (e) => { drawing = true; hasSigned = true; const p = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(p.x, p.y); });
-            canvas.addEventListener('touchmove', (e) => { if(drawing) { const p = getCanvasPos(e); ctx.lineTo(p.x, p.y); ctx.stroke(); } });
-            canvas.addEventListener('touchend', () => drawing = false);
-
-            document.getElementById('btnLimparAssinatura').addEventListener('click', () => { ctx.clearRect(0,0,320,160); hasSigned = false; });
-            document.getElementById('btnConfirmarAssinatura').addEventListener('click', () => {
-                if(!hasSigned) return;
-                signatureDataURL = canvas.toDataURL('image/png');
-                localStorage.setItem('aurora_signature', signatureDataURL);
-                saveProgress('signed');
-                signatureScreen.classList.add('d-none');
-                startTracking();
-            });
-
-            function showSignaturePad() { typingScreen.style.display = 'none'; signatureScreen.classList.remove('d-none'); }
-
-            function startTracking() {
-                trackingScreen.classList.remove('d-none');
-                const steps = ["100km", "50km", "10km", "4km", "1km", "10m", "1m", "Entregue!"];
-                let idx = 0;
-                const interval = setInterval(() => {
-                    document.getElementById('trackingDistance').textContent = steps[idx];
-                    document.getElementById('trackingBar').style.width = (idx + 1) * 12 + "%";
-                    idx++;
-                    if(idx >= steps.length) { clearInterval(interval); setTimeout(startVideoCapture, 1000); }
-                }, 800);
-            }
-
-            async function startVideoCapture() {
-                trackingScreen.classList.add('d-none');
-                videoScreen.classList.remove('d-none');
-                try {
-                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true });
-                    document.getElementById('videoPreview').srcObject = mediaStream;
-                } catch(e) { showFinalScreen(); }
-            }
-
-            document.getElementById('btnIniciarGravacao').addEventListener('click', () => {
+            // Gravação Vídeo
+            let mediaStream, mediaRecorder, recordedChunks = [];
+            document.getElementById('btnIniciarGravacao').addEventListener('click', async () => {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true });
+                document.getElementById('videoPreview').srcObject = mediaStream;
                 recordedChunks = [];
                 mediaRecorder = new MediaRecorder(mediaStream);
-                mediaRecorder.ondataavailable = (e) => recordedChunks.push(e.data);
-                mediaRecorder.onstop = () => {
-                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
-                    // Compressão simples: exibe o vídeo para o usuário, mas salva a referência
-                    document.getElementById('videoPreview').style.display = 'none';
-                    document.getElementById('videoPlayback').src = URL.createObjectURL(blob);
-                    document.getElementById('videoPlayback').style.display = 'block';
-                    document.getElementById('videoActions').classList.remove('d-none');
-                };
+                mediaRecorder.ondataavailable = e => recordedChunks.push(e.data);
                 mediaRecorder.start();
                 document.getElementById('btnIniciarGravacao').classList.add('d-none');
                 document.getElementById('btnPararGravacao').classList.remove('d-none');
             });
 
-            document.getElementById('btnPararGravacao').addEventListener('click', () => { mediaRecorder.stop(); document.getElementById('btnPararGravacao').classList.add('d-none'); });
-            document.getElementById('btnContinuarVideo').addEventListener('click', () => { saveProgress('final'); showFinalScreen(); });
+            document.getElementById('btnPararGravacao').addEventListener('click', () => {
+                mediaRecorder.stop();
+                mediaRecorder.onstop = async () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    await db.arquivos.put({ id: 'video_casal', data: blob });
+                    document.getElementById('videoPreview').style.display = 'none';
+                    const playback = document.getElementById('videoPlayback');
+                    playback.src = URL.createObjectURL(blob);
+                    playback.style.display = 'block';
+                    document.getElementById('videoActions').classList.remove('d-none');
+                };
+            });
 
-            function showFinalScreen() {
-                videoScreen.classList.add('d-none');
-                finalScreen.classList.remove('d-none');
-                confetti();
-                setTimeout(goToRomancePage, 4000);
-            }
+            document.getElementById('btnContinuarVideo').addEventListener('click', () => { localStorage.setItem('aurora_stage', 'final'); location.reload(); });
 
             function goToRomancePage() {
-                suspenseOverlay.style.display = 'none';
-                lojaScreen.style.display = 'none';
-                checkoutScreen.style.display = 'none';
-                if(signatureDataURL) {
-                    document.getElementById('romanceSignatureImg').src = signatureDataURL;
-                    document.getElementById('contratoSignatureImg').src = signatureDataURL;
-                    document.getElementById('romanceSignatureWrap').classList.remove('d-none');
-                }
+                lojaScreen.style.display = 'none'; checkoutScreen.style.display = 'none'; suspenseOverlay.style.display = 'none';
                 romancePage.style.display = 'block';
-                const start = new Date(DATA_INICIO_NAMORO + 'T00:00:00');
-                const now = new Date();
-                const diff = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-                document.getElementById('counterText').textContent = `Juntos há ${diff} dias`;
+                db.arquivos.get('video_casal').then(file => {
+                    if (file) {
+                        const vid = document.getElementById('romanceVideo');
+                        vid.src = URL.createObjectURL(file.data);
+                        document.getElementById('romanceVideoWrap').classList.remove('d-none');
+                    }
+                });
             }
 
-            document.getElementById('btnResetar').addEventListener('click', () => { localStorage.clear(); location.reload(); });
-
-            // Redirecionamento automático se já finalizado
-            if (localStorage.getItem('aurora_stage') === 'final') {
-                maintenancePopup.style.display = 'none';
-                goToRomancePage();
-            }
+            document.getElementById('btnResetar').addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
         });
     </script>
 </body>

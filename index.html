@@ -7,6 +7,7 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
 
     <style>
         :root {
@@ -106,6 +107,16 @@
         .romance-video-wrap video { width: 100%; border-radius: 12px; border: 3px solid var(--rosegold); background:#000; }
         .contract-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(183,110,121,0.5); border-radius: 14px; padding: 20px; text-align:center; }
         .contract-signature-img { max-width: 260px; width: 100%; background:#fff; border-radius: 8px; padding: 10px; margin-top: 10px; }
+        .contract-box p.text-start { text-align: left !important; }
+        .counter-badge {
+            display: inline-block; background: rgba(183,110,121,0.15); border: 1px solid rgba(183,110,121,0.5);
+            border-radius: 999px; padding: 8px 18px; font-size: 0.85rem; margin-top: 10px;
+        }
+        .btn-share {
+            background: transparent; border: 1px solid var(--rosegold); color: var(--rosegold);
+            border-radius: 999px; padding: 10px 22px; font-weight: bold;
+        }
+        .btn-share:hover { background: var(--rosegold); color: white; }
     </style>
 </head>
 <body>
@@ -469,10 +480,10 @@
             <div class="tracking-bar-outer"><div class="tracking-bar-inner" id="trackingBar"></div></div>
         </div>
 
-        <!-- Passo NOVO: Vídeo de confirmação -->
+        <!-- Vídeo de confirmação -->
         <div id="videoScreen" class="d-none w-100 px-3 text-center">
             <p class="text-white fw-bold mb-1">Última etapa antes da entrega</p>
-            <p class="text-white-50 small mb-3">Grave um vídeo rápido pra confirmarmos que é você mesma aí do outro lado.</p>
+            <p class="text-white-50 small mb-3">Envie um vídeo do casal para nosso sistema, para finalizar a verificação de entrega.</p>
             <div class="signature-pad-wrap" style="max-width: 340px;">
                 <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:3/4;object-fit:cover;"></video>
                 <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:3/4;object-fit:cover;" controls></video>
@@ -510,12 +521,15 @@
     <!-- ================= TELA FINAL: NOSSA HISTÓRIA ================= -->
     <div id="romancePage" class="romance-page">
         <div class="text-center mb-4">
-            <p class="text-rosegold text-uppercase small tracking-wide mb-1">Para Ana</p>
+            <p class="text-rosegold text-uppercase small tracking-wide mb-1">Para <span class="js-nome"></span></p>
             <h1 class="romance-title fw-bold">Nossa Trajetória</h1>
             <div class="romance-divider"></div>
             <p class="fs-6 fw-light" style="max-width: 420px; margin: 0 auto;">
-                Ana, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito. Edite este texto como quiser antes de mandar pra ela.
+                <span class="js-nome"></span>, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito. Edite este texto como quiser antes de mandar pra ela.
             </p>
+            <div id="counterBadge" class="counter-badge">
+                <i class="bi bi-heart-fill text-rosegold me-1"></i> <span id="counterText">calculando...</span>
+            </div>
         </div>
 
         <div style="max-width: 420px; margin: 0 auto;">
@@ -557,16 +571,36 @@
             <div class="contract-box">
                 <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.5rem;"></i>
                 <p class="small mt-2 mb-0">Lá atrás, quando você "confirmou o recebimento do pedido", essa foi a assinatura que ficou:</p>
-                <img id="romanceSignatureImg" class="contract-signature-img" alt="Assinatura de Ana">
+                <img id="romanceSignatureImg" class="contract-signature-img" alt="Assinatura">
                 <p class="small text-white-50 mt-2 mb-0">Guardo ela como o começo simbólico da nossa história.</p>
+            </div>
+        </div>
+
+        <!-- Contrato de namoro, por humor -->
+        <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
+            <p class="romance-section-title">Contrato (sem validade jurídica, validade eterna)</p>
+            <div class="contract-box">
+                <i class="bi bi-file-earmark-heart text-rosegold" style="font-size: 1.8rem;"></i>
+                <h6 class="fw-bold mt-2 mb-3">Termo de Compromisso Afetivo</h6>
+                <p class="small text-start mb-2"><strong>Partes:</strong> [Seu Nome] e <span class="js-nome"></span>, doravante "as Partes Apaixonadas".</p>
+                <p class="small text-start mb-2"><strong>Cláusula 1ª:</strong> A partir desta assinatura, fica reconhecido que <span class="js-nome"></span> é minha, e eu sou dela — sem cláusula de rescisão, sem letras miúdas.</p>
+                <p class="small text-start mb-2"><strong>Cláusula 2ª:</strong> Ficam garantidos: abraço em dia ruim, prioridade em qualquer maratona de série e metade de qualquer sobremesa.</p>
+                <p class="small text-start mb-2"><strong>Cláusula 3ª:</strong> Fica estabelecido regime de "café da manhã na cama" em datas comemorativas, e direito irrevogável a puxar o cobertor.</p>
+                <p class="small text-start mb-3"><strong>Cláusula 4ª:</strong> Este documento não vale nada perante a lei. Vale tudo perante nós dois.</p>
+                <p class="small text-start mb-0"><strong>Assinatura da contratante:</strong></p>
+                <img id="contratoSignatureImg" class="contract-signature-img" alt="Assinatura">
+                <p class="small text-white-50 mt-3 mb-0">(é a mesma assinatura de quando você "confirmou o recebimento do pedido" 😉)</p>
             </div>
         </div>
 
         <div class="text-center mt-5">
             <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.8rem;"></i>
             <p class="fs-5 fw-light mt-3" style="max-width: 420px; margin: 0 auto;">
-                Ana, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você. Edite esta mensagem final do seu jeito antes de enviar.
+                <span class="js-nome"></span>, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você. Edite esta mensagem final do seu jeito antes de enviar.
             </p>
+            <button id="btnCompartilhar" class="btn btn-share mt-4">
+                <i class="bi bi-share-fill me-2"></i>Compartilhar
+            </button>
         </div>
     </div>
 
@@ -574,6 +608,14 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // ===== CONFIGURAÇÕES: edite aqui =====
+            const NOME_DELA = "Ana";
+            const NOME_COMPLETO = "Ana Poloni";
+            const DATA_INICIO_NAMORO = "2020-07-02"; // formato AAAA-MM-DD, ajuste pra data real de vocês
+            // =======================================
+
+            document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
+
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
@@ -645,7 +687,7 @@
                     btnNao: "Prefiro depois"
                 },
                 {
-                    text: "Última Verificação: Confirmamos que a destinatária deste pedido é a Ana. Você confirma sua identidade para liberarmos a entrega?",
+                    text: `Última Verificação: Confirmamos que a destinatária deste pedido é a ${NOME_DELA}. Você confirma sua identidade para liberarmos a entrega?`,
                     btnSim: "Sim, sou eu",
                     btnNao: "Não"
                 }
@@ -736,7 +778,7 @@
 
             function startTypingEffect() {
                 typingScreen.style.display = 'block';
-                const textToType = "Ana, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...";
+                const textToType = `${NOME_DELA}, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...`;
                 const textContainer = document.getElementById('typedText');
                 let i = 0;
 
@@ -819,7 +861,7 @@
 
             function startTracking() {
                 trackingScreen.classList.remove('d-none');
-                document.getElementById('confirmMsg').textContent = "Pedido confirmado para Ana Poloni. Aguarde, o pedido está a caminho.";
+                document.getElementById('confirmMsg').textContent = `Pedido confirmado para ${NOME_COMPLETO}. Aguarde, o pedido está a caminho.`;
 
                 const steps = [
                     { label: "100km", pct: 8 },
@@ -859,7 +901,7 @@
                 setTimeout(nextStep, 800);
             }
 
-            // ===== NOVO: captura de vídeo entre o rastreamento e a foto final =====
+            // ===== Captura de vídeo entre o rastreamento e a foto final =====
             async function startVideoCapture() {
                 videoScreen.classList.remove('d-none');
                 const preview = document.getElementById('videoPreview');
@@ -929,13 +971,44 @@
                 finalScreen.classList.remove('d-none');
                 document.getElementById('finalPhoto').classList.add('glow-effect');
 
+                fireConfetti();
+
                 setTimeout(() => {
-                    try { musica.play(); } catch (e) { console.log("Áudio pendente"); }
+                    fadeInMusic();
                 }, 1500);
 
                 setTimeout(() => {
                     goToRomancePage();
                 }, 5000);
+            }
+
+            // ===== Confete na revelação =====
+            function fireConfetti() {
+                if (typeof confetti !== 'function') return;
+                const duration = 2500;
+                const end = Date.now() + duration;
+                (function frame() {
+                    confetti({ particleCount: 4, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
+                    confetti({ particleCount: 4, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
+                    if (Date.now() < end) requestAnimationFrame(frame);
+                })();
+            }
+
+            // ===== Música com fade-in suave =====
+            function fadeInMusic() {
+                musica.volume = 0;
+                musica.play().then(() => {
+                    let vol = 0;
+                    const fade = setInterval(() => {
+                        vol += 0.05;
+                        if (vol >= 1) {
+                            musica.volume = 1;
+                            clearInterval(fade);
+                        } else {
+                            musica.volume = vol;
+                        }
+                    }, 150);
+                }).catch(() => console.log("Áudio pendente (interação do usuário necessária)"));
             }
 
             function goToRomancePage() {
@@ -957,7 +1030,7 @@
                 }, 800);
             }
 
-            // Preenche a página final com o vídeo gravado e a assinatura, se existirem
+            // Preenche a página final com o vídeo gravado, a assinatura e o contador
             function populateRomancePage() {
                 if (videoBlobURL) {
                     document.getElementById('romanceVideo').src = videoBlobURL;
@@ -967,7 +1040,59 @@
                     document.getElementById('romanceSignatureImg').src = signatureDataURL;
                     document.getElementById('romanceSignatureWrap').classList.remove('d-none');
                 }
+                document.getElementById('contratoSignatureImg').src = signatureDataURL || '';
+                updateCounter();
             }
+
+            // ===== Contador "juntos há..." =====
+            function updateCounter() {
+                const counterEl = document.getElementById('counterText');
+                const start = new Date(DATA_INICIO_NAMORO + 'T00:00:00');
+                if (isNaN(start.getTime())) {
+                    counterEl.textContent = "edite DATA_INICIO_NAMORO no código";
+                    return;
+                }
+                const now = new Date();
+                let years = now.getFullYear() - start.getFullYear();
+                let months = now.getMonth() - start.getMonth();
+                let days = now.getDate() - start.getDate();
+
+                if (days < 0) {
+                    months -= 1;
+                    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+                    days += prevMonth.getDate();
+                }
+                if (months < 0) {
+                    years -= 1;
+                    months += 12;
+                }
+
+                const partes = [];
+                if (years > 0) partes.push(`${years} ano${years !== 1 ? 's' : ''}`);
+                if (months > 0) partes.push(`${months} ${months !== 1 ? 'meses' : 'mês'}`);
+                partes.push(`${days} dia${days !== 1 ? 's' : ''}`);
+
+                counterEl.textContent = `Juntos há ${partes.join(', ')}`;
+            }
+
+            // ===== Compartilhar página final =====
+            document.getElementById('btnCompartilhar').addEventListener('click', async () => {
+                const shareData = {
+                    title: 'Nossa Trajetória',
+                    text: `Para ${NOME_DELA}, com carinho.`,
+                    url: window.location.href
+                };
+                if (navigator.share) {
+                    try { await navigator.share(shareData); } catch (e) { /* usuário cancelou */ }
+                } else {
+                    try {
+                        await navigator.clipboard.writeText(window.location.href);
+                        alert('Link copiado! Agora é só colar onde quiser enviar.');
+                    } catch (e) {
+                        alert('Não foi possível copiar o link automaticamente. Copie a URL da barra de endereço.');
+                    }
+                }
+            });
 
             // Atalho: abrir o link com #nossahistoria pula direto pra página final
             if (window.location.hash.toLowerCase() === '#nossahistoria') {

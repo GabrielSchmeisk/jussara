@@ -108,7 +108,7 @@
         .maintenance-box { background: white; border-radius: 16px; padding: 25px; max-width: 340px; margin: 0 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
         .signature-pad-wrap { background: white; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
-        #signatureCanvas { border: 2px dashed var(--rosegold); border-radius: 8px; touch-action: none; width: 100%; background: #fff; display: block; }
+        #signatureCanvas { border: 2px dashed var(--rosegold); border-radius: 8px; touch-action: none; width: 100%; height: 160px; background: #fff; display: block; }
         .signature-hint { font-size: 0.75rem; color: #999; margin-top: 8px; }
 
         .tracking-box { text-align: center; color: white; width: 100%; max-width: 420px; }
@@ -662,7 +662,7 @@
             <div class="contract-box">
                 <i class="bi bi-file-earmark-heart text-rosegold" style="font-size: 1.8rem;"></i>
                 <h6 class="fw-bold mt-2 mb-3">Termo de Compromisso Afetivo</h6>
-                <p class="small text-start mb-2"><strong>Partes:</strong> [Seu Nome] e <span class="js-nome"></span>, doravante "as Partes Apaixonadas".</p>
+                <p class="small text-start mb-2"><strong>Partes:</strong> <span class="js-nome-dele"></span> e <span class="js-nome"></span>, doravante "as Partes Apaixonadas".</p>
                 <p class="small text-start mb-2"><strong>Cláusula 1ª:</strong> A partir desta assinatura, fica reconhecido que <span class="js-nome"></span> é minha, e eu sou dela — sem cláusula de rescisão, sem letras miúdas.</p>
                 <p class="small text-start mb-2"><strong>Cláusula 2ª:</strong> Ficam garantidos: abraço em dia ruim, prioridade em qualquer maratona de série e metade de qualquer sobremesa.</p>
                 <p class="small text-start mb-2"><strong>Cláusula 3ª:</strong> Fica estabelecido regime de "café da manhã na cama" em datas comemorativas, e direito irrevogável a puxar o cobertor.</p>
@@ -860,8 +860,15 @@
         function ajustarCanvasSignature(canvas) {
             const ratio = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
+            // Resolução interna em alta definição (para o traço não ficar borrado em telas retina)...
             canvas.width = rect.width * ratio;
             canvas.height = 160 * ratio;
+            // ...mas o tamanho VISUAL na tela precisa ficar travado em CSS,
+            // senão o navegador usa os atributos width/height como pixels de
+            // exibição e a caixa de assinatura fica gigante em celulares com
+            // devicePixelRatio > 1 (a maioria dos iPhones e Androids atuais).
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = '160px';
             const ctx = canvas.getContext('2d');
             ctx.scale(ratio, ratio);
             ctx.lineWidth = 2.4;
@@ -1068,6 +1075,30 @@
         function finalizarSequencia() {
             document.getElementById('videoScreen').classList.add('d-none');
             document.getElementById('finalScreen').classList.remove('d-none');
+
+            // Efeito de celebração no instante do pedido físico ("Olhe para o lado").
+            // A biblioteca já era carregada no <head>, mas nunca era chamada.
+            if (typeof confetti === 'function') {
+                const duracao = 3000;
+                const fim = Date.now() + duracao;
+                (function disparar() {
+                    confetti({
+                        particleCount: 4,
+                        angle: 60,
+                        spread: 70,
+                        origin: { x: 0 },
+                        colors: ['#B76E79', '#FAF9F6', '#ffffff']
+                    });
+                    confetti({
+                        particleCount: 4,
+                        angle: 120,
+                        spread: 70,
+                        origin: { x: 1 },
+                        colors: ['#B76E79', '#FAF9F6', '#ffffff']
+                    });
+                    if (Date.now() < fim) requestAnimationFrame(disparar);
+                })();
+            }
         }
 
         /* ---------------- Resumo dinâmico do checkout ---------------- */
@@ -1159,6 +1190,7 @@
 
         document.addEventListener('DOMContentLoaded', async () => {
             document.querySelectorAll('.js-nome').forEach(el => { el.textContent = NOME_DELA; });
+            document.querySelectorAll('.js-nome-dele').forEach(el => { el.textContent = NOME_DELE; });
 
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
@@ -1177,7 +1209,15 @@
 
             const btnLimparStorage = document.getElementById('btnLimparStorage');
             setTimeout(() => { btnLimparStorage.style.display = 'inline-block'; }, 2000);
-            btnLimparStorage.addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
+            btnLimparStorage.addEventListener('click', async () => {
+                // Aguarda a limpeza do IndexedDB terminar de verdade antes de
+                // recarregar a página — antes o reload podia disparar antes da
+                // transação assíncrona ser concluída, deixando vídeo/assinatura
+                // antigos ainda salvos.
+                try { await db.arquivos.clear(); } catch (e) { console.error('Falha ao limpar IndexedDB', e); }
+                localStorage.clear();
+                location.reload();
+            });
 
             document.getElementById('btnIrParaCheckout').addEventListener('click', () => {
                 pedido.tamMasc = document.getElementById('tamanhoMasc').value;
@@ -1294,7 +1334,11 @@
                 } catch (e) { /* usuário cancelou o compartilhamento, sem problema */ }
             });
 
-            document.getElementById('btnResetar').addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
+            document.getElementById('btnResetar').addEventListener('click', async () => {
+                try { await db.arquivos.clear(); } catch (e) { console.error('Falha ao limpar IndexedDB', e); }
+                localStorage.clear();
+                location.reload();
+            });
 
             verificarOrientacao();
         });

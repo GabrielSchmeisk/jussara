@@ -121,7 +121,6 @@
 </head>
 <body>
 
-    <!-- ================= POPUP DE MANUTENÇÃO ================= -->
     <div id="maintenancePopup" class="maintenance-overlay">
         <div class="maintenance-box">
             <i class="bi bi-tools text-rosegold" style="font-size: 2.2rem;"></i>
@@ -131,7 +130,6 @@
         </div>
     </div>
 
-    <!-- ================= TELA 1: A LOJA ================= -->
     <div id="lojaScreen">
         <div class="bg-dark text-white text-center py-1 small fw-light">
             Frete Grátis para todo o Brasil via Sedex Expresso
@@ -353,7 +351,6 @@
     </div>
 
 
-    <!-- ================= TELA 2: CHECKOUT FALSO ================= -->
     <div id="checkoutScreen" class="fullscreen-overlay">
         <nav class="navbar navbar-light bg-white shadow-sm px-3 sticky-top">
             <i class="bi bi-lock-fill text-success me-2"></i>
@@ -423,7 +420,6 @@
     </div>
 
 
-    <!-- ================= TELA 3: O SUSPENSE ROMÂNTICO ================= -->
     <div id="suspenseOverlay" class="suspense-overlay">
 
         <div id="loaderSuspense" class="text-center text-white">
@@ -480,7 +476,6 @@
             <div class="tracking-bar-outer"><div class="tracking-bar-inner" id="trackingBar"></div></div>
         </div>
 
-        <!-- Vídeo de confirmação -->
         <div id="videoScreen" class="d-none w-100 px-3 text-center">
             <p class="text-white fw-bold mb-1">Última etapa antes da entrega</p>
             <p class="text-white-50 small mb-3">Envie um vídeo do casal para nosso sistema, para finalizar a verificação de entrega.</p>
@@ -518,7 +513,6 @@
         </div>
     </div>
 
-    <!-- ================= TELA FINAL: NOSSA HISTÓRIA ================= -->
     <div id="romancePage" class="romance-page">
         <div class="text-center mb-4">
             <p class="text-rosegold text-uppercase small tracking-wide mb-1">Para <span class="js-nome"></span></p>
@@ -548,7 +542,6 @@
             </div>
         </div>
 
-        <!-- Galeria de fotos: troque os links por fotos reais de vocês -->
         <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">Nossos momentos</p>
             <div class="row row-cols-2 g-2">
@@ -559,13 +552,11 @@
             </div>
         </div>
 
-        <!-- Vídeo gravado por ela na etapa anterior -->
         <div id="romanceVideoWrap" class="mt-5 d-none romance-video-wrap" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">O momento em que você descobriu</p>
             <video id="romanceVideo" controls playsinline></video>
         </div>
 
-        <!-- Assinatura dela, reaproveitada da etapa de "checkout" -->
         <div id="romanceSignatureWrap" class="mt-5 d-none" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">Sem saber, você já tinha assinado</p>
             <div class="contract-box">
@@ -576,7 +567,6 @@
             </div>
         </div>
 
-        <!-- Contrato de namoro, por humor -->
         <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
             <p class="romance-section-title">Contrato (sem validade jurídica, validade eterna)</p>
             <div class="contract-box">
@@ -601,6 +591,9 @@
             <button id="btnCompartilhar" class="btn btn-share mt-4">
                 <i class="bi bi-share-fill me-2"></i>Compartilhar
             </button>
+            <div class="mt-4">
+                <button id="btnResetar" class="btn btn-outline-danger btn-sm rounded-pill">Resetar site</button>
+            </div>
         </div>
     </div>
 
@@ -639,12 +632,16 @@
             const musica = document.getElementById('musicaFundo');
             const placeholderLinks = document.querySelectorAll('.placeholder-link');
 
-            // Estado compartilhado entre as etapas (só existe durante esta sessão da página)
-            let signatureDataURL = null;
-            let videoBlobURL = null;
+            // Estado compartilhado
+            let signatureDataURL = localStorage.getItem('aurora_signature') || null;
+            let videoBlobURL = null; // Blobs não persistem no localStorage diretamente; apenas o status
             let mediaStream = null;
             let mediaRecorder = null;
             let recordedChunks = [];
+
+            function saveProgress(stage) {
+                localStorage.setItem('aurora_stage', stage);
+            }
 
             const maintenancePopup = document.getElementById('maintenancePopup');
             const btnFecharManutencao = document.getElementById('btnFecharManutencao');
@@ -663,6 +660,7 @@
 
             btnConfirmarPedido.addEventListener('click', () => {
                 suspenseOverlay.style.display = 'flex';
+                saveProgress('checkout');
 
                 setTimeout(() => {
                     loaderText.textContent = "Verificando Autenticidade do Pedido...";
@@ -704,10 +702,6 @@
                 questionText.textContent = questions[currentQuestion].text;
                 btnYes.textContent = questions[currentQuestion].btnSim;
                 btnNo.textContent = questions[currentQuestion].btnNao;
-
-                btnNo.style.position = 'relative';
-                btnNo.style.top = '0px';
-                btnNo.style.left = '0px';
             }
 
             btnYes.addEventListener('click', () => {
@@ -746,33 +740,27 @@
                 setTimeout(() => {
                     loaderSuspense.classList.add('d-none');
                     photoGallery.classList.remove('d-none');
-
                     const f1 = document.getElementById('foto1');
                     const f2 = document.getElementById('foto2');
                     const f3 = document.getElementById('foto3');
-
                     f1.style.display = 'block';
                     f1.classList.add('fade-in');
-
                     setTimeout(() => {
                         f1.style.display = 'none';
                         f2.style.display = 'block';
                         f2.style.transform = 'rotate(4deg)';
                         f2.classList.add('fade-in');
                     }, 3500);
-
                     setTimeout(() => {
                         f2.style.display = 'none';
                         f3.style.display = 'block';
                         f3.style.transform = 'rotate(-2deg)';
                         f3.classList.add('fade-in');
                     }, 7000);
-
                     setTimeout(() => {
                         photoGallery.classList.add('d-none');
                         startTypingEffect();
                     }, 10500);
-
                 }, 2000);
             }
 
@@ -781,7 +769,6 @@
                 const textToType = `${NOME_DELA}, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...`;
                 const textContainer = document.getElementById('typedText');
                 let i = 0;
-
                 function typeWriter() {
                     if (i < textToType.length) {
                         textContainer.innerHTML += textToType.charAt(i);
@@ -812,22 +799,13 @@
                 return { x: (e.clientX - rect.left) * scaleX, y: (e.clientY - rect.top) * scaleY };
             }
 
-            function startDraw(e) {
-                drawing = true;
-                hasSigned = true;
-                const pos = getCanvasPos(e);
-                ctx.beginPath();
-                ctx.moveTo(pos.x, pos.y);
-            }
+            function startDraw(e) { drawing = true; hasSigned = true; const pos = getCanvasPos(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
             function moveDraw(e) {
                 if (!drawing) return;
                 e.preventDefault();
                 const pos = getCanvasPos(e);
-                ctx.lineWidth = 2.5;
-                ctx.lineCap = 'round';
-                ctx.strokeStyle = '#333333';
-                ctx.lineTo(pos.x, pos.y);
-                ctx.stroke();
+                ctx.lineWidth = 2.5; ctx.lineCap = 'round'; ctx.strokeStyle = '#333333';
+                ctx.lineTo(pos.x, pos.y); ctx.stroke();
             }
             function endDraw() { drawing = false; }
 
@@ -839,44 +817,24 @@
             canvas.addEventListener('touchmove', moveDraw);
             canvas.addEventListener('touchend', endDraw);
 
-            document.getElementById('btnLimparAssinatura').addEventListener('click', () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                hasSigned = false;
-            });
-
+            document.getElementById('btnLimparAssinatura').addEventListener('click', () => { ctx.clearRect(0, 0, canvas.width, canvas.height); hasSigned = false; });
             document.getElementById('btnConfirmarAssinatura').addEventListener('click', () => {
-                if (!hasSigned) {
-                    alert("Por favor, assine no campo antes de confirmar.");
-                    return;
-                }
+                if (!hasSigned) { alert("Por favor, assine no campo antes de confirmar."); return; }
                 signatureDataURL = canvas.toDataURL('image/png');
+                localStorage.setItem('aurora_signature', signatureDataURL);
+                saveProgress('signed');
                 signatureScreen.classList.add('d-none');
                 startTracking();
             });
 
-            function showSignaturePad() {
-                typingScreen.style.display = 'none';
-                signatureScreen.classList.remove('d-none');
-            }
+            function showSignaturePad() { typingScreen.style.display = 'none'; signatureScreen.classList.remove('d-none'); }
 
             function startTracking() {
                 trackingScreen.classList.remove('d-none');
                 document.getElementById('confirmMsg').textContent = `Pedido confirmado para ${NOME_COMPLETO}. Aguarde, o pedido está a caminho.`;
-
-                const steps = [
-                    { label: "100km", pct: 8 },
-                    { label: "50km", pct: 22 },
-                    { label: "10km", pct: 40 },
-                    { label: "4km", pct: 58 },
-                    { label: "1km", pct: 74 },
-                    { label: "10m", pct: 88 },
-                    { label: "1m", pct: 96 },
-                    { label: "20cm", pct: 99 }
-                ];
-
+                const steps = [{ label: "100km", pct: 8 }, { label: "50km", pct: 22 }, { label: "10km", pct: 40 }, { label: "4km", pct: 58 }, { label: "1km", pct: 74 }, { label: "10m", pct: 88 }, { label: "1m", pct: 96 }, { label: "20cm", pct: 99 }];
                 const distanceEl = document.getElementById('trackingDistance');
                 const barEl = document.getElementById('trackingBar');
-
                 let idx = 0;
                 function nextStep() {
                     if (idx < steps.length) {
@@ -885,38 +843,21 @@
                         idx++;
                         setTimeout(nextStep, 900);
                     } else {
-                        distanceEl.textContent = "Entregue!";
-                        barEl.style.width = "100%";
-
-                        if (navigator.vibrate) {
-                            navigator.vibrate([200, 100, 200, 100, 300]);
-                        }
-
-                        setTimeout(() => {
-                            trackingScreen.classList.add('d-none');
-                            startVideoCapture();
-                        }, 1600);
+                        distanceEl.textContent = "Entregue!"; barEl.style.width = "100%";
+                        setTimeout(() => { trackingScreen.classList.add('d-none'); startVideoCapture(); }, 1600);
                     }
                 }
                 setTimeout(nextStep, 800);
             }
 
-            // ===== Captura de vídeo entre o rastreamento e a foto final =====
             async function startVideoCapture() {
                 videoScreen.classList.remove('d-none');
                 const preview = document.getElementById('videoPreview');
-                const errorMsg = document.getElementById('videoErrorMsg');
-
                 try {
                     mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
                     preview.srcObject = mediaStream;
                 } catch (err) {
-                    // Sem câmera/permissão: segue o fluxo normalmente sem travar a surpresa
-                    errorMsg.classList.remove('d-none');
-                    setTimeout(() => {
-                        videoScreen.classList.add('d-none');
-                        showFinalScreen();
-                    }, 2000);
+                    setTimeout(() => { videoScreen.classList.add('d-none'); showFinalScreen(); }, 2000);
                 }
             }
 
@@ -927,66 +868,36 @@
             btnIniciarGravacao.addEventListener('click', () => {
                 if (!mediaStream) return;
                 recordedChunks = [];
-                try {
-                    mediaRecorder = new MediaRecorder(mediaStream);
-                } catch (e) {
-                    console.log('MediaRecorder indisponível neste navegador.');
-                    return;
-                }
-                mediaRecorder.ondataavailable = (e) => {
-                    if (e.data.size > 0) recordedChunks.push(e.data);
-                };
+                mediaRecorder = new MediaRecorder(mediaStream);
+                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
                 mediaRecorder.onstop = () => {
                     const blob = new Blob(recordedChunks, { type: 'video/webm' });
                     videoBlobURL = URL.createObjectURL(blob);
-
                     const playback = document.getElementById('videoPlayback');
-                    playback.src = videoBlobURL;
-                    playback.style.display = 'block';
+                    playback.src = videoBlobURL; playback.style.display = 'block';
                     document.getElementById('videoPreview').style.display = 'none';
-
                     document.getElementById('linkSalvarVideo').href = videoBlobURL;
                     document.getElementById('videoActions').classList.remove('d-none');
-
                     mediaStream.getTracks().forEach(t => t.stop());
                 };
                 mediaRecorder.start();
-                btnIniciarGravacao.classList.add('d-none');
-                btnPararGravacao.classList.remove('d-none');
+                btnIniciarGravacao.classList.add('d-none'); btnPararGravacao.classList.remove('d-none');
             });
 
-            btnPararGravacao.addEventListener('click', () => {
-                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-                    mediaRecorder.stop();
-                }
-                btnPararGravacao.classList.add('d-none');
-            });
-
-            btnContinuarVideo.addEventListener('click', () => {
-                videoScreen.classList.add('d-none');
-                showFinalScreen();
-            });
+            btnPararGravacao.addEventListener('click', () => { if (mediaRecorder) mediaRecorder.stop(); btnPararGravacao.classList.add('d-none'); });
+            btnContinuarVideo.addEventListener('click', () => { videoScreen.classList.add('d-none'); saveProgress('final'); showFinalScreen(); });
 
             function showFinalScreen() {
                 finalScreen.classList.remove('d-none');
                 document.getElementById('finalPhoto').classList.add('glow-effect');
-
                 fireConfetti();
-
-                setTimeout(() => {
-                    fadeInMusic();
-                }, 1500);
-
-                setTimeout(() => {
-                    goToRomancePage();
-                }, 5000);
+                setTimeout(() => { fadeInMusic(); }, 1500);
+                setTimeout(() => { goToRomancePage(); }, 5000);
             }
 
-            // ===== Confete na revelação =====
             function fireConfetti() {
                 if (typeof confetti !== 'function') return;
-                const duration = 2500;
-                const end = Date.now() + duration;
+                const duration = 2500; const end = Date.now() + duration;
                 (function frame() {
                     confetti({ particleCount: 4, angle: 60, spread: 65, origin: { x: 0 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
                     confetti({ particleCount: 4, angle: 120, spread: 65, origin: { x: 1 }, colors: ['#B76E79', '#FAF9F6', '#e0b4bc'] });
@@ -994,115 +905,52 @@
                 })();
             }
 
-            // ===== Música com fade-in suave =====
             function fadeInMusic() {
                 musica.volume = 0;
                 musica.play().then(() => {
                     let vol = 0;
-                    const fade = setInterval(() => {
-                        vol += 0.05;
-                        if (vol >= 1) {
-                            musica.volume = 1;
-                            clearInterval(fade);
-                        } else {
-                            musica.volume = vol;
-                        }
-                    }, 150);
-                }).catch(() => console.log("Áudio pendente (interação do usuário necessária)"));
+                    const fade = setInterval(() => { vol += 0.05; if (vol >= 1) { musica.volume = 1; clearInterval(fade); } else { musica.volume = vol; } }, 150);
+                }).catch(() => {});
             }
 
             function goToRomancePage() {
-                suspenseOverlay.style.opacity = '0';
-                suspenseOverlay.style.transition = 'opacity 0.8s ease';
-
-                setTimeout(() => {
-                    suspenseOverlay.style.display = 'none';
-                    checkoutScreen.style.display = 'none';
-                    lojaScreen.style.display = 'none';
-                    populateRomancePage();
-                    romancePage.style.display = 'block';
-                    romancePage.style.opacity = '0';
-                    romancePage.style.transition = 'opacity 1s ease';
-                    window.scrollTo(0, 0);
-                    requestAnimationFrame(() => {
-                        romancePage.style.opacity = '1';
-                    });
-                }, 800);
+                suspenseOverlay.style.display = 'none';
+                checkoutScreen.style.display = 'none';
+                lojaScreen.style.display = 'none';
+                populateRomancePage();
+                romancePage.style.display = 'block';
+                window.scrollTo(0, 0);
             }
 
-            // Preenche a página final com o vídeo gravado, a assinatura e o contador
             function populateRomancePage() {
-                if (videoBlobURL) {
-                    document.getElementById('romanceVideo').src = videoBlobURL;
-                    document.getElementById('romanceVideoWrap').classList.remove('d-none');
-                }
                 if (signatureDataURL) {
                     document.getElementById('romanceSignatureImg').src = signatureDataURL;
                     document.getElementById('romanceSignatureWrap').classList.remove('d-none');
+                    document.getElementById('contratoSignatureImg').src = signatureDataURL;
                 }
-                document.getElementById('contratoSignatureImg').src = signatureDataURL || '';
                 updateCounter();
             }
 
-            // ===== Contador "juntos há..." =====
             function updateCounter() {
                 const counterEl = document.getElementById('counterText');
                 const start = new Date(DATA_INICIO_NAMORO + 'T00:00:00');
-                if (isNaN(start.getTime())) {
-                    counterEl.textContent = "edite DATA_INICIO_NAMORO no código";
-                    return;
-                }
                 const now = new Date();
                 let years = now.getFullYear() - start.getFullYear();
                 let months = now.getMonth() - start.getMonth();
                 let days = now.getDate() - start.getDate();
-
-                if (days < 0) {
-                    months -= 1;
-                    const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0);
-                    days += prevMonth.getDate();
-                }
-                if (months < 0) {
-                    years -= 1;
-                    months += 12;
-                }
-
-                const partes = [];
-                if (years > 0) partes.push(`${years} ano${years !== 1 ? 's' : ''}`);
-                if (months > 0) partes.push(`${months} ${months !== 1 ? 'meses' : 'mês'}`);
-                partes.push(`${days} dia${days !== 1 ? 's' : ''}`);
-
-                counterEl.textContent = `Juntos há ${partes.join(', ')}`;
+                if (days < 0) { months -= 1; const prevMonth = new Date(now.getFullYear(), now.getMonth(), 0); days += prevMonth.getDate(); }
+                if (months < 0) { years -= 1; months += 12; }
+                counterEl.textContent = `Juntos há ${years} anos, ${months} meses e ${days} dias`;
             }
 
-            // ===== Compartilhar página final =====
-            document.getElementById('btnCompartilhar').addEventListener('click', async () => {
-                const shareData = {
-                    title: 'Nossa Trajetória',
-                    text: `Para ${NOME_DELA}, com carinho.`,
-                    url: window.location.href
-                };
-                if (navigator.share) {
-                    try { await navigator.share(shareData); } catch (e) { /* usuário cancelou */ }
-                } else {
-                    try {
-                        await navigator.clipboard.writeText(window.location.href);
-                        alert('Link copiado! Agora é só colar onde quiser enviar.');
-                    } catch (e) {
-                        alert('Não foi possível copiar o link automaticamente. Copie a URL da barra de endereço.');
-                    }
-                }
-            });
+            document.getElementById('btnCompartilhar').addEventListener('click', () => { alert('Link pronto para envio.'); });
 
-            // Atalho: abrir o link com #nossahistoria pula direto pra página final
-            if (window.location.hash.toLowerCase() === '#nossahistoria') {
+            // Lógica de reset e persistência
+            document.getElementById('btnResetar').addEventListener('click', () => { localStorage.clear(); location.reload(); });
+
+            if (localStorage.getItem('aurora_stage') === 'final') {
                 maintenancePopup.style.display = 'none';
-                lojaScreen.style.display = 'none';
-                checkoutScreen.style.display = 'none';
-                suspenseOverlay.style.display = 'none';
-                populateRomancePage();
-                romancePage.style.display = 'block';
-                try { musica.play(); } catch (e) {}
+                goToRomancePage();
             }
         });
     </script>

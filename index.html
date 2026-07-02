@@ -30,14 +30,12 @@
         .tracking-wide { letter-spacing: 2px; }
         .placeholder-link:active { opacity: 0.5; }
 
-        /* Estrutura de Imagens da Loja */
         .product-image-container img { width: 100%; object-fit: cover; max-height: 400px; background-color: #eee; }
         .related-img { height: 150px; object-fit: cover; background-color: #eee; border-radius: 8px; }
 
         .trust-badges i { font-size: 1.8rem; color: #555; }
         .security-bar { font-size: 0.75rem; background-color: #f1f1f1; }
 
-        /* Overlays (Telas sobrepostas) */
         .fullscreen-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: var(--offwhite); z-index: 9999;
@@ -51,11 +49,9 @@
             backdrop-filter: blur(10px);
         }
 
-        /* Estilos do Checkout */
         .checkout-box { background: white; border-radius: 12px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
         .icon-circle { width: 40px; height: 40px; border-radius: 50%; background: #f0f0f0; display: flex; align-items: center; justify-content: center; }
 
-        /* Animações e Efeitos Especiais */
         .fade-in { animation: fadeIn 1s ease-in forwards; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -76,7 +72,6 @@
         .text-shadow { text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
         .final-photo { max-height: 40vh; border: 4px solid var(--rosegold); border-radius: 12px; background-color: #eee; }
 
-        /* Popup de Manutenção */
         .maintenance-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0,0,0,0.6); z-index: 10500;
@@ -84,24 +79,20 @@
         }
         .maintenance-box { background: white; border-radius: 16px; padding: 25px; max-width: 340px; margin: 0 20px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
 
-        /* Assinatura Digital */
         .signature-pad-wrap { background: white; border-radius: 16px; padding: 20px; width: 100%; max-width: 400px; margin: 0 auto; box-shadow: 0 10px 30px rgba(0,0,0,0.3); }
         #signatureCanvas { border: 2px dashed var(--rosegold); border-radius: 8px; touch-action: none; width: 100%; background: #fff; }
 
-        /* Rastreamento */
         .tracking-box { text-align: center; color: white; }
         .tracking-distance { font-size: 3rem; font-weight: bold; }
         .tracking-bar-outer { width: 90%; max-width: 320px; height: 8px; background: rgba(255,255,255,0.2); border-radius: 4px; margin: 15px auto; overflow: hidden; }
         .tracking-bar-inner { height: 100%; background: var(--rosegold); width: 0%; transition: width 0.6s ease; }
 
-        /* Glow */
         @keyframes glowPulse {
             0%, 100% { box-shadow: 0 0 15px 4px rgba(183, 110, 121, 0.6); }
             50% { box-shadow: 0 0 35px 12px rgba(183, 110, 121, 0.95); }
         }
         .glow-effect { animation: glowPulse 1.6s ease-in-out infinite; }
 
-        /* Página Final estilo "site de namoro" */
         .romance-page {
             display: none; min-height: 100vh; width: 100%;
             background: linear-gradient(180deg, #2b1d20 0%, #4a2c34 100%);
@@ -110,6 +101,11 @@
         .romance-title { font-family: Georgia, 'Times New Roman', serif; }
         .romance-divider { width: 60px; height: 2px; background: var(--rosegold); margin: 20px auto; }
         .timeline-item { background: rgba(255,255,255,0.06); border-left: 3px solid var(--rosegold); border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .romance-section-title { font-family: Georgia, 'Times New Roman', serif; font-size: 1.3rem; text-align:center; margin-bottom: 18px; }
+        .romance-gallery-img { width: 100%; height: 140px; object-fit: cover; border-radius: 10px; background:#3a2a2f; }
+        .romance-video-wrap video { width: 100%; border-radius: 12px; border: 3px solid var(--rosegold); background:#000; }
+        .contract-box { background: rgba(255,255,255,0.08); border: 1px solid rgba(183,110,121,0.5); border-radius: 14px; padding: 20px; text-align:center; }
+        .contract-signature-img { max-width: 260px; width: 100%; background:#fff; border-radius: 8px; padding: 10px; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -365,7 +361,6 @@
                 </div>
             </div>
 
-            <!-- Endereço Pré-Preenchido -->
             <div class="checkout-box d-flex align-items-start">
                 <div class="icon-circle me-3"><i class="bi bi-geo-alt-fill text-rosegold fs-5"></i></div>
                 <div>
@@ -379,7 +374,6 @@
                 </div>
             </div>
 
-            <!-- Método de Pagamento -->
             <div class="checkout-box d-flex align-items-start">
                 <div class="icon-circle me-3"><i class="bi bi-credit-card-fill text-primary fs-5"></i></div>
                 <div class="w-100">
@@ -389,7 +383,6 @@
                 </div>
             </div>
 
-            <!-- Valores -->
             <div class="checkout-box">
                 <div class="d-flex justify-content-between mb-2">
                     <span class="text-muted small">Subtotal</span>
@@ -422,13 +415,11 @@
     <!-- ================= TELA 3: O SUSPENSE ROMÂNTICO ================= -->
     <div id="suspenseOverlay" class="suspense-overlay">
 
-        <!-- Passo 1: Loader Inicial -->
         <div id="loaderSuspense" class="text-center text-white">
             <div class="spinner-border text-rosegold mb-3" role="status" style="width: 3rem; height: 3rem; border-width: 0.3em;"></div>
             <p class="fs-6 fw-bold tracking-wide text-uppercase" id="loaderText">Processando Pagamento...</p>
         </div>
 
-        <!-- Passo 2: As Perguntas -->
         <div id="questionBox" class="d-none bg-white p-4 rounded-4 shadow-lg text-center w-100 mx-3 position-relative" style="max-width: 400px;">
             <div class="position-absolute top-0 start-50 translate-middle bg-rosegold text-white rounded-circle d-flex align-items-center justify-content-center border border-white border-4" style="width: 60px; height: 60px;">
                 <i class="bi bi-heart-fill fs-3"></i>
@@ -440,9 +431,7 @@
             </div>
         </div>
 
-        <!-- Passo 3: Galeria de Fotos -->
         <div id="photoGallery" class="d-none w-100">
-            <!-- Adicione o caminho das fotos reais de vocês aqui -->
             <div class="polaroid" id="foto1">
                 <img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+1" alt="Nós">
                 <div class="polaroid-caption">Arquivos da Loja: Nosso Início</div>
@@ -457,12 +446,10 @@
             </div>
         </div>
 
-        <!-- Passo 4: Efeito Máquina de Escrever -->
         <div id="typingScreen" class="typing-container">
             <span id="typedText"></span><span class="cursor">|</span>
         </div>
 
-        <!-- Passo 5: Assinatura Digital -->
         <div id="signatureScreen" class="d-none w-100 px-3 text-center">
             <p class="text-white fw-bold mb-3">Assine para confirmar o recebimento do pedido</p>
             <div class="signature-pad-wrap">
@@ -474,7 +461,6 @@
             </div>
         </div>
 
-        <!-- Passo 6: Confirmação + Rastreamento Dinâmico -->
         <div id="trackingScreen" class="d-none tracking-box w-100 px-3">
             <p id="confirmMsg" class="fs-5 fw-bold mb-4"></p>
             <i class="bi bi-truck" style="font-size: 2.2rem; color: var(--rosegold);"></i>
@@ -483,9 +469,38 @@
             <div class="tracking-bar-outer"><div class="tracking-bar-inner" id="trackingBar"></div></div>
         </div>
 
-        <!-- Passo 7: Gran Finale -->
+        <!-- Passo NOVO: Vídeo de confirmação -->
+        <div id="videoScreen" class="d-none w-100 px-3 text-center">
+            <p class="text-white fw-bold mb-1">Última etapa antes da entrega</p>
+            <p class="text-white-50 small mb-3">Grave um vídeo rápido pra confirmarmos que é você mesma aí do outro lado.</p>
+            <div class="signature-pad-wrap" style="max-width: 340px;">
+                <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:3/4;object-fit:cover;"></video>
+                <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:3/4;object-fit:cover;" controls></video>
+
+                <div class="d-flex gap-2 mt-3">
+                    <button id="btnIniciarGravacao" class="btn btn-rosegold flex-fill rounded-pill fw-bold btn-sm">
+                        <i class="bi bi-record-circle me-1"></i>Gravar
+                    </button>
+                    <button id="btnPararGravacao" class="btn btn-danger flex-fill rounded-pill fw-bold btn-sm d-none">
+                        Parar
+                    </button>
+                </div>
+
+                <div id="videoActions" class="d-none mt-2 d-flex gap-2">
+                    <a id="linkSalvarVideo" class="btn btn-outline-secondary flex-fill rounded-pill btn-sm fw-bold" download="video-confirmacao.webm">
+                        <i class="bi bi-download me-1"></i>Salvar
+                    </a>
+                    <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
+                        Continuar
+                    </button>
+                </div>
+
+                <p class="small text-muted mt-2 mb-0">O celular vai pedir permissão de câmera e microfone — é só permitir. Para salvar o vídeo, toque em "Salvar".</p>
+                <p id="videoErrorMsg" class="small text-danger mt-2 mb-0 d-none">Não conseguimos acessar a câmera. Sem problemas, seguindo em frente.</p>
+            </div>
+        </div>
+
         <div id="finalScreen" class="d-none text-center w-100 px-3 fade-in">
-            <!-- Coloque a melhor foto de vocês aqui -->
             <img id="finalPhoto" src="https://via.placeholder.com/400x500/B76E79/fff?text=Nossa+Foto+Final" class="img-fluid final-photo shadow-lg mb-4" alt="Nós">
             <h1 class="text-white fw-bold display-5 text-shadow mb-3">As alianças já chegaram.</h1>
             <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
@@ -499,46 +514,70 @@
             <h1 class="romance-title fw-bold">Nossa Trajetória</h1>
             <div class="romance-divider"></div>
             <p class="fs-6 fw-light" style="max-width: 420px; margin: 0 auto;">
-                <!-- Substitua pelo texto de introdução da trajetória de vocês -->
-                [Coloque aqui a mensagem de abertura sobre a trajetória de vocês]
+                Ana, tudo que você acabou de passar era só uma desculpa boba pra chegar até aqui. Não tinha aliança nenhuma no correio — a única coisa que eu queria entregar era isso: tudo o que a gente construiu até hoje, contado do meu jeito. Edite este texto como quiser antes de mandar pra ela.
             </p>
         </div>
 
         <div style="max-width: 420px; margin: 0 auto;">
-            <!-- Substitua cada item pela linha do tempo real de vocês -->
+            <p class="romance-section-title">Nossa linha do tempo</p>
             <div class="timeline-item">
-                <strong>[Data]</strong>
-                <p class="small mb-0 mt-1">[Descreva esse momento da trajetória de vocês]</p>
+                <strong>[Data do primeiro encontro / conversa]</strong>
+                <p class="small mb-0 mt-1">Descreva aqui como foi a primeira vez que vocês se falaram ou se viram — o que você sentiu, o que achou engraçado ou especial.</p>
             </div>
             <div class="timeline-item">
-                <strong>[Data]</strong>
-                <p class="small mb-0 mt-1">[Descreva esse momento da trajetória de vocês]</p>
+                <strong>[Data de um momento marcante]</strong>
+                <p class="small mb-0 mt-1">Conte uma viagem, um perrengue resolvido junto, uma piada interna — algo que só vocês dois entendem.</p>
             </div>
             <div class="timeline-item">
-                <strong>[Data]</strong>
-                <p class="small mb-0 mt-1">[Descreva esse momento da trajetória de vocês]</p>
+                <strong>[Data recente / de hoje]</strong>
+                <p class="small mb-0 mt-1">Fale sobre o presente: por que hoje, por que ela, por que agora.</p>
+            </div>
+        </div>
+
+        <!-- Galeria de fotos: troque os links por fotos reais de vocês -->
+        <div class="mt-5" style="max-width: 420px; margin: 0 auto;">
+            <p class="romance-section-title">Nossos momentos</p>
+            <div class="row row-cols-2 g-2">
+                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+1" class="romance-gallery-img" alt="Foto do casal 1"></div>
+                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+2" class="romance-gallery-img" alt="Foto do casal 2"></div>
+                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+3" class="romance-gallery-img" alt="Foto do casal 3"></div>
+                <div class="col"><img src="https://via.placeholder.com/300x300/4a2c34/fff?text=Foto+4" class="romance-gallery-img" alt="Foto do casal 4"></div>
+            </div>
+        </div>
+
+        <!-- Vídeo gravado por ela na etapa anterior -->
+        <div id="romanceVideoWrap" class="mt-5 d-none romance-video-wrap" style="max-width: 420px; margin: 0 auto;">
+            <p class="romance-section-title">O momento em que você descobriu</p>
+            <video id="romanceVideo" controls playsinline></video>
+        </div>
+
+        <!-- Assinatura dela, reaproveitada da etapa de "checkout" -->
+        <div id="romanceSignatureWrap" class="mt-5 d-none" style="max-width: 420px; margin: 0 auto;">
+            <p class="romance-section-title">Sem saber, você já tinha assinado</p>
+            <div class="contract-box">
+                <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.5rem;"></i>
+                <p class="small mt-2 mb-0">Lá atrás, quando você "confirmou o recebimento do pedido", essa foi a assinatura que ficou:</p>
+                <img id="romanceSignatureImg" class="contract-signature-img" alt="Assinatura de Ana">
+                <p class="small text-white-50 mt-2 mb-0">Guardo ela como o começo simbólico da nossa história.</p>
             </div>
         </div>
 
         <div class="text-center mt-5">
             <i class="bi bi-heart-fill text-rosegold" style="font-size: 1.8rem;"></i>
             <p class="fs-5 fw-light mt-3" style="max-width: 420px; margin: 0 auto;">
-                [Coloque aqui a mensagem final reforçando o quão especial ela é]
+                Ana, obrigado por topar essa vida comigo, dia após dia. Isso aqui é só um jeito diferente de dizer o que eu já sinto todos os dias: eu escolho você. Edite esta mensagem final do seu jeito antes de enviar.
             </p>
         </div>
     </div>
 
-    <!-- Áudio do final (Substitua musica.mp3 pelo arquivo correto) -->
     <audio id="musicaFundo" src="musica.mp3" preload="auto"></audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Telas
             const lojaScreen = document.getElementById('lojaScreen');
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
 
-            // Elementos do Suspense
             const loaderSuspense = document.getElementById('loaderSuspense');
             const loaderText = document.getElementById('loaderText');
             const questionBox = document.getElementById('questionBox');
@@ -546,10 +585,10 @@
             const typingScreen = document.getElementById('typingScreen');
             const signatureScreen = document.getElementById('signatureScreen');
             const trackingScreen = document.getElementById('trackingScreen');
+            const videoScreen = document.getElementById('videoScreen');
             const finalScreen = document.getElementById('finalScreen');
             const romancePage = document.getElementById('romancePage');
 
-            // Botões e Textos
             const btnIrParaCheckout = document.getElementById('btnIrParaCheckout');
             const btnConfirmarPedido = document.getElementById('btnConfirmarPedido');
             const questionText = document.getElementById('questionText');
@@ -558,31 +597,31 @@
             const musica = document.getElementById('musicaFundo');
             const placeholderLinks = document.querySelectorAll('.placeholder-link');
 
-            // Popup de Manutenção
+            // Estado compartilhado entre as etapas (só existe durante esta sessão da página)
+            let signatureDataURL = null;
+            let videoBlobURL = null;
+            let mediaStream = null;
+            let mediaRecorder = null;
+            let recordedChunks = [];
+
             const maintenancePopup = document.getElementById('maintenancePopup');
             const btnFecharManutencao = document.getElementById('btnFecharManutencao');
             btnFecharManutencao.addEventListener('click', () => {
                 maintenancePopup.style.display = 'none';
             });
 
-            // 0. Impede navegação nos itens falsos da vitrine (menu, busca, sacola, itens relacionados etc.)
             placeholderLinks.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                });
+                link.addEventListener('click', (e) => e.preventDefault());
             });
 
-            // 1. Transição: Loja -> Checkout
             btnIrParaCheckout.addEventListener('click', () => {
                 checkoutScreen.style.display = 'block';
                 window.scrollTo(0, 0);
             });
 
-            // 2. Transição: Checkout -> Suspense
             btnConfirmarPedido.addEventListener('click', () => {
                 suspenseOverlay.style.display = 'flex';
 
-                // Simula aprovação de cartão
                 setTimeout(() => {
                     loaderText.textContent = "Verificando Autenticidade do Pedido...";
                 }, 2000);
@@ -594,7 +633,6 @@
                 }, 4000);
             });
 
-            // 3. Lógica das Perguntas - fluxo de rastreamento interativo
             const questions = [
                 {
                     text: "Verificação de Destinatária: Para liberar o rastreamento em tempo real, confirme que é você quem vai acompanhar esse pedido até o fim, com o celular em mãos.",
@@ -609,7 +647,7 @@
                 {
                     text: "Última Verificação: Confirmamos que a destinatária deste pedido é a Ana. Você confirma sua identidade para liberarmos a entrega?",
                     btnSim: "Sim, sou eu",
-                    btnNao: "Não" // Foge
+                    btnNao: "Não"
                 }
             ];
 
@@ -641,7 +679,6 @@
                 }
             });
 
-            // Botão Fujão na última pergunta
             btnNo.addEventListener('touchstart', moveButton);
             btnNo.addEventListener('mouseover', moveButton);
             function moveButton(e) {
@@ -660,7 +697,6 @@
                 }
             }
 
-            // 4. Galeria de Fotos (Polaroids)
             function startPhotoGallery() {
                 loaderSuspense.classList.remove('d-none');
                 loaderText.textContent = "Acessando fotos enviadas para a loja...";
@@ -673,19 +709,16 @@
                     const f2 = document.getElementById('foto2');
                     const f3 = document.getElementById('foto3');
 
-                    // Mostra foto 1
                     f1.style.display = 'block';
                     f1.classList.add('fade-in');
 
-                    // Mostra foto 2 após 3s
                     setTimeout(() => {
                         f1.style.display = 'none';
                         f2.style.display = 'block';
-                        f2.style.transform = 'rotate(4deg)'; // Rotação diferente
+                        f2.style.transform = 'rotate(4deg)';
                         f2.classList.add('fade-in');
                     }, 3500);
 
-                    // Mostra foto 3 após 7s
                     setTimeout(() => {
                         f2.style.display = 'none';
                         f3.style.display = 'block';
@@ -693,7 +726,6 @@
                         f3.classList.add('fade-in');
                     }, 7000);
 
-                    // Inicia texto digitado após 10.5s
                     setTimeout(() => {
                         photoGallery.classList.add('d-none');
                         startTypingEffect();
@@ -702,7 +734,6 @@
                 }, 2000);
             }
 
-            // 5. Efeito Máquina de Escrever
             function startTypingEffect() {
                 typingScreen.style.display = 'block';
                 const textToType = "Ana, você é a minha melhor escolha todos os dias. Meu maior desejo é construir uma vida inteira ao seu lado. Cada momento com você é o meu presente favorito...";
@@ -713,15 +744,14 @@
                     if (i < textToType.length) {
                         textContainer.innerHTML += textToType.charAt(i);
                         i++;
-                        setTimeout(typeWriter, 60); // Velocidade da digitação
+                        setTimeout(typeWriter, 60);
                     } else {
-                        setTimeout(showSignaturePad, 2500); // Aguarda um pouco após terminar de ler
+                        setTimeout(showSignaturePad, 2500);
                     }
                 }
                 typeWriter();
             }
 
-            // 6. Assinatura Digital
             const canvas = document.getElementById('signatureCanvas');
             const ctx = canvas.getContext('2d');
             let drawing = false;
@@ -777,6 +807,7 @@
                     alert("Por favor, assine no campo antes de confirmar.");
                     return;
                 }
+                signatureDataURL = canvas.toDataURL('image/png');
                 signatureScreen.classList.add('d-none');
                 startTracking();
             });
@@ -786,7 +817,6 @@
                 signatureScreen.classList.remove('d-none');
             }
 
-            // 7. Rastreamento Dinâmico
             function startTracking() {
                 trackingScreen.classList.remove('d-none');
                 document.getElementById('confirmMsg').textContent = "Pedido confirmado para Ana Poloni. Aguarde, o pedido está a caminho.";
@@ -813,41 +843,101 @@
                         idx++;
                         setTimeout(nextStep, 900);
                     } else {
-                        // Entrega concluída
                         distanceEl.textContent = "Entregue!";
                         barEl.style.width = "100%";
 
-                        // Feedback sensorial - vibração no momento da entrega
                         if (navigator.vibrate) {
                             navigator.vibrate([200, 100, 200, 100, 300]);
                         }
 
                         setTimeout(() => {
                             trackingScreen.classList.add('d-none');
-                            showFinalScreen();
+                            startVideoCapture();
                         }, 1600);
                     }
                 }
                 setTimeout(nextStep, 800);
             }
 
-            // 8. Tela Final e Música
+            // ===== NOVO: captura de vídeo entre o rastreamento e a foto final =====
+            async function startVideoCapture() {
+                videoScreen.classList.remove('d-none');
+                const preview = document.getElementById('videoPreview');
+                const errorMsg = document.getElementById('videoErrorMsg');
+
+                try {
+                    mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+                    preview.srcObject = mediaStream;
+                } catch (err) {
+                    // Sem câmera/permissão: segue o fluxo normalmente sem travar a surpresa
+                    errorMsg.classList.remove('d-none');
+                    setTimeout(() => {
+                        videoScreen.classList.add('d-none');
+                        showFinalScreen();
+                    }, 2000);
+                }
+            }
+
+            const btnIniciarGravacao = document.getElementById('btnIniciarGravacao');
+            const btnPararGravacao = document.getElementById('btnPararGravacao');
+            const btnContinuarVideo = document.getElementById('btnContinuarVideo');
+
+            btnIniciarGravacao.addEventListener('click', () => {
+                if (!mediaStream) return;
+                recordedChunks = [];
+                try {
+                    mediaRecorder = new MediaRecorder(mediaStream);
+                } catch (e) {
+                    console.log('MediaRecorder indisponível neste navegador.');
+                    return;
+                }
+                mediaRecorder.ondataavailable = (e) => {
+                    if (e.data.size > 0) recordedChunks.push(e.data);
+                };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    videoBlobURL = URL.createObjectURL(blob);
+
+                    const playback = document.getElementById('videoPlayback');
+                    playback.src = videoBlobURL;
+                    playback.style.display = 'block';
+                    document.getElementById('videoPreview').style.display = 'none';
+
+                    document.getElementById('linkSalvarVideo').href = videoBlobURL;
+                    document.getElementById('videoActions').classList.remove('d-none');
+
+                    mediaStream.getTracks().forEach(t => t.stop());
+                };
+                mediaRecorder.start();
+                btnIniciarGravacao.classList.add('d-none');
+                btnPararGravacao.classList.remove('d-none');
+            });
+
+            btnPararGravacao.addEventListener('click', () => {
+                if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+                    mediaRecorder.stop();
+                }
+                btnPararGravacao.classList.add('d-none');
+            });
+
+            btnContinuarVideo.addEventListener('click', () => {
+                videoScreen.classList.add('d-none');
+                showFinalScreen();
+            });
+
             function showFinalScreen() {
                 finalScreen.classList.remove('d-none');
                 document.getElementById('finalPhoto').classList.add('glow-effect');
 
-                // Toca a música pouco depois da tela aparecer
                 setTimeout(() => {
-                    try { musica.play(); } catch(e) { console.log("Áudio pendente"); }
+                    try { musica.play(); } catch (e) { console.log("Áudio pendente"); }
                 }, 1500);
 
-                // 5 segundos depois, transição para a página "nossa trajetória"
                 setTimeout(() => {
                     goToRomancePage();
                 }, 5000);
             }
 
-            // 9. Transição final para a página estilo "site de namoro"
             function goToRomancePage() {
                 suspenseOverlay.style.opacity = '0';
                 suspenseOverlay.style.transition = 'opacity 0.8s ease';
@@ -856,6 +946,7 @@
                     suspenseOverlay.style.display = 'none';
                     checkoutScreen.style.display = 'none';
                     lojaScreen.style.display = 'none';
+                    populateRomancePage();
                     romancePage.style.display = 'block';
                     romancePage.style.opacity = '0';
                     romancePage.style.transition = 'opacity 1s ease';
@@ -864,6 +955,29 @@
                         romancePage.style.opacity = '1';
                     });
                 }, 800);
+            }
+
+            // Preenche a página final com o vídeo gravado e a assinatura, se existirem
+            function populateRomancePage() {
+                if (videoBlobURL) {
+                    document.getElementById('romanceVideo').src = videoBlobURL;
+                    document.getElementById('romanceVideoWrap').classList.remove('d-none');
+                }
+                if (signatureDataURL) {
+                    document.getElementById('romanceSignatureImg').src = signatureDataURL;
+                    document.getElementById('romanceSignatureWrap').classList.remove('d-none');
+                }
+            }
+
+            // Atalho: abrir o link com #nossahistoria pula direto pra página final
+            if (window.location.hash.toLowerCase() === '#nossahistoria') {
+                maintenancePopup.style.display = 'none';
+                lojaScreen.style.display = 'none';
+                checkoutScreen.style.display = 'none';
+                suspenseOverlay.style.display = 'none';
+                populateRomancePage();
+                romancePage.style.display = 'block';
+                try { musica.play(); } catch (e) {}
             }
         });
     </script>

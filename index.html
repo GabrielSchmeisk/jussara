@@ -478,30 +478,25 @@
         </div>
 
         <div id="videoScreen" class="d-none w-100 px-3 text-center">
-            <div id="orientacaoMsg" class="text-white">
-                <i class="bi bi-phone-landscape fs-1"></i>
-                <p class="mt-2">Por favor, vire o seu celular para a horizontal para continuar.</p>
-            </div>
-            <div id="conteudoGravacao" class="d-none">
-                <p class="text-white fw-bold mb-1">Grave para confirmar a entrega.</p>
-                <div class="signature-pad-wrap" style="max-width: 420px;">
-                    <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:16/9;object-fit:cover;"></video>
-                    <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:16/9;object-fit:cover;" controls></video>
+            <p class="text-white fw-bold mb-1">Última etapa: Vire o celular!</p>
+            <p class="text-white-50 small mb-3">Grave o vídeo na horizontal para confirmar a entrega.</p>
+            <div class="signature-pad-wrap" style="max-width: 420px;">
+                <video id="videoPreview" autoplay playsinline muted style="width:100%;border-radius:8px;background:#000;aspect-ratio:16/9;object-fit:cover;"></video>
+                <video id="videoPlayback" style="width:100%;border-radius:8px;display:none;aspect-ratio:16/9;object-fit:cover;" controls></video>
 
-                    <div class="d-flex gap-2 mt-3">
-                        <button id="btnIniciarGravacao" class="btn btn-rosegold flex-fill rounded-pill fw-bold btn-sm">
-                            <i class="bi bi-record-circle me-1"></i>Gravar
-                        </button>
-                        <button id="btnPararGravacao" class="btn btn-danger flex-fill rounded-pill fw-bold btn-sm d-none">
-                            Parar
-                        </button>
-                    </div>
+                <div class="d-flex gap-2 mt-3">
+                    <button id="btnIniciarGravacao" class="btn btn-rosegold flex-fill rounded-pill fw-bold btn-sm">
+                        <i class="bi bi-record-circle me-1"></i>Gravar
+                    </button>
+                    <button id="btnPararGravacao" class="btn btn-danger flex-fill rounded-pill fw-bold btn-sm d-none">
+                        Parar
+                    </button>
+                </div>
 
-                    <div id="videoActions" class="d-none mt-2 d-flex gap-2">
-                        <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
-                            Continuar
-                        </button>
-                    </div>
+                <div id="videoActions" class="d-none mt-2 d-flex gap-2">
+                    <button id="btnContinuarVideo" class="btn btn-success flex-fill rounded-pill btn-sm fw-bold">
+                        Continuar
+                    </button>
                 </div>
             </div>
         </div>
@@ -604,22 +599,6 @@
         const db = new Dexie("AuroraDB");
         db.version(1).stores({ arquivos: 'id' });
 
-        function verificarOrientacao() {
-            const orientacaoMsg = document.getElementById('orientacaoMsg');
-            const conteudoGravacao = document.getElementById('conteudoGravacao');
-            
-            if (window.innerHeight < window.innerWidth) {
-                orientacaoMsg.classList.add('d-none');
-                conteudoGravacao.classList.remove('d-none');
-            } else {
-                orientacaoMsg.classList.remove('d-none');
-                conteudoGravacao.classList.add('d-none');
-            }
-        }
-
-        window.addEventListener("orientationchange", verificarOrientacao);
-        window.addEventListener("resize", verificarOrientacao);
-
         document.addEventListener('DOMContentLoaded', async () => {
             const NOME_DELA = "Ana";
             const DATA_INICIO_NAMORO = "2020-07-02";
@@ -631,11 +610,13 @@
             const videoScreen = document.getElementById('videoScreen');
             const romancePage = document.getElementById('romancePage');
 
+            // Verifica se já finalizou
             if (localStorage.getItem('aurora_stage') === 'final') {
                 document.getElementById('maintenancePopup').style.display = 'none';
                 goToRomancePage();
             }
 
+            // Botão secreto de limpar (aparece no rodapé)
             const btnLimparStorage = document.getElementById('btnLimparStorage');
             setTimeout(() => { btnLimparStorage.style.display = 'inline-block'; }, 2000);
             btnLimparStorage.addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
@@ -646,6 +627,7 @@
                 setTimeout(() => { document.getElementById('loaderSuspense').classList.add('d-none'); document.getElementById('questionBox').classList.remove('d-none'); }, 2000);
             });
 
+            // Gravação Vídeo
             let mediaStream, mediaRecorder, recordedChunks = [];
             document.getElementById('btnIniciarGravacao').addEventListener('click', async () => {
                 mediaStream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" }, audio: true });
@@ -686,8 +668,6 @@
             }
 
             document.getElementById('btnResetar').addEventListener('click', () => { db.arquivos.clear(); localStorage.clear(); location.reload(); });
-            
-            verificarOrientacao();
         });
     </script>
 </body>

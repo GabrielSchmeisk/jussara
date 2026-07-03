@@ -19,11 +19,21 @@
             --text-dark: #333333;
         }
 
+        html {
+            background-color: var(--offwhite);
+            /* Evita o "flash" branco puro do navegador durante bounce-scroll no iOS
+               e em qualquer momento em que o conteúdo seja mais curto que a tela. */
+            height: 100%;
+        }
+
         body {
             background-color: var(--offwhite);
             font-family: 'Jost', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             color: var(--text-dark);
             overflow-x: hidden;
+            min-height: 100%;
+            /* min-height garante que o fundo off-white cubra toda a tela mesmo
+               quando o conteúdo visível (ex: loja) é mais curto que o viewport. */
         }
 
         .text-rosegold { color: var(--rosegold) !important; }
@@ -37,6 +47,67 @@
 
         .product-image-container img { width: 100%; object-fit: cover; max-height: 400px; background-color: #eee; }
         .related-img { height: 150px; object-fit: cover; background-color: #eee; border-radius: 8px; }
+
+        /* ---- Home / vitrine da joalheria ---- */
+        .promo-carousel { position: relative; }
+        .promo-slide {
+            min-height: 190px; display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 26px 20px; color: white; position: relative; overflow: hidden;
+        }
+        .promo-slide.slide-a { background: linear-gradient(135deg, #8f4d57 0%, #B76E79 60%, #c98d96 100%); }
+        .promo-slide.slide-b { background: linear-gradient(135deg, #3a2029 0%, #4a2c34 60%, #6a3f49 100%); }
+        .promo-slide.slide-c { background: linear-gradient(135deg, #B76E79 0%, #d9a5ac 70%, #f0d9dd 100%); }
+        .promo-slide::before {
+            content: ''; position: absolute; inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12), transparent 55%);
+            pointer-events: none;
+        }
+        .promo-eyebrow { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; opacity: 0.85; margin-bottom: 6px; }
+        .promo-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.65rem; font-weight: 600; margin-bottom: 6px; }
+        .promo-sub { font-size: 0.82rem; opacity: 0.9; max-width: 300px; }
+        .carousel-indicators-custom { position: absolute; bottom: 10px; left: 0; right: 0; display: flex; justify-content: center; gap: 6px; z-index: 5; }
+        .carousel-indicators-custom button { width: 6px; height: 6px; border-radius: 50%; border: none; background: rgba(255,255,255,0.4); padding: 0; }
+        .carousel-indicators-custom button.active { background: #fff; width: 16px; border-radius: 3px; }
+
+        .thumb-strip { display: flex; gap: 8px; justify-content: center; margin-top: 10px; flex-wrap: wrap; }
+        .thumb-item {
+            width: 60px; height: 60px; border-radius: 8px; overflow: hidden; cursor: pointer;
+            border: 2px solid transparent; opacity: 0.65; transition: opacity 0.2s ease, border-color 0.2s ease; background: #eee;
+        }
+        .thumb-item img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .thumb-item.active, .thumb-item:active { opacity: 1; border-color: var(--rosegold); }
+
+        .featured-ribbon {
+            display: inline-flex; align-items: center; gap: 6px; background: rgba(183,110,121,0.1);
+            border: 1px solid rgba(183,110,121,0.35); color: var(--rosegold-dark); font-size: 0.72rem;
+            letter-spacing: 1px; text-transform: uppercase; font-weight: 600; padding: 5px 12px; border-radius: 999px;
+        }
+
+        .section-divider { display: flex; align-items: center; gap: 12px; margin: 8px 0 18px; }
+        .section-divider .line { flex: 1; height: 1px; background: linear-gradient(90deg, transparent, #e0b4bc, transparent); }
+        .section-divider i { color: var(--rosegold); font-size: 0.85rem; }
+
+        .about-section {
+            background: linear-gradient(180deg, #FAF9F6 0%, #f3e6e8 100%);
+            border-radius: 14px; padding: 26px 20px; text-align: center; position: relative;
+            border: 1px solid #f0d9dd;
+        }
+        .about-section .about-eyebrow { font-size: 0.68rem; letter-spacing: 3px; text-transform: uppercase; color: var(--rosegold-dark); font-weight: 600; }
+        .about-section h4 { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 1.5rem; font-weight: 600; margin: 6px 0 12px; }
+        .about-section p { font-size: 0.88rem; color: #5a5048; line-height: 1.7; max-width: 420px; margin: 0 auto; }
+        .about-badges { display: flex; justify-content: center; gap: 22px; margin-top: 18px; flex-wrap: wrap; }
+        .about-badges .about-badge { text-align: center; }
+        .about-badges .about-badge i { font-size: 1.4rem; color: var(--rosegold); }
+        .about-badges .about-badge span { display: block; font-size: 0.68rem; color: #8a7a5c; margin-top: 4px; max-width: 80px; }
+
+        .highlight-strip { display: flex; gap: 10px; overflow-x: auto; padding: 4px 2px 10px; scrollbar-width: none; }
+        .highlight-strip::-webkit-scrollbar { display: none; }
+        .highlight-card {
+            flex: 0 0 auto; width: 130px; background: white; border-radius: 12px; overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.06); border: 1px solid #f2e6e8;
+        }
+        .highlight-card img { width: 100%; height: 90px; object-fit: cover; background: #eee; }
+        .highlight-card .hc-label { font-size: 0.68rem; font-weight: 600; text-align: center; padding: 6px 4px; color: #5a5048; }
 
         .trust-badges i { font-size: 1.8rem; color: #555; }
         .security-bar { font-size: 0.75rem; background-color: #f1f1f1; }
@@ -82,15 +153,15 @@
         .question-dots span.done { background: var(--rosegold); }
 
         .polaroid {
-            background: white; padding: 14px 14px 38px 14px; box-shadow: 0 14px 34px rgba(0,0,0,0.45);
-            border-radius: 6px; max-width: 88%; opacity: 0;
+            background: white; padding: 16px 16px 44px 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.5);
+            border-radius: 6px; max-width: 95%; width: 320px; opacity: 0;
             transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1);
         }
         .polaroid.foto-visivel { opacity: 1; }
         .polaroid img { width: 100%; height: auto; border-radius: 3px; display: block; }
-        .polaroid-caption { font-family: 'Courier New', Courier, monospace; text-align: center; margin-top: 12px; font-weight: bold; color: #333; font-size: 0.95rem; }
-        .polaroid-stack { position: relative; width: 100%; max-width: 92vw; height: 430px; margin: 0 auto; }
-        @media (min-width: 400px) { .polaroid-stack { max-width: 380px; height: 460px; } }
+        .polaroid-caption { font-family: 'Courier New', Courier, monospace; text-align: center; margin-top: 14px; font-weight: bold; color: #333; font-size: 1.05rem; }
+        .polaroid-stack { position: relative; width: 100%; max-width: 96vw; height: 480px; margin: 0 auto; }
+        @media (min-width: 400px) { .polaroid-stack { max-width: 440px; height: 520px; } }
         .polaroid-stack .polaroid { position: absolute; top: 0; left: 50%; }
 
         .typing-container {
@@ -101,7 +172,7 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         .text-shadow { text-shadow: 2px 2px 10px rgba(0,0,0,0.5); }
-        .final-photo { max-height: 40vh; border: 4px solid var(--rosegold); border-radius: 12px; background-color: #eee; }
+        .final-photo { max-height: 52vh; width: 100%; max-width: 420px; object-fit: cover; border: 4px solid var(--rosegold); border-radius: 12px; background-color: #eee; }
 
         .maintenance-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
@@ -200,13 +271,13 @@
         .btn-share:hover { background: var(--rosegold); color: white; }
 
         /* Scattered "photos on a table" gallery */
-        .table-gallery { position: relative; max-width: 420px; margin: 0 auto; padding: 30px 10px 50px; }
+        .table-gallery { position: relative; max-width: 480px; margin: 0 auto; padding: 34px 8px 55px; }
         .table-photo {
-            background: #fff; padding: 8px 8px 26px 8px; border-radius: 3px; box-shadow: 0 8px 20px rgba(0,0,0,0.45);
-            width: 46%; display: inline-block; margin: 2% 1%; vertical-align: top;
+            background: #fff; padding: 10px 10px 32px 10px; border-radius: 3px; box-shadow: 0 10px 26px rgba(0,0,0,0.5);
+            width: 47%; display: inline-block; margin: 2.5% 1%; vertical-align: top;
             transition: transform 0.25s ease, box-shadow 0.25s ease, z-index 0s;
         }
-        .table-photo img { width: 100%; height: 130px; object-fit: cover; display: block; border-radius: 1px; background:#3a2a2f; }
+        .table-photo img { width: 100%; height: 190px; object-fit: cover; display: block; border-radius: 1px; background:#3a2a2f; }
         .table-photo:active { transform: scale(1.08) rotate(0deg) !important; z-index: 20; box-shadow: 0 14px 30px rgba(0,0,0,0.55); }
         .table-photo:nth-child(1) { transform: rotate(-6deg) translateY(6px); margin-right: -4%; z-index: 4; }
         .table-photo:nth-child(2) { transform: rotate(4deg); z-index: 3; }
@@ -230,9 +301,53 @@
 
         .skip-link { color: rgba(255,255,255,0.35); font-size: 0.72rem; text-decoration: underline; background: none; border: none; margin-top: 18px; }
 
+        .post-record-screen {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 16px; color: white; text-align: center; padding: 10px;
+        }
+        .post-record-screen .check-circle {
+            width: 64px; height: 64px; border-radius: 50%; background: rgba(183,110,121,0.18);
+            border: 1px solid rgba(183,110,121,0.6); display: flex; align-items: center; justify-content: center;
+            font-size: 1.8rem; color: var(--rosegold);
+        }
+        .post-record-screen .phone-icon-portrait { font-size: 3rem; display: inline-block; animation: rotatePhoneBack 1.8s ease-in-out infinite; color: var(--rosegold); }
+        @keyframes rotatePhoneBack {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-90deg); }
+        }
+        .btn-link-muted { color: rgba(255,255,255,0.5); font-size: 0.8rem; background: none; border: none; text-decoration: underline; margin-top: 6px; }
+
+        /* ---- Flashback cinematográfico (transição antes de "Nossa História") ---- */
+        .flashback-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #0a0608; z-index: 10800;
+            display: none; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .flashback-photo {
+            position: absolute; width: 62vw; max-width: 300px; border-radius: 8px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.7); opacity: 0; filter: blur(6px);
+            transform: scale(0.85);
+            transition: opacity 0.28s ease, transform 0.55s ease, filter 0.45s ease;
+        }
+        .flashback-photo img { width: 100%; display: block; border-radius: 8px; }
+        .flashback-photo.fb-ativa { opacity: 1; filter: blur(0); transform: scale(1.04); }
+        .flashback-flash {
+            position: absolute; inset: 0; background: white; opacity: 0; pointer-events: none;
+            transition: opacity 0.12s ease;
+        }
+        .flashback-flash.fb-piscar { opacity: 0.22; }
+        .flashback-label {
+            position: absolute; bottom: 12%; left: 0; right: 0; text-align: center;
+            color: rgba(255,255,255,0.55); font-family: 'Cormorant Garamond', Georgia, serif;
+            font-style: italic; font-size: 1rem; letter-spacing: 1px; opacity: 0;
+            transition: opacity 0.6s ease;
+        }
+        .flashback-label.fb-visivel { opacity: 1; }
+
         @media (prefers-reduced-motion: reduce) {
-            .glow-effect, .rotate-hint .phone-icon, .rec-dot, .cursor { animation: none !important; }
+            .glow-effect, .rotate-hint .phone-icon, .rec-dot, .cursor, .phone-icon-portrait { animation: none !important; }
             .reveal-up { animation: none !important; opacity: 1 !important; }
+            .flashback-photo { transition: opacity 0.2s ease !important; filter: none !important; transform: none !important; }
         }
     </style>
 </head>
@@ -263,6 +378,29 @@
             </div>
         </nav>
 
+        <div id="promoCarousel" class="promo-carousel">
+            <div class="promo-slide slide-a" data-slide="0">
+                <p class="promo-eyebrow">Coleção Esgrifa</p>
+                <h2 class="promo-title">Alianças que contam histórias</h2>
+                <p class="promo-sub">Prata 950 com acabamento artesanal e garantia vitalícia.</p>
+            </div>
+            <div class="promo-slide slide-b d-none" data-slide="1">
+                <p class="promo-eyebrow">Edição Flor Rosa</p>
+                <h2 class="promo-title">Solitário Libélula, brinde exclusivo</h2>
+                <p class="promo-sub">Em toda compra de aliança Esgrifa Branca+ deste mês.</p>
+            </div>
+            <div class="promo-slide slide-c d-none" data-slide="2">
+                <p class="promo-eyebrow">Frete e Pagamento</p>
+                <h2 class="promo-title">Frete grátis para todo o Brasil</h2>
+                <p class="promo-sub">10% de desconto no Pix ou em até 10x sem juros no cartão.</p>
+            </div>
+            <div class="carousel-indicators-custom" id="promoIndicators">
+                <button class="active" data-go="0" aria-label="Slide 1"></button>
+                <button data-go="1" aria-label="Slide 2"></button>
+                <button data-go="2" aria-label="Slide 3"></button>
+            </div>
+        </div>
+
         <div class="container-fluid pt-3 pb-5 mb-5">
 
             <nav aria-label="breadcrumb" class="small mb-2 px-2">
@@ -273,11 +411,30 @@
                 </ol>
             </nav>
 
+            <div class="px-2 mb-2">
+                <span class="featured-ribbon"><i class="bi bi-award-fill"></i> Mais vendida da coleção</span>
+            </div>
+
             <div class="product-image-container text-center my-2 position-relative">
-                <img src="https://via.placeholder.com/600x600/FAF9F6/B76E79?text=Ali%C3%A7na+Esgrifa+Branca%2B" alt="Par de Alianças Esgrifa Branca+ com Solitário Libélula" class="img-fluid rounded shadow-sm">
+                <img id="imagemPrincipalProduto" src="https://via.placeholder.com/600x600/FAF9F6/B76E79?text=Ali%C3%A7na+Esgrifa+Branca%2B" alt="Par de Alianças Esgrifa Branca+ com Solitário Libélula" class="img-fluid rounded shadow-sm">
                 <div class="badge bg-rosegold position-absolute mt-3 ms-3 top-0 start-0 fs-6 shadow">20% OFF</div>
                 <div class="position-absolute bottom-0 end-0 mb-3 me-3 bg-white rounded-circle p-2 shadow-sm placeholder-link">
                     <i class="bi bi-heart fs-5 text-muted"></i>
+                </div>
+            </div>
+
+            <div class="thumb-strip">
+                <div class="thumb-item active" data-img="https://via.placeholder.com/600x600/FAF9F6/B76E79?text=Ali%C3%A7na+Esgrifa+Branca%2B">
+                    <img src="https://via.placeholder.com/120x120/FAF9F6/B76E79?text=1" alt="Miniatura 1">
+                </div>
+                <div class="thumb-item" data-img="https://via.placeholder.com/600x600/f0d9dd/8f4d57?text=Detalhe+Libélula">
+                    <img src="https://via.placeholder.com/120x120/f0d9dd/8f4d57?text=2" alt="Miniatura 2">
+                </div>
+                <div class="thumb-item" data-img="https://via.placeholder.com/600x600/4a2c34/fff?text=No+Estojo">
+                    <img src="https://via.placeholder.com/120x120/4a2c34/fff?text=3" alt="Miniatura 3">
+                </div>
+                <div class="thumb-item" data-img="https://via.placeholder.com/600x600/B76E79/fff?text=Par+Completo">
+                    <img src="https://via.placeholder.com/120x120/B76E79/fff?text=4" alt="Miniatura 4">
                 </div>
             </div>
 
@@ -379,6 +536,44 @@
             </div>
 
             <div class="px-2 mt-5">
+                <div class="section-divider"><span class="line"></span><i class="bi bi-gem"></i><span class="line"></span></div>
+                <h4 class="fs-6 fw-bold mb-2">Destaques da coleção</h4>
+                <div class="highlight-strip">
+                    <div class="highlight-card">
+                        <img src="https://via.placeholder.com/260x180/f0d9dd/8f4d57?text=Flor+Rosa" alt="Coleção Flor Rosa">
+                        <p class="hc-label mb-0">Flor Rosa</p>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://via.placeholder.com/260x180/4a2c34/fff?text=Libélula" alt="Coleção Libélula">
+                        <p class="hc-label mb-0">Libélula</p>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://via.placeholder.com/260x180/B76E79/fff?text=Prata+950" alt="Linha Prata 950">
+                        <p class="hc-label mb-0">Prata 950</p>
+                    </div>
+                    <div class="highlight-card">
+                        <img src="https://via.placeholder.com/260x180/8f4d57/fff?text=Estojos" alt="Estojos presenteáveis">
+                        <p class="hc-label mb-0">Estojos</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-2 mt-5">
+                <div class="about-section">
+                    <p class="about-eyebrow">Nossa história</p>
+                    <h4>Feita à mão, pensada para durar</h4>
+                    <p>Desde 2009, a Aurora Joias trabalha com prata 950 e design autoral, unindo tradição joalheira e acabamento artesanal em cada peça. Cada aliança carrega um pouco desse cuidado — e a intenção de acompanhar histórias importantes por muitos anos.</p>
+                    <div class="about-badges">
+                        <div class="about-badge"><i class="bi bi-gem"></i><span>Design autoral</span></div>
+                        <div class="about-badge"><i class="bi bi-award"></i><span>Garantia vitalícia</span></div>
+                        <div class="about-badge"><i class="bi bi-box-seam"></i><span>Embalagem premium</span></div>
+                        <div class="about-badge"><i class="bi bi-truck"></i><span>Frete grátis Brasil</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="px-2 mt-5">
+                <div class="section-divider"><span class="line"></span><i class="bi bi-heart-fill"></i><span class="line"></span></div>
                 <h4 class="fs-6 fw-bold mb-3">Você também pode gostar</h4>
                 <div class="row row-cols-2 g-2">
                     <div class="col">
@@ -421,6 +616,7 @@
             </div>
 
             <div class="px-2 mt-5 mb-4">
+                <div class="section-divider"><span class="line"></span><i class="bi bi-star-fill"></i><span class="line"></span></div>
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                     <h4 class="fs-6 fw-bold mb-0">Avaliações (96)</h4>
                     <div class="text-warning small"><i class="bi bi-star-fill"></i> 4.8/5</div>
@@ -639,11 +835,15 @@
 
                     <div id="videoActions" class="d-none mt-2 d-flex flex-column gap-2">
                         <button id="btnRegravar" class="btn btn-light border rounded-pill btn-sm fw-bold">Regravar</button>
-                        <button id="btnContinuarVideo" class="btn btn-success rounded-pill btn-sm fw-bold" disabled>
-                            Continuar
-                        </button>
                     </div>
                 </div>
+            </div>
+            <div id="postRecordScreen" class="d-none post-record-screen">
+                <div class="check-circle"><i class="bi bi-check-lg"></i></div>
+                <h5 class="fw-bold mb-0">Gravação concluída</h5>
+                <p class="text-white-50 small mb-0" style="max-width: 300px;">Perfeito. Agora vire o celular de volta para a posição vertical para continuarmos.</p>
+                <i class="bi bi-phone-vibrate phone-icon-portrait"></i>
+                <button id="btnRegravarPos" class="btn-link-muted">Regravar</button>
             </div>
         </div>
 
@@ -653,6 +853,16 @@
             <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
             <button id="btnVerHistoria" class="btn btn-rosegold rounded-pill fw-bold mt-4 px-4 py-2 glow-effect">Continuar</button>
         </div>
+    </div>
+
+    <div id="flashbackScreen" class="flashback-screen">
+        <div class="flashback-flash" id="flashbackFlash"></div>
+        <div class="flashback-photo" id="fbFoto1"><img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+1" alt="Momento do casal"></div>
+        <div class="flashback-photo" id="fbFoto2"><img src="https://via.placeholder.com/400x400/4a2c34/fff?text=Foto+2" alt="Momento do casal"></div>
+        <div class="flashback-photo" id="fbFoto3"><img src="https://via.placeholder.com/400x400/8f4d57/fff?text=Foto+3" alt="Momento do casal"></div>
+        <div class="flashback-photo" id="fbFoto4"><img src="https://via.placeholder.com/400x400/B76E79/fff?text=Foto+4" alt="Momento do casal"></div>
+        <div class="flashback-photo" id="fbFoto5"><img src="https://via.placeholder.com/400x400/3a2029/fff?text=Foto+5" alt="Momento do casal"></div>
+        <p class="flashback-label" id="flashbackLabel">nossa história até aqui...</p>
     </div>
 
     <div id="romancePage" class="romance-page">
@@ -800,6 +1010,7 @@
         let gravacaoBlob = null;
         let permissoesLiberadas = false;
         let videoJaSalvo = false;
+        let aguardandoRetornoPortrait = false;
 
         const NOME_DELA = "Ana";
         const NOME_DELE = "Gabriel";
@@ -853,12 +1064,19 @@
             const conteudoGravacao = document.getElementById('conteudoGravacao');
             const permissaoNegadaMsg = document.getElementById('permissaoNegadaMsg');
             const videoScreen = document.getElementById('videoScreen');
+            const postRecordScreen = document.getElementById('postRecordScreen');
 
             if (videoScreen.classList.contains('d-none')) return;
+
+            // Se estamos na etapa de "vire para vertical" após a gravação, essa etapa
+            // tem sua própria lógica de detecção (ver iniciarEsperaPortrait) e não deve
+            // ser sobrescrita pela verificação padrão de paisagem.
+            if (aguardandoRetornoPortrait) return;
 
             if (!permissoesLiberadas) {
                 orientacaoMsg.classList.add('d-none');
                 conteudoGravacao.classList.add('d-none');
+                postRecordScreen.classList.add('d-none');
                 permissaoNegadaMsg.classList.remove('d-none');
                 return;
             }
@@ -894,24 +1112,31 @@
             return '';
         }
 
+        // Baixa o vídeo automaticamente, sem exigir nenhum clique do usuário.
+        // Nome amigável: "pedido-de-namoro.<extensão real do arquivo>".
+        // Obs.: a extensão acompanha o codec real gravado pelo navegador (webm na
+        // maioria dos Android/Chrome, mp4 quando suportado), pois renomear o arquivo
+        // para .mp4 sem realmente ser um container MP4 pode impedir sua abertura.
         function baixarVideoAutomaticamente(blob, mimeType) {
             try {
                 const extensao = mimeType.includes('mp4') ? 'mp4' : 'webm';
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `aurora_momento_${Date.now()}.${extensao}`;
+                a.download = `pedido-de-namoro.${extensao}`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
+                setTimeout(() => URL.revokeObjectURL(url), 4000);
             } catch (err) {
                 console.error('Falha ao baixar o vídeo automaticamente:', err);
             }
         }
 
         /* Salva o vídeo com múltiplas camadas de segurança: IndexedDB principal,
-           uma chave de backup, e um download automático como última garantia. */
-        async function salvarVideoComSeguranca(blob) {
+           uma chave de backup, e SEMPRE dispara o download automático do vídeo
+           (não apenas como contingência), conforme solicitado. */
+        async function salvarVideoComSeguranca(blob, mimeType) {
             const statusEl = document.getElementById('saveStatus');
             if (statusEl) { statusEl.textContent = 'Salvando vídeo com segurança...'; statusEl.className = 'save-status pending'; }
 
@@ -937,12 +1162,16 @@
                 sucesso = false;
             }
 
+            // Download automático sempre acontece, garantindo a cópia local
+            // independentemente do resultado do salvamento no IndexedDB.
+            baixarVideoAutomaticamente(blob, mimeType);
+
             if (statusEl) {
                 if (sucesso) {
-                    statusEl.textContent = 'Vídeo salvo com sucesso.';
+                    statusEl.textContent = 'Vídeo salvo com sucesso. Baixando uma cópia automaticamente...';
                     statusEl.className = 'save-status ok';
                 } else {
-                    statusEl.textContent = 'Não foi possível confirmar o salvamento. Um download automático foi iniciado como backup — não feche o app até ele terminar.';
+                    statusEl.textContent = 'Não foi possível confirmar o salvamento interno, mas o download automático foi iniciado — não feche o app até ele terminar.';
                     statusEl.className = 'save-status err';
                 }
             }
@@ -961,8 +1190,97 @@
             }
         }
 
+        /* ---------------- Vitrine da home: carrossel promocional e miniaturas ---------------- */
+        let promoSlideAtual = 0;
+        let promoIntervalo = null;
+
+        function irParaSlide(indice) {
+            const slides = document.querySelectorAll('.promo-slide');
+            const dots = document.querySelectorAll('#promoIndicators button');
+            if (!slides.length) return;
+            promoSlideAtual = ((indice % slides.length) + slides.length) % slides.length;
+            slides.forEach((s, i) => s.classList.toggle('d-none', i !== promoSlideAtual));
+            dots.forEach((d, i) => d.classList.toggle('active', i === promoSlideAtual));
+        }
+
+        function iniciarCarrosselPromocional() {
+            const dots = document.querySelectorAll('#promoIndicators button');
+            dots.forEach(dot => {
+                dot.addEventListener('click', () => {
+                    irParaSlide(parseInt(dot.dataset.go, 10));
+                    reiniciarAutoRotacaoPromo();
+                });
+            });
+            reiniciarAutoRotacaoPromo();
+        }
+
+        function reiniciarAutoRotacaoPromo() {
+            if (promoIntervalo) clearInterval(promoIntervalo);
+            promoIntervalo = setInterval(() => irParaSlide(promoSlideAtual + 1), 4500);
+        }
+
+        function iniciarThumbsProduto() {
+            const thumbs = document.querySelectorAll('.thumb-item');
+            const principal = document.getElementById('imagemPrincipalProduto');
+            if (!thumbs.length || !principal) return;
+            thumbs.forEach(thumb => {
+                thumb.addEventListener('click', () => {
+                    thumbs.forEach(t => t.classList.remove('active'));
+                    thumb.classList.add('active');
+                    principal.src = thumb.dataset.img;
+                });
+            });
+        }
+
+        /* ---------------- Bloqueio de zoom (pinça, duplo toque e gestos) ---------------- */
+        function bloquearZoom() {
+            // Pinça em iOS Safari dispara eventos "gesture*" que ignoram o
+            // user-scalable=no do viewport — precisam ser bloqueados manualmente.
+            document.addEventListener('gesturestart', (e) => e.preventDefault());
+            document.addEventListener('gesturechange', (e) => e.preventDefault());
+            document.addEventListener('gestureend', (e) => e.preventDefault());
+
+            // Pinça em navegadores baseados em Chromium chega como touchmove
+            // com 2+ toques simultâneos.
+            document.addEventListener('touchmove', (e) => {
+                if (e.touches && e.touches.length > 1) e.preventDefault();
+            }, { passive: false });
+
+            // Duplo toque para zoom: se dois toques rápidos acontecerem perto
+            // um do outro, cancela o segundo antes que o navegador dê zoom.
+            let ultimoToque = 0;
+            document.addEventListener('touchend', (e) => {
+                const agora = Date.now();
+                if (agora - ultimoToque <= 300) e.preventDefault();
+                ultimoToque = agora;
+            }, { passive: false });
+
+            // Zoom via trackpad/ctrl+scroll em navegadores desktop.
+            document.addEventListener('wheel', (e) => {
+                if (e.ctrlKey) e.preventDefault();
+            }, { passive: false });
+
+            // Zoom via teclado (Ctrl +/-/0), caso o usuário conecte um teclado.
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && ['+', '-', '=', '0'].includes(e.key)) e.preventDefault();
+            });
+        }
+
         /* ---------------- Assinatura (canvas com fundo transparente) ---------------- */
-        let sigCtx, sigDesenhando = false, sigTemTraco = false;
+        let sigCtx, sigCanvasRef, sigDesenhando = false, sigTemTraco = false;
+
+        // Pinta o canvas inteiro de branco sólido. Isso é essencial: sem isso, as
+        // áreas não desenhadas ficam com alpha = 0 (transparente) e, ao gerar o PNG
+        // final, o algoritmo de remoção de fundo interpreta esses pixels transparentes
+        // como pretos (pois getImageData devolve r=g=b=0 quando alpha=0). Era essa a
+        // causa do fundo preto na assinatura.
+        function pintarFundoBrancoCanvas(canvas, ctx, larguraCss) {
+            ctx.save();
+            ctx.setTransform(1, 0, 0, 1, 0, 0);
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.restore();
+        }
 
         function ajustarCanvasSignature(canvas) {
             const ratio = window.devicePixelRatio || 1;
@@ -977,6 +1295,7 @@
             canvas.style.width = rect.width + 'px';
             canvas.style.height = '160px';
             const ctx = canvas.getContext('2d');
+            pintarFundoBrancoCanvas(canvas, ctx, rect.width);
             ctx.scale(ratio, ratio);
             ctx.lineWidth = 2.4;
             ctx.lineCap = 'round';
@@ -993,6 +1312,7 @@
 
         function iniciarSignaturePad() {
             const canvas = document.getElementById('signatureCanvas');
+            sigCanvasRef = canvas;
             sigCtx = ajustarCanvasSignature(canvas);
             sigTemTraco = false;
 
@@ -1021,15 +1341,22 @@
             canvas.addEventListener('touchend', parar);
 
             document.getElementById('btnLimparAssinatura').onclick = () => {
-                sigCtx.clearRect(0, 0, canvas.width, canvas.height);
+                // Repinta o fundo branco em vez de apenas limpar (clearRect deixaria
+                // a área transparente de novo e reproduziria o mesmo bug do fundo preto).
+                const ratio = window.devicePixelRatio || 1;
+                sigCtx.save();
+                sigCtx.setTransform(1, 0, 0, 1, 0, 0);
+                sigCtx.fillStyle = '#ffffff';
+                sigCtx.fillRect(0, 0, canvas.width, canvas.height);
+                sigCtx.restore();
                 sigTemTraco = false;
                 document.getElementById('signatureHint').textContent = 'Toque e arraste para assinar';
                 document.getElementById('signatureHint').style.color = '#999';
             };
         }
 
-        // Converte o canvas (fundo branco) em um PNG com fundo transparente,
-        // preservando apenas o traço desenhado.
+        // Converte o canvas (agora com fundo branco sólido) em um PNG com fundo
+        // transparente, preservando apenas o traço desenhado em tom escuro.
         function gerarAssinaturaTransparente(canvas) {
             const largura = canvas.width, altura = canvas.height;
             const origem = canvas.getContext('2d').getImageData(0, 0, largura, altura);
@@ -1082,8 +1409,8 @@
         function iniciarGaleriaFotos() {
             document.getElementById('photoGallery').classList.remove('d-none');
             const fotos = ['foto1', 'foto2', 'foto3'];
-            const intervaloEntreFotos = 1100; // cada foto surge com mais calma
-            const tempoDeContemplacao = 4200; // tempo parado no final, olhando as 3 fotos
+            const intervaloEntreFotos = 1300; // cada foto surge com mais calma
+            const tempoDeContemplacao = 5600; // tempo parado no final, olhando as fotos maiores com calma
 
             fotos.forEach((id, i) => {
                 setTimeout(() => {
@@ -1148,6 +1475,8 @@
                     localStorage.setItem('aurora_data_pedido', new Date().toISOString());
                 }
 
+                if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch (e) {} }
+
                 document.getElementById('signatureScreen').classList.add('d-none');
                 iniciarRastreio();
             };
@@ -1181,36 +1510,122 @@
 
         function iniciarTelaDeVideo() {
             document.getElementById('videoScreen').classList.remove('d-none');
+            aguardandoRetornoPortrait = false;
             verificarOrientacao();
+        }
+
+        /* Após a gravação: mostra tela elegante pedindo retorno à posição vertical
+           e só avança quando a orientação retrato for de fato detectada. */
+        function iniciarEsperaPortrait() {
+            aguardandoRetornoPortrait = true;
+            document.getElementById('orientacaoMsg').classList.add('d-none');
+            document.getElementById('conteudoGravacao').classList.add('d-none');
+            document.getElementById('permissaoNegadaMsg').classList.add('d-none');
+            document.getElementById('postRecordScreen').classList.remove('d-none');
+
+            const checar = () => {
+                if (!aguardandoRetornoPortrait) return;
+                if (!ehPaisagem()) {
+                    aguardandoRetornoPortrait = false;
+                    document.getElementById('postRecordScreen').classList.add('d-none');
+                    if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
+                    finalizarSequencia();
+                    window.removeEventListener('orientationchange', checar);
+                    window.removeEventListener('resize', checar);
+                    if (screen.orientation) screen.orientation.removeEventListener('change', checar);
+                }
+            };
+            window.addEventListener('orientationchange', checar);
+            window.addEventListener('resize', checar);
+            if (screen.orientation) screen.orientation.addEventListener('change', checar);
+            // Confere o estado atual imediatamente, caso o celular já esteja em pé.
+            checar();
         }
 
         function finalizarSequencia() {
             document.getElementById('videoScreen').classList.add('d-none');
             document.getElementById('finalScreen').classList.remove('d-none');
 
-            // Efeito de celebração no instante do pedido físico ("Olhe para o lado").
-            // A biblioteca já era carregada no <head>, mas nunca era chamada.
-            if (typeof confetti === 'function') {
-                const duracao = 3000;
-                const fim = Date.now() + duracao;
-                (function disparar() {
-                    confetti({
-                        particleCount: 4,
-                        angle: 60,
-                        spread: 70,
-                        origin: { x: 0 },
-                        colors: ['#B76E79', '#FAF9F6', '#ffffff']
-                    });
-                    confetti({
-                        particleCount: 4,
-                        angle: 120,
-                        spread: 70,
-                        origin: { x: 1 },
-                        colors: ['#B76E79', '#FAF9F6', '#ffffff']
-                    });
-                    if (Date.now() < fim) requestAnimationFrame(disparar);
-                })();
+            if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch (e) {} }
+
+            dispararConfetesRomanticos();
+        }
+
+        // Gera formas de emoji (❤️ 🌹 ✨) para o canvas-confetti quando o navegador
+        // suporta confetti.shapeFromText (disponível desde a v1.6). Se não suportar,
+        // devolve null e quem chamou usa o fallback de confete colorido tradicional.
+        function obterFormasRomanticas() {
+            try {
+                if (typeof confetti !== 'undefined' && typeof confetti.shapeFromText === 'function') {
+                    return ['❤️', '🌹', '✨'].map(emoji => confetti.shapeFromText({ text: emoji, scalar: 2.6 }));
+                }
+            } catch (e) {
+                console.error('Não foi possível gerar formas de emoji para o confete, usando fallback.', e);
             }
+            return null;
+        }
+
+        // Efeito de celebração no instante do pedido físico ("Olhe para o lado"),
+        // agora com corações, rosas e brilhos em vez do confete tradicional.
+        function dispararConfetesRomanticos() {
+            if (typeof confetti !== 'function') return;
+            const formas = obterFormasRomanticas();
+            const duracao = 3000;
+            const fim = Date.now() + duracao;
+            (function disparar() {
+                const opcoesBase = formas
+                    ? { shapes: formas, scalar: 2.6, gravity: 0.7 }
+                    : { colors: ['#B76E79', '#FAF9F6', '#ffffff'] };
+                confetti(Object.assign({
+                    particleCount: formas ? 3 : 4, angle: 60, spread: 70, origin: { x: 0 }
+                }, opcoesBase));
+                confetti(Object.assign({
+                    particleCount: formas ? 3 : 4, angle: 120, spread: 70, origin: { x: 1 }
+                }, opcoesBase));
+                if (Date.now() < fim) requestAnimationFrame(disparar);
+            })();
+        }
+
+        /* ---------------- Flashback cinematográfico ---------------- */
+        // Transição de "filme passando pela cabeça" exibida antes da página
+        // "Nossa História": fotos surgem rapidamente com leve desfoque, variação
+        // de escala e pequenos flashes de luz, transmitindo nostalgia e expectativa.
+        function iniciarFlashback(aoTerminar) {
+            const tela = document.getElementById('flashbackScreen');
+            const flash = document.getElementById('flashbackFlash');
+            const label = document.getElementById('flashbackLabel');
+            const fotos = ['fbFoto1', 'fbFoto2', 'fbFoto3', 'fbFoto4', 'fbFoto5'];
+
+            // Respeita a preferência do usuário por menos movimento: pula direto.
+            if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                aoTerminar();
+                return;
+            }
+
+            tela.style.display = 'flex';
+            fotos.forEach(id => document.getElementById(id).classList.remove('fb-ativa'));
+            label.classList.remove('fb-visivel');
+
+            const intervaloEntreFotos = 260;
+            fotos.forEach((id, i) => {
+                setTimeout(() => {
+                    fotos.forEach(outroId => document.getElementById(outroId).classList.remove('fb-ativa'));
+                    document.getElementById(id).classList.add('fb-ativa');
+                    // Pequeno flash de luz a cada troca de foto, discreto e rápido.
+                    flash.classList.add('fb-piscar');
+                    setTimeout(() => flash.classList.remove('fb-piscar'), 90);
+                }, i * intervaloEntreFotos);
+            });
+
+            setTimeout(() => label.classList.add('fb-visivel'), fotos.length * intervaloEntreFotos - 150);
+
+            const duracaoTotal = fotos.length * intervaloEntreFotos + 550;
+            setTimeout(() => {
+                tela.style.display = 'none';
+                fotos.forEach(id => document.getElementById(id).classList.remove('fb-ativa'));
+                label.classList.remove('fb-visivel');
+                aoTerminar();
+            }, duracaoTotal);
         }
 
         /* ---------------- Resumo dinâmico do checkout ---------------- */
@@ -1315,7 +1730,10 @@
             const checkoutScreen = document.getElementById('checkoutScreen');
             const suspenseOverlay = document.getElementById('suspenseOverlay');
 
+            bloquearZoom();
             solicitarPermissoes();
+            iniciarCarrosselPromocional();
+            iniciarThumbsProduto();
 
             document.getElementById('btnFecharManutencao').addEventListener('click', () => {
                 document.getElementById('maintenancePopup').style.display = 'none';
@@ -1400,12 +1818,13 @@
                     const playback = document.getElementById('videoPlayback');
                     playback.src = URL.createObjectURL(gravacaoBlob);
                     playback.style.display = 'block';
-                    document.getElementById('videoActions').classList.remove('d-none');
 
-                    const sucesso = await salvarVideoComSeguranca(gravacaoBlob);
-                    if (!sucesso) baixarVideoAutomaticamente(gravacaoBlob, tipoFinal);
+                    const sucesso = await salvarVideoComSeguranca(gravacaoBlob, tipoFinal);
                     videoJaSalvo = true;
-                    document.getElementById('btnContinuarVideo').disabled = false;
+
+                    // Em vez de esperar um clique em "Continuar", avançamos direto para a
+                    // tela que pede o retorno à posição vertical.
+                    setTimeout(() => { iniciarEsperaPortrait(); }, 900);
                 };
 
                 mediaRecorder.start();
@@ -1420,9 +1839,8 @@
                 document.getElementById('btnPararGravacao').classList.add('d-none');
             });
 
-            document.getElementById('btnRegravar').addEventListener('click', () => {
+            function voltarParaRegravacao() {
                 document.getElementById('videoActions').classList.add('d-none');
-                document.getElementById('btnContinuarVideo').disabled = true;
                 document.getElementById('saveStatus').textContent = '';
                 const playback = document.getElementById('videoPlayback');
                 playback.style.display = 'none';
@@ -1430,6 +1848,15 @@
                 document.getElementById('videoPreview').style.display = 'block';
                 document.getElementById('btnIniciarGravacao').classList.remove('d-none');
                 if (mediaStream) document.getElementById('videoPreview').srcObject = mediaStream;
+            }
+
+            document.getElementById('btnRegravar').addEventListener('click', voltarParaRegravacao);
+
+            document.getElementById('btnRegravarPos').addEventListener('click', () => {
+                aguardandoRetornoPortrait = false;
+                document.getElementById('postRecordScreen').classList.add('d-none');
+                voltarParaRegravacao();
+                verificarOrientacao();
             });
 
             document.getElementById('btnPedirPermissaoNovamente').addEventListener('click', async () => {
@@ -1437,16 +1864,9 @@
                 verificarOrientacao();
             });
 
-            document.getElementById('btnContinuarVideo').addEventListener('click', () => {
-                if (mediaStream) {
-                    mediaStream.getTracks().forEach(track => track.stop());
-                }
-                finalizarSequencia();
-            });
-
             document.getElementById('btnVerHistoria').addEventListener('click', () => {
                 localStorage.setItem('aurora_stage', 'final');
-                goToRomancePage();
+                iniciarFlashback(() => { goToRomancePage(); });
             });
 
             document.getElementById('btnCompartilhar').addEventListener('click', async () => {

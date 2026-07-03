@@ -344,10 +344,99 @@
         }
         .flashback-label.fb-visivel { opacity: 1; }
 
+        /* ---- Carta final (envelope + carta manuscrita) ---- */
+        .letter-stage {
+            perspective: 1400px; width: 100%; max-width: 320px; margin: 22px auto 6px;
+            min-height: 300px; position: relative;
+        }
+        .envelope {
+            position: relative; width: 100%; padding-top: 68%; cursor: pointer;
+            opacity: 0; transform: translateY(14px) scale(0.96);
+            transition: opacity 0.9s ease, transform 0.9s ease;
+        }
+        .envelope.envelope-visivel { opacity: 1; transform: translateY(0) scale(1); }
+        .envelope-back {
+            position: absolute; inset: 0; border-radius: 6px;
+            background: linear-gradient(160deg, #f4ead9 0%, #e6d5b8 100%);
+            box-shadow: 0 22px 45px rgba(0,0,0,0.55);
+        }
+        .envelope-back::before, .envelope-back::after {
+            content: ''; position: absolute; bottom: 0; width: 52%; height: 78%;
+            background: linear-gradient(135deg, #efe1c9, #ddc79f); z-index: 2;
+        }
+        .envelope-back::before { left: 0; clip-path: polygon(0 0, 100% 50%, 0 100%); }
+        .envelope-back::after { right: 0; clip-path: polygon(100% 0, 0 50%, 100% 100%); }
+        .envelope-flap {
+            position: absolute; top: 0; left: 0; width: 100%; height: 58%;
+            background: linear-gradient(150deg, #eaddc4, #d7c39c);
+            clip-path: polygon(0 0, 100% 0, 50% 92%);
+            transform-origin: top center; transform-style: preserve-3d;
+            transition: transform 1.15s cubic-bezier(0.65, 0, 0.35, 1);
+            z-index: 4; border-radius: 6px 6px 0 0;
+        }
+        .envelope.aberto .envelope-flap { transform: rotateX(180deg); }
+        .envelope-seal {
+            position: absolute; top: 34%; left: 50%; width: 42px; height: 42px;
+            transform: translate(-50%, -50%); border-radius: 50%; background: var(--rosegold);
+            display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.15rem;
+            box-shadow: 0 6px 14px rgba(0,0,0,0.45); z-index: 6;
+            transition: opacity 0.35s ease, transform 0.35s ease;
+        }
+        .envelope.aberto .envelope-seal { opacity: 0; transform: translate(-50%, -50%) scale(0.3); }
+        .letter-paper {
+            position: absolute; left: 50%; bottom: 4%; width: 86%; min-height: 62%;
+            background: #FBF7F0; border-radius: 3px; box-shadow: 0 14px 34px rgba(0,0,0,0.4);
+            padding: 20px 16px 16px; z-index: 3;
+            transform: translate(-50%, 6%) scale(0.82); opacity: 0;
+            transition: transform 1.3s cubic-bezier(0.22, 1, 0.36, 1) 0.55s, opacity 0.9s ease 0.55s, z-index 0s 0.55s;
+        }
+        .envelope.aberto .letter-paper { transform: translate(-50%, -62%) scale(1.06); opacity: 1; z-index: 7; }
+        .letter-paper::before {
+            content: ''; position: absolute; inset: 6px; border: 1px solid #e3d5ba; pointer-events: none;
+        }
+        .letter-text {
+            font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.02rem;
+            line-height: 1.75; color: #2b2523; text-align: left; min-height: 90px; margin: 0;
+            white-space: pre-wrap;
+        }
+        .letter-signoff {
+            font-family: 'Alex Brush', cursive; font-size: 1.7rem; color: var(--rosegold-dark);
+            margin-top: 10px; opacity: 0; transition: opacity 0.6s ease;
+        }
+        .letter-signoff.visivel { opacity: 1; }
+        .envelope-hint {
+            text-align: center; color: rgba(255,255,255,0.45); font-size: 0.72rem; letter-spacing: 1px;
+            text-transform: uppercase; margin-top: 8px; opacity: 0; transition: opacity 0.6s ease;
+        }
+        .envelope-hint.visivel { opacity: 1; }
+        #finalContinuarWrap { transition: opacity 0.8s ease; }
+
+        /* ---- Seleção de regras do contrato ---- */
+        .rules-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .rule-card {
+            background: rgba(255,255,255,0.06); border: 1px solid rgba(183,110,121,0.35);
+            border-radius: 12px; padding: 16px 10px 14px; text-align: center; cursor: pointer;
+            transition: background 0.2s ease, border-color 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+            position: relative; user-select: none;
+        }
+        .rule-card i.rule-icon { font-size: 1.35rem; color: var(--rosegold); display: block; margin-bottom: 8px; }
+        .rule-card p { font-size: 0.74rem; color: #f0d9dd; margin: 0; line-height: 1.4; }
+        .rule-card:active { transform: scale(0.97); }
+        .rule-card.selecionada { background: rgba(183,110,121,0.28); border-color: var(--rosegold); }
+        .rule-card.disabled { opacity: 0.35; pointer-events: none; }
+        .rule-check {
+            position: absolute; top: 8px; right: 8px; width: 18px; height: 18px; border-radius: 50%;
+            border: 1.5px solid rgba(255,255,255,0.35); background: rgba(0,0,0,0.15);
+            display: flex; align-items: center; justify-content: center; font-size: 0.6rem; color: transparent;
+        }
+        .rule-card.selecionada .rule-check { background: var(--rosegold); border-color: var(--rosegold); color: #fff; }
+        #btnGerarContrato:disabled { opacity: 0.5; }
+
         @media (prefers-reduced-motion: reduce) {
             .glow-effect, .rotate-hint .phone-icon, .rec-dot, .cursor, .phone-icon-portrait { animation: none !important; }
             .reveal-up { animation: none !important; opacity: 1 !important; }
             .flashback-photo { transition: opacity 0.2s ease !important; filter: none !important; transform: none !important; }
+            .envelope, .envelope-flap, .letter-paper, .envelope-seal { transition: none !important; }
         }
     </style>
 </head>
@@ -850,8 +939,24 @@
         <div id="finalScreen" class="d-none text-center w-100 px-3 fade-in">
             <img id="finalPhoto" src="https://via.placeholder.com/400x500/B76E79/fff?text=Nossa+Foto+Final" class="img-fluid final-photo shadow-lg mb-4" alt="Nós">
             <h1 class="text-white fw-bold display-5 text-shadow mb-3">As alianças já chegaram.</h1>
-            <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
-            <button id="btnVerHistoria" class="btn btn-rosegold rounded-pill fw-bold mt-4 px-4 py-2 glow-effect">Continuar</button>
+
+            <div class="letter-stage">
+                <div id="envelope" class="envelope">
+                    <div class="envelope-back"></div>
+                    <div class="letter-paper" id="letterPaper">
+                        <p class="letter-text" id="letterTextFinal"></p>
+                        <p class="letter-signoff" id="letterSignoff">Com todo o meu amor.</p>
+                    </div>
+                    <div class="envelope-flap" id="envelopeFlap"></div>
+                    <div class="envelope-seal" id="envelopeSeal"><i class="bi bi-heart-fill"></i></div>
+                </div>
+                <p class="envelope-hint" id="envelopeHint">toque para abrir</p>
+            </div>
+
+            <div id="finalContinuarWrap" class="d-none">
+                <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
+                <button id="btnVerHistoria" class="btn btn-rosegold rounded-pill fw-bold mt-4 px-4 py-2 glow-effect">Continuar</button>
+            </div>
         </div>
     </div>
 
@@ -920,7 +1025,19 @@
             </div>
         </div>
 
-        <div class="mt-5 reveal-up" style="max-width: 460px; margin: 0 auto;">
+        <div id="regrasSelecaoWrap" class="mt-5 reveal-up" style="max-width: 460px; margin: 0 auto;">
+            <p class="romance-section-title">Escolha as regras do nosso contrato</p>
+            <p class="text-center text-white-50 small mb-3" style="max-width: 360px; margin: 0 auto;">
+                Selecione de 2 a 3 combinados pra virarem cláusulas oficiais (e bem afetivas) do nosso contrato de namoro.
+            </p>
+            <div class="rules-grid" id="rulesGrid"></div>
+            <div class="text-center mt-3">
+                <p id="regrasContador" class="small text-white-50 mb-2">0 de 3 selecionadas (mínimo 2)</p>
+                <button id="btnGerarContrato" class="btn btn-rosegold rounded-pill fw-bold px-4" disabled>Gerar nosso contrato</button>
+            </div>
+        </div>
+
+        <div id="contratoWrap" class="mt-5 d-none reveal-up" style="max-width: 460px; margin: 0 auto;">
             <p class="romance-section-title">Contrato (sem validade jurídica, validade eterna)</p>
             <div class="contract-paper">
                 <div class="contract-inner">
@@ -928,7 +1045,7 @@
                     <h2 class="contract-title">Contrato de Adesão ao Namoro</h2>
                     <div class="romance-divider"></div>
 
-                    <p class="contract-intro">As partes abaixo identificadas resolvem celebrar o presente Contrato de Namoro, comprometendo-se, de livre e espontânea vontade — e de um bocado de paixão — a cumprir integralmente as cláusulas descritas a seguir.</p>
+                    <p class="contract-intro">As partes abaixo identificadas resolvem celebrar o presente Contrato de Namoro, comprometendo-se, de livre e espontânea vontade — e de um bocado de paixão — a cumprir integralmente as cláusulas personalizadas descritas a seguir, escolhidas a dedo por <span class="js-nome"></span>.</p>
 
                     <p class="contract-parties">
                         <strong>CONTRATANTE:</strong> <span class="js-nome-dele"></span><br>
@@ -936,21 +1053,7 @@
                         doravante denominados, em conjunto, "as Partes Apaixonadas".
                     </p>
 
-                    <ol class="contract-articles">
-                        <li><strong>Art. 1º —</strong> Fica estabelecido o compartilhamento voluntário de comida, sendo o mínimo aceitável oferecer pelo menos um pedaço antes de comer tudo sozinho(a).</li>
-                        <li><strong>Art. 2º —</strong> O cobertor será dividido de forma equânime, ficando vedado o "efeito casulo" unilateral durante a madrugada.</li>
-                        <li><strong>Art. 3º —</strong> Fica instituído o regime de maratonas de filmes e séries em conjunto, com direito a pausas para pipoca e comentários espontâneos sobre a trama.</li>
-                        <li><strong>Art. 4º —</strong> As Partes comprometem-se a respeitar mutuamente os tempos, ritmos e momentos de silêncio uma da outra, sem cobranças desnecessárias.</li>
-                        <li><strong>Art. 5º —</strong> É dever de ambas as Partes apoiar incondicionalmente os sonhos, planos e ideias malucas uma da outra.</li>
-                        <li><strong>Art. 6º —</strong> Ficam os abraços decretados obrigatórios em qualquer horário, sem necessidade de justificativa prévia.</li>
-                        <li><strong>Art. 7º —</strong> As mensagens de bom dia constituem cláusula pétrea deste contrato, não podendo ser suprimidas nem mesmo por emenda constitucional do sono.</li>
-                        <li><strong>Art. 8º —</strong> Os beijos são ilimitados, não estando sujeitos a cotas, franquias ou horário comercial.</li>
-                        <li><strong>Art. 9º —</strong> Fica proibido dormir brigados, salvo em hipóteses extremamente justificadas, mediante prévio pedido de desculpas e, preferencialmente, um abraço.</li>
-                        <li><strong>Art. 10º —</strong> São garantidos passeios inesperados e planos espontâneos, desde que comunicados com, no mínimo, entusiasmo.</li>
-                        <li><strong>Art. 11º —</strong> As Partes comprometem-se a rir das piadas uma da outra, inclusive — e principalmente — das ruins.</li>
-                        <li><strong>Art. 12º —</strong> Fica instituído o direito à metade de qualquer sobremesa, ressalvado o direito de recusa por parte de quem não gosta de doce.</li>
-                        <li><strong>Art. 13º —</strong> O presente contrato não possui prazo de vigência determinado, renovando-se automaticamente todos os dias, por vontade própria das Partes.</li>
-                    </ol>
+                    <ol class="contract-articles" id="contractArticlesList"></ol>
 
                     <p class="contract-closing">E por estarem justas e apaixonadas, as Partes firmam o presente instrumento, em caráter irrevogável (do coração), para que produza os seus efeitos afetivos.</p>
 
@@ -1027,6 +1130,155 @@
             { texto: "Última coisa antes de seguirmos: você está feliz com a vida que a gente está construindo juntos?", sim: "Muito feliz", nao: "Sim, muito" }
         ];
         let perguntaAtual = 0;
+
+        /* ---------------- Regras do contrato (personalização) ---------------- */
+        const opcoesRegras = [
+            { id: 'batata', icon: 'bi-basket2', label: 'Dividir a última batata frita', artigo: 'Fica estabelecido o compartilhamento voluntário de qualquer petisco, sendo o mínimo aceitável oferecer pelo menos a última batata frita antes de terminar o prato sozinho(a).' },
+            { id: 'abraco', icon: 'bi-people-fill', label: 'Nunca negar um abraço', artigo: 'Ficam os abraços decretados obrigatórios em qualquer horário, sem necessidade de justificativa prévia.' },
+            { id: 'filmes', icon: 'bi-film', label: 'Assistir filmes juntos', artigo: 'Fica instituído o regime de maratonas de filmes e séries em conjunto, com direito a pausas para pipoca e comentários espontâneos sobre a trama.' },
+            { id: 'passeios', icon: 'bi-signpost-2', label: 'Passeios surpresa', artigo: 'São garantidos passeios inesperados e planos espontâneos, desde que comunicados com, no mínimo, entusiasmo.' },
+            { id: 'sobremesa', icon: 'bi-cup-hot', label: 'Comer sobremesa juntos', artigo: 'Fica instituído o direito à divisão de qualquer sobremesa, com pelo menos uma garfada compartilhada, ressalvado o direito de recusa por parte de quem não gosta de doce.' },
+            { id: 'conchinha', icon: 'bi-moon-stars-fill', label: 'Dormir de conchinha sempre que possível', artigo: 'O cobertor será dividido de forma equânime, ficando garantida a posição de conchinha sempre que possível, vedado o "efeito casulo" unilateral durante a madrugada.' },
+            { id: 'bomdia', icon: 'bi-sunrise-fill', label: 'Mandar mensagem de bom dia', artigo: 'As mensagens de bom dia constituem cláusula pétrea deste contrato, não podendo ser suprimidas nem mesmo por emenda constitucional do sono.' },
+            { id: 'sonhos', icon: 'bi-stars', label: 'Apoiar os sonhos um do outro', artigo: 'É dever de ambas as Partes apoiar incondicionalmente os sonhos, planos e ideias malucas uma da outra.' }
+        ];
+        let regrasSelecionadas = [];
+        const MAX_REGRAS = 3;
+        const MIN_REGRAS = 2;
+
+        function renderRulesGrid() {
+            const grid = document.getElementById('rulesGrid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            opcoesRegras.forEach(op => {
+                const card = document.createElement('div');
+                card.className = 'rule-card';
+                card.dataset.id = op.id;
+                card.innerHTML = `<div class="rule-check"><i class="bi bi-check-lg"></i></div><i class="bi ${op.icon} rule-icon"></i><p>${op.label}</p>`;
+                card.addEventListener('click', () => toggleRegra(op.id, card));
+                grid.appendChild(card);
+            });
+            atualizarEstadoSelecaoRegras();
+        }
+
+        function toggleRegra(id, card) {
+            const idx = regrasSelecionadas.indexOf(id);
+            if (idx >= 0) {
+                regrasSelecionadas.splice(idx, 1);
+                card.classList.remove('selecionada');
+            } else {
+                if (regrasSelecionadas.length >= MAX_REGRAS) return;
+                regrasSelecionadas.push(id);
+                card.classList.add('selecionada');
+            }
+            atualizarEstadoSelecaoRegras();
+        }
+
+        function atualizarEstadoSelecaoRegras() {
+            const contador = document.getElementById('regrasContador');
+            const btn = document.getElementById('btnGerarContrato');
+            if (!contador || !btn) return;
+            const n = regrasSelecionadas.length;
+            contador.textContent = `${n} de ${MAX_REGRAS} selecionadas (mínimo ${MIN_REGRAS})`;
+            btn.disabled = n < MIN_REGRAS;
+            document.querySelectorAll('.rule-card').forEach(c => {
+                const isSel = regrasSelecionadas.includes(c.dataset.id);
+                if (!isSel && n >= MAX_REGRAS) c.classList.add('disabled');
+                else c.classList.remove('disabled');
+            });
+        }
+
+        function gerarContratoPersonalizado(idsEscolhidos) {
+            const lista = document.getElementById('contractArticlesList');
+            if (!lista) return;
+            lista.innerHTML = '';
+            idsEscolhidos.forEach((id, i) => {
+                const regra = opcoesRegras.find(o => o.id === id);
+                if (!regra) return;
+                const li = document.createElement('li');
+                li.innerHTML = `<strong>Art. ${i + 1}º —</strong> ${regra.artigo}`;
+                lista.appendChild(li);
+            });
+            const selecaoWrap = document.getElementById('regrasSelecaoWrap');
+            const contratoWrap = document.getElementById('contratoWrap');
+            if (selecaoWrap) selecaoWrap.classList.add('d-none');
+            if (contratoWrap) {
+                contratoWrap.classList.remove('d-none');
+                setTimeout(() => contratoWrap.scrollIntoView({ behavior: 'smooth', block: 'start' }), 150);
+            }
+        }
+
+        /* Prepara o contrato ao chegar na página "Nossa História": se as regras já
+           foram escolhidas anteriormente (ex: após um reload), pula direto para o
+           contrato gerado; caso contrário, exibe a seleção. */
+        function prepararContrato() {
+            renderRulesGrid();
+            let salvo = null;
+            try { salvo = JSON.parse(localStorage.getItem('aurora_regras_contrato') || 'null'); } catch (e) { salvo = null; }
+
+            if (Array.isArray(salvo) && salvo.length >= MIN_REGRAS) {
+                regrasSelecionadas = salvo.slice(0, MAX_REGRAS);
+                document.querySelectorAll('.rule-card').forEach(c => {
+                    if (regrasSelecionadas.includes(c.dataset.id)) c.classList.add('selecionada');
+                });
+                atualizarEstadoSelecaoRegras();
+                gerarContratoPersonalizado(regrasSelecionadas);
+            }
+        }
+
+        /* ---------------- Carta final (envelope) ---------------- */
+        function iniciarCartaFinal() {
+            const envelope = document.getElementById('envelope');
+            const envelopeHint = document.getElementById('envelopeHint');
+            const letterTextEl = document.getElementById('letterTextFinal');
+            const letterSignoff = document.getElementById('letterSignoff');
+            const continuarWrap = document.getElementById('finalContinuarWrap');
+            if (!envelope || !letterTextEl) return;
+
+            const cartaMensagem = `${NOME_DELA},\n\nSe você chegou até aqui, seguiu cada pista deste caminho até o fim. Mas a verdade é que nunca existiu aliança nenhuma chegando pelo correio — a única coisa que sempre esteve a caminho era este momento.\n\nNão sei fazer discursos bonitos, mas sei exatamente o que sinto: quero seguir escrevendo essa história ao seu lado, todos os dias, do jeito mais simples e verdadeiro possível.\n\nAgora, olhe para o lado.`;
+
+            let jaAbriu = false;
+            letterTextEl.textContent = '';
+            letterSignoff.classList.remove('visivel');
+            continuarWrap.classList.add('d-none');
+
+            function digitarCarta() {
+                let i = 0;
+                letterTextEl.textContent = '';
+                const intervalo = setInterval(() => {
+                    letterTextEl.textContent += cartaMensagem.charAt(i);
+                    i++;
+                    if (i >= cartaMensagem.length) {
+                        clearInterval(intervalo);
+                        setTimeout(() => {
+                            letterSignoff.classList.add('visivel');
+                            setTimeout(() => {
+                                continuarWrap.classList.remove('d-none');
+                                continuarWrap.classList.add('reveal-up');
+                            }, 700);
+                        }, 500);
+                    }
+                }, 28);
+            }
+
+            function abrirEnvelope() {
+                if (jaAbriu) return;
+                jaAbriu = true;
+                envelopeHint.classList.remove('visivel');
+                envelope.classList.add('aberto');
+                setTimeout(digitarCarta, 900);
+            }
+
+            envelope.addEventListener('click', abrirEnvelope);
+
+            // Surge suavemente na tela e, pouco depois, começa a abrir sozinho
+            // (a pessoa também pode tocar para abrir antes, se quiser).
+            requestAnimationFrame(() => {
+                envelope.classList.add('envelope-visivel');
+                setTimeout(() => envelopeHint.classList.add('visivel'), 500);
+            });
+            setTimeout(abrirEnvelope, 2200);
+        }
 
         /* ---------------- Utilidades ---------------- */
         // Antes esta função verificava se o celular estava na VERTICAL (comportamento
@@ -1549,6 +1801,7 @@
             if (navigator.vibrate) { try { navigator.vibrate([200, 100, 200]); } catch (e) {} }
 
             dispararConfetesRomanticos();
+            iniciarCartaFinal();
         }
 
         // Gera formas de emoji (❤️ 🌹 ✨) para o canvas-confetti quando o navegador
@@ -1679,6 +1932,7 @@
             document.getElementById('romancePage').style.display = 'block';
             window.scrollTo(0, 0);
             tentarTocarMusica();
+            prepararContrato();
 
             const dataPedidoIso = localStorage.getItem('aurora_data_pedido');
             if (dataPedidoIso) {
@@ -1847,6 +2101,7 @@
                 playback.removeAttribute('src');
                 document.getElementById('videoPreview').style.display = 'block';
                 document.getElementById('btnIniciarGravacao').classList.remove('d-none');
+                videoJaSalvo = false;
                 if (mediaStream) document.getElementById('videoPreview').srcObject = mediaStream;
             }
 
@@ -1868,6 +2123,15 @@
                 localStorage.setItem('aurora_stage', 'final');
                 iniciarFlashback(() => { goToRomancePage(); });
             });
+
+            const btnGerarContrato = document.getElementById('btnGerarContrato');
+            if (btnGerarContrato) {
+                btnGerarContrato.addEventListener('click', () => {
+                    if (regrasSelecionadas.length < MIN_REGRAS) return;
+                    try { localStorage.setItem('aurora_regras_contrato', JSON.stringify(regrasSelecionadas)); } catch (e) { console.error('Falha ao salvar regras do contrato', e); }
+                    gerarContratoPersonalizado(regrasSelecionadas);
+                });
+            }
 
             document.getElementById('btnCompartilhar').addEventListener('click', async () => {
                 try {

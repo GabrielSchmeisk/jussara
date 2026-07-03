@@ -954,7 +954,6 @@
             </div>
 
             <div id="finalContinuarWrap" class="d-none">
-                <p class="text-white fs-2 mt-2 text-shadow fw-light">Olhe para o lado.</p>
                 <button id="btnVerHistoria" class="btn btn-rosegold rounded-pill fw-bold mt-4 px-4 py-2 glow-effect">Continuar</button>
             </div>
         </div>
@@ -1091,7 +1090,6 @@
                 <i class="bi bi-share-fill me-2"></i>Compartilhar
             </button>
             <div class="mt-4 text-center">
-                <button id="btnLimparStorage" class="btn btn-outline-warning btn-sm rounded-pill" style="display: none;">Limpar Dados (Teste)</button>
                 <button id="btnResetar" class="btn btn-outline-danger btn-sm rounded-pill mt-2">Resetar site</button>
             </div>
         </div>
@@ -1235,7 +1233,7 @@
             const continuarWrap = document.getElementById('finalContinuarWrap');
             if (!envelope || !letterTextEl) return;
 
-            const cartaMensagem = `${NOME_DELA},\n\nSe você chegou até aqui, seguiu cada pista deste caminho até o fim. Mas a verdade é que nunca existiu aliança nenhuma chegando pelo correio — a única coisa que sempre esteve a caminho era este momento.\n\nNão sei fazer discursos bonitos, mas sei exatamente o que sinto: quero seguir escrevendo essa história ao seu lado, todos os dias, do jeito mais simples e verdadeiro possível.\n\nAgora, olhe para o lado.`;
+            const cartaMensagem = `${NOME_DELA},\n\nSe você chegou até aqui, seguiu cada pista deste caminho até o fim. Mas a verdade é que nunca existiu aliança nenhuma chegando pelo correio — a única coisa que sempre esteve a caminho era este momento.\n\nNão sei fazer discursos bonitos, mas sei exatamente o que sinto: quero seguir escrevendo essa história ao seu lado, todos os dias, do jeito mais simples e verdadeiro possível.`;
 
             let jaAbriu = false;
             letterTextEl.textContent = '';
@@ -1526,7 +1524,7 @@
         // final, o algoritmo de remoção de fundo interpreta esses pixels transparentes
         // como pretos (pois getImageData devolve r=g=b=0 quando alpha=0). Era essa a
         // causa do fundo preto na assinatura.
-        function pintarFundoBrancoCanvas(canvas, ctx, larguraCss) {
+        function pintarFundoBrancoCanvas(canvas, ctx) {
             ctx.save();
             ctx.setTransform(1, 0, 0, 1, 0, 0);
             ctx.fillStyle = '#ffffff';
@@ -1547,7 +1545,7 @@
             canvas.style.width = rect.width + 'px';
             canvas.style.height = '160px';
             const ctx = canvas.getContext('2d');
-            pintarFundoBrancoCanvas(canvas, ctx, rect.width);
+            pintarFundoBrancoCanvas(canvas, ctx);
             ctx.scale(ratio, ratio);
             ctx.lineWidth = 2.4;
             ctx.lineCap = 'round';
@@ -1595,7 +1593,6 @@
             document.getElementById('btnLimparAssinatura').onclick = () => {
                 // Repinta o fundo branco em vez de apenas limpar (clearRect deixaria
                 // a área transparente de novo e reproduziria o mesmo bug do fundo preto).
-                const ratio = window.devicePixelRatio || 1;
                 sigCtx.save();
                 sigCtx.setTransform(1, 0, 0, 1, 0, 0);
                 sigCtx.fillStyle = '#ffffff';
@@ -1763,7 +1760,16 @@
         function iniciarTelaDeVideo() {
             document.getElementById('videoScreen').classList.remove('d-none');
             aguardandoRetornoPortrait = false;
-            verificarOrientacao();
+            // A permissão de câmera/microfone só é solicitada agora, no momento em que
+            // faz sentido dentro da história (confirmar o recebimento da entrega) — e
+            // não no carregamento inicial da "loja". Pedir isso na home quebraria
+            // completamente a ilusão de e-commerce real, já que nenhuma loja pede
+            // acesso à câmera assim que a página abre.
+            if (!permissoesLiberadas) {
+                solicitarPermissoes().then(verificarOrientacao);
+            } else {
+                verificarOrientacao();
+            }
         }
 
         /* Após a gravação: mostra tela elegante pedindo retorno à posição vertical
@@ -1818,8 +1824,8 @@
             return null;
         }
 
-        // Efeito de celebração no instante do pedido físico ("Olhe para o lado"),
-        // agora com corações, rosas e brilhos em vez do confete tradicional.
+        // Efeito de celebração no instante do pedido físico, com corações, rosas e
+        // brilhos em vez do confete tradicional.
         function dispararConfetesRomanticos() {
             if (typeof confetti !== 'function') return;
             const formas = obterFormasRomanticas();
@@ -1985,7 +1991,6 @@
             const suspenseOverlay = document.getElementById('suspenseOverlay');
 
             bloquearZoom();
-            solicitarPermissoes();
             iniciarCarrosselPromocional();
             iniciarThumbsProduto();
 
@@ -1997,18 +2002,6 @@
                 document.getElementById('maintenancePopup').style.display = 'none';
                 goToRomancePage();
             }
-
-            const btnLimparStorage = document.getElementById('btnLimparStorage');
-            setTimeout(() => { btnLimparStorage.style.display = 'inline-block'; }, 2000);
-            btnLimparStorage.addEventListener('click', async () => {
-                // Aguarda a limpeza do IndexedDB terminar de verdade antes de
-                // recarregar a página — antes o reload podia disparar antes da
-                // transação assíncrona ser concluída, deixando vídeo/assinatura
-                // antigos ainda salvos.
-                try { await db.arquivos.clear(); } catch (e) { console.error('Falha ao limpar IndexedDB', e); }
-                localStorage.clear();
-                location.reload();
-            });
 
             document.getElementById('btnIrParaCheckout').addEventListener('click', () => {
                 pedido.tamMasc = document.getElementById('tamanhoMasc').value;
